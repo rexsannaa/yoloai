@@ -1,0 +1,194 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      color: #212529;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: #1a1d21;
+      color: #ced4da;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      font-weight: bold;
+      color: #fff;
+      border-bottom: 1px solid #343a40;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex-grow: 1;
+    }
+
+    .sidebar-menu li {
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      transition: 0.2s;
+      border-left: 4px solid transparent;
+    }
+
+    .sidebar-menu li:hover {
+      background: #343a40;
+      color: #fff;
+    }
+
+    .sidebar-menu li.active {
+      background: #495057;
+      color: #fff;
+      border-left-color: #8a2be2;
+    }
+
+    .sidebar-footer {
+      padding: 15px;
+      border-top: 1px solid #343a40;
+      font-size: 0.9em;
+    }
+
+    .user-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #8a2be2;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex-grow: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .invite-button {
+      background: white;
+      color: #0d6efd;
+      border: 1px solid #0d6efd;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .empty-workspace {
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .empty-workspace img {
+      max-width: 220px;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .action-buttons .btn {
+      padding: 10px 20px;
+      margin: 0 8px;
+      border-radius: 5px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #8a2be2;
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      border: 1px solid #8a2be2;
+      color: #8a2be2;
+      background: transparent;
+    }
+
+    .btn-primary:hover {
+      background: #7324bf;
+    }
+
+    .btn-secondary:hover {
+      background: #f1e8ff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li><span>公共計畫</span><span>&gt;</span></li>
+      <li class="active"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li><span><i class="fas fa-cogs"></i> 工作流程</span></li>
+      <li><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+    </ul>
+    <div class="sidebar-footer">
+      <div style="display:flex; align-items:center;">
+        <div class="user-avatar">劉</div>
+        <div>
+          <div><strong>劉冠廷</strong></div>
+          <div>成員</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;">已使用 <strong style="color:#8a2be2;">2.1</strong> 額度<br><small>於 六月1日重設</small></div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="content-header">
+      <h1>專案</h1>
+      <button class="invite-button"><i class="fas fa-user-plus"></i> 邀請成員</button>
+    </div>
+    <div class="empty-workspace">
+      <img src="https://via.placeholder.com/250x200/E8DAEF/A276C7?text=No+Projects" alt="沒有專案">
+      <h2>此工作區中沒有專案。</h2>
+      <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
+      <div class="action-buttons">
+        <a href="#" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
+        <a href="#" class="btn btn-secondary"><i class="fas fa-book-open"></i> 檢視教學</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
