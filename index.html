@@ -77,6 +77,7 @@
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
             border: 3px solid transparent;
+            cursor: pointer;
         }
 
         .workflow-step:hover {
@@ -86,6 +87,13 @@
 
         .workflow-step.active {
             border-color: var(--primary-color);
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         .step-number {
@@ -122,9 +130,11 @@
             background: #e8ebff;
         }
 
-        .upload-area svg {
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 15px;
             color: var(--primary-color);
-            margin-bottom: 15px;
         }
 
         .image-preview {
@@ -152,6 +162,31 @@
             object-fit: cover;
         }
 
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--danger-color);
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger-color);
+            color: var(--white);
+            transform: scale(1.1);
+        }
+
         .button {
             background: var(--primary-color);
             color: var(--white);
@@ -164,12 +199,19 @@
             margin: 10px;
             font-family: var(--chinese-font);
             font-weight: 500;
+            display: inline-block;
         }
 
         .button:hover {
             background: #5a67d8;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .step-content {
@@ -182,14 +224,140 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 顯示第一步 */
-        #step1 {
+        .annotation-canvas,
+        #visualizerCanvas,
+        #detectionCanvas,
+        #chartCanvas {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
             display: block;
         }
+
+        .annotation-canvas {
+            cursor: crosshair;
+            max-width: 100%;
+        }
+
+        .training-visualizer {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        #imageCounter {
+            display: inline-block;
+            margin: 0 15px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        #trainingStatus {
+            text-align: center;
+            font-size: 16px;
+            color: var(--text-color);
+            margin-top: 10px;
+        }
+
+        #video-container {
+            position: relative;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        #webcam {
+            max-width: 640px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        #detectionCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        #detectionResults {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-family: var(--chinese-font);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: var(--chinese-font);
+            transition: border-color 0.2s ease;
+            margin: 10px 0;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        label {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .workflow {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .upload-area {
+                padding: 30px 20px;
+            }
+            
+            .training-visualizer {
+                padding: 20px;
+            }
+        }
     </style>
-    
-    <!-- 外部樣式表（如果可用） -->
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -227,7 +395,7 @@
         <!-- 步驟1: 上傳區域 -->
         <div id="step1" class="step-content" style="display: block;">
             <div class="upload-area" id="uploadArea">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -241,7 +409,7 @@
         </div>
 
         <!-- 步驟2: 標註工具 -->
-        <div id="step2" class="step-content" style="display: none;">
+        <div id="step2" class="step-content">
             <h2>標註工具</h2>
             <p>請在圖片上拖曳滑鼠來框選要偵測的物件</p>
             <div>
@@ -259,7 +427,7 @@
         </div>
 
         <!-- 步驟3: 視覺化訓練 -->
-        <div id="step3" class="step-content" style="display: none;">
+        <div id="step3" class="step-content">
             <h2>視覺化訓練過程</h2>
             <div class="training-visualizer">
                 <canvas id="visualizerCanvas" width="800" height="400"></canvas>
@@ -274,11 +442,11 @@
         </div>
 
         <!-- 步驟4: 即時測試 -->
-        <div id="step4" class="step-content" style="display: none;">
+        <div id="step4" class="step-content">
             <h2>即時攝影機測試</h2>
             <div id="video-container">
                 <video id="webcam" autoplay playsinline width="640" height="480"></video>
-                <canvas id="detectionCanvas" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+                <canvas id="detectionCanvas" width="640" height="480"></canvas>
             </div>
             <button class="button" id="startWebcam">開啟攝影機</button>
             <button class="button" id="stopWebcam" style="display: none;">停止攝影機</button>
@@ -290,97 +458,12 @@
         </div>
     </div>
 
-    <!-- 簡化的內嵌 JavaScript -->
-    <script>
-        // 簡單的初始化邏輯
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('頁面載入完成');
-            
-            // 確保上傳區域存在
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('fileInput');
-            
-            if (uploadArea && fileInput) {
-                // 點擊上傳區域
-                uploadArea.addEventListener('click', function() {
-                    fileInput.click();
-                });
-                
-                // 拖放功能
-                uploadArea.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    uploadArea.classList.add('drag-over');
-                });
-                
-                uploadArea.addEventListener('dragleave', function() {
-                    uploadArea.classList.remove('drag-over');
-                });
-                
-                uploadArea.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    uploadArea.classList.remove('drag-over');
-                    handleFiles(e.dataTransfer.files);
-                });
-                
-                // 檔案選擇
-                fileInput.addEventListener('change', function(e) {
-                    handleFiles(e.target.files);
-                });
-            }
-            
-            // 處理檔案上傳
-            function handleFiles(files) {
-                const imagePreview = document.getElementById('imagePreview');
-                const images = Array.from(files).filter(file => file.type.startsWith('image/'));
-                
-                if (images.length === 0) {
-                    alert('請選擇圖片檔案');
-                    return;
-                }
-                
-                imagePreview.innerHTML = '';
-                let loadedCount = 0;
-                
-                images.forEach(function(file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const div = document.createElement('div');
-                        div.className = 'preview-item';
-                        div.innerHTML = '<img src="' + e.target.result + '" alt="' + file.name + '">';
-                        imagePreview.appendChild(div);
-                        
-                        loadedCount++;
-                        if (loadedCount >= 10) {
-                            document.getElementById('nextStep1').style.display = 'inline-block';
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-            
-            // 步驟導航
-            const nextStep1 = document.getElementById('nextStep1');
-            if (nextStep1) {
-                nextStep1.addEventListener('click', function() {
-                    document.getElementById('step1').style.display = 'none';
-                    document.getElementById('step2').style.display = 'block';
-                    updateWorkflowStep(2);
-                });
-            }
-            
-            function updateWorkflowStep(step) {
-                document.querySelectorAll('.workflow-step').forEach(function(el) {
-                    el.classList.remove('active');
-                });
-                document.querySelector('[data-step="' + step + '"]').classList.add('active');
-            }
-        });
-    </script>
-    
-    <!-- 載入外部腳本（如果可用） -->
-    <script src="app.js"></script>
+    <!-- JavaScript 載入順序很重要 -->
+    <script src="lib/tfjs.min.js"></script>
+    <script src="lib/yolo.min.js"></script>
     <script src="annotator.js"></script>
     <script src="visualizer.js"></script>
     <script src="yolo-worker.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
