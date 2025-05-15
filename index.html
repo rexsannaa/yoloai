@@ -1,469 +1,110 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyYOLO - 視覺化機器學習教學平台</title>
-    
-    <!-- 內嵌樣式以確保正確載入 -->
-    <style>
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --success-color: #00ff00;
-            --warning-color: #ffa500;
-            --danger-color: #ff0000;
-            --info-color: #00bfff;
-            --text-color: #333333;
-            --bg-color: #f5f5f5;
-            --white: #ffffff;
-            --border-color: #e0e0e0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --chinese-font: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "微軟正黑體", 
-                           "PingFang TC", "蘋方-繁", "Noto Sans TC", "思源黑體", sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--chinese-font);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: var(--white);
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .tagline {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .workflow {
-            display: flex;
-            gap: 20px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-
-        .workflow-step {
-            flex: 1;
-            min-width: 250px;
-            background: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
-            cursor: pointer;
-        }
-
-        .workflow-step:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .workflow-step.active {
-            border-color: var(--primary-color);
-            animation: pulse 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-
-        .step-number {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: var(--primary-color);
-            color: var(--white);
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--white);
-            margin: 30px 0;
-        }
-
-        .upload-area:hover {
-            border-color: var(--primary-color);
-            background: #f7f9ff;
-        }
-
-        .upload-area.drag-over {
-            border-color: var(--primary-color);
-            background: #e8ebff;
-        }
-
-        .upload-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 15px;
-            color: var(--primary-color);
-        }
-
-        .image-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .preview-item {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease;
-        }
-
-        .preview-item:hover {
-            transform: scale(1.05);
-        }
-
-        .preview-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 25px;
-            height: 25px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--danger-color);
-            transition: all 0.2s ease;
-        }
-
-        .delete-btn:hover {
-            background: var(--danger-color);
-            color: var(--white);
-            transform: scale(1.1);
-        }
-
-        .button {
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            font-family: var(--chinese-font);
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .button:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .step-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .annotation-canvas,
-        #visualizerCanvas,
-        #detectionCanvas,
-        #chartCanvas {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: var(--shadow);
-            display: block;
-        }
-
-        .annotation-canvas {
-            cursor: crosshair;
-            max-width: 100%;
-        }
-
-        .training-visualizer {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 30px;
-            margin: 30px 0;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        #imageCounter {
-            display: inline-block;
-            margin: 0 15px;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-
-        #trainingStatus {
-            text-align: center;
-            font-size: 16px;
-            color: var(--text-color);
-            margin-top: 10px;
-        }
-
-        #video-container {
-            position: relative;
-            margin: 20px 0;
-            display: inline-block;
-        }
-
-        #webcam {
-            max-width: 640px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-
-        #detectionCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        #detectionResults {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-family: var(--chinese-font);
-        }
-
-        .result-container {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: var(--chinese-font);
-            transition: border-color 0.2s ease;
-            margin: 10px 0;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        label {
-            font-weight: 500;
-            margin-right: 8px;
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .workflow {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .button {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-            
-            .upload-area {
-                padding: 30px 20px;
-            }
-            
-            .training-visualizer {
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <div class="container">
             <h1>EasyYOLO 視覺化機器學習教學平台</h1>
-            <p class="tagline">讓每個人都能在10分鐘內，用10張照片，理解並訓練出自己的AI模型</p>
+            <p class="tagline">用10張照片，10分鐘訓練自己的AI模型</p>
         </div>
     </header>
 
     <div class="container">
-        <!-- 工作流程指示器 -->
+        <!-- 工作流程 -->
         <div class="workflow" id="workflow">
             <div class="workflow-step active" data-step="1">
                 <div class="step-number">1</div>
                 <h3>上傳照片</h3>
-                <p>上傳10張物件照片開始訓練</p>
+                <p>上傳10張物件照片</p>
             </div>
             <div class="workflow-step" data-step="2">
                 <div class="step-number">2</div>
                 <h3>標註物件</h3>
-                <p>使用智慧標註工具標記物件</p>
+                <p>智慧標註工具</p>
             </div>
             <div class="workflow-step" data-step="3">
                 <div class="step-number">3</div>
                 <h3>視覺化訓練</h3>
-                <p>觀看AI學習過程動畫</p>
+                <p>AI學習動畫</p>
             </div>
             <div class="workflow-step" data-step="4">
                 <div class="step-number">4</div>
                 <h3>即時測試</h3>
-                <p>使用攝影機測試模型效果</p>
+                <p>攝影機測試</p>
             </div>
         </div>
 
-        <!-- 步驟1: 上傳區域 -->
+        <!-- 步驟容器 -->
         <div id="step1" class="step-content" style="display: block;">
             <div class="upload-area" id="uploadArea">
                 <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                 </svg>
                 <h3>拖曳或點擊上傳照片</h3>
-                <p>至少上傳10張包含目標物件的照片 (支援 JPG, PNG)</p>
+                <p>至少上傳10張 JPG/PNG 照片</p>
                 <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
             </div>
             <div class="image-preview" id="imagePreview"></div>
-            <button class="button" id="nextStep1" style="display: none;">下一步：標註物件</button>
+            <button class="button next-btn" id="nextStep1" style="display: none;">下一步</button>
         </div>
 
-        <!-- 步驟2: 標註工具 -->
         <div id="step2" class="step-content">
             <h2>標註工具</h2>
-            <p>請在圖片上拖曳滑鼠來框選要偵測的物件</p>
-            <div>
+            <div class="annotation-controls">
                 <label>物件名稱：</label>
-                <input type="text" id="objectName" placeholder="例如：蘋果、汽車、狗" value="物件">
+                <input type="text" id="objectName" value="物件">
             </div>
-            <canvas id="annotationCanvas" class="annotation-canvas" width="800" height="600"></canvas>
-            <div>
+            <canvas id="annotationCanvas" class="annotation-canvas"></canvas>
+            <div class="image-nav">
                 <button class="button" id="prevImage">上一張</button>
                 <span id="imageCounter">1/10</span>
                 <button class="button" id="nextImage">下一張</button>
             </div>
-            <button class="button" id="saveAnnotations">儲存標註</button>
-            <button class="button" id="nextStep2">下一步：開始訓練</button>
+            <button class="button next-btn" id="nextStep2">下一步</button>
         </div>
 
-        <!-- 步驟3: 視覺化訓練 -->
         <div id="step3" class="step-content">
-            <h2>視覺化訓練過程</h2>
+            <h2>視覺化訓練</h2>
             <div class="training-visualizer">
-                <canvas id="visualizerCanvas" width="800" height="400"></canvas>
-                <canvas id="chartCanvas" width="400" height="300" style="margin-top: 20px;"></canvas>
+                <canvas id="visualizerCanvas"></canvas>
+                <canvas id="chartCanvas"></canvas>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <p id="trainingStatus">準備開始訓練...</p>
             </div>
             <button class="button" id="startTraining">開始訓練</button>
-            <button class="button" id="nextStep3" style="display: none;">下一步：測試模型</button>
+            <button class="button next-btn" id="nextStep3" style="display: none;">下一步</button>
         </div>
 
-        <!-- 步驟4: 即時測試 -->
         <div id="step4" class="step-content">
-            <h2>即時攝影機測試</h2>
+            <h2>即時測試</h2>
             <div id="video-container">
-                <video id="webcam" autoplay playsinline width="640" height="480"></video>
-                <canvas id="detectionCanvas" width="640" height="480"></canvas>
+                <video id="webcam" autoplay playsinline></video>
+                <canvas id="detectionCanvas"></canvas>
             </div>
-            <button class="button" id="startWebcam">開啟攝影機</button>
-            <button class="button" id="stopWebcam" style="display: none;">停止攝影機</button>
+            <div class="video-controls">
+                <button class="button" id="startWebcam">開啟攝影機</button>
+                <button class="button" id="stopWebcam" style="display: none;">停止</button>
+            </div>
             <div class="result-container">
                 <h3>偵測結果</h3>
                 <div id="detectionResults">等待偵測...</div>
             </div>
-            <button class="button" id="exportModel">匯出模型設定</button>
+            <button class="button" id="exportModel">匯出模型</button>
         </div>
     </div>
 
-    <!-- JavaScript 載入順序很重要 -->
     <script src="lib/tfjs.min.js"></script>
     <script src="lib/yolo.min.js"></script>
-    <script src="annotator.js"></script>
-    <script src="visualizer.js"></script>
-    <script src="yolo-worker.js"></script>
     <script src="app.js"></script>
+    <script src="visualizer.js"></script>
+    <script src="annotator.js"></script>
 </body>
 </html>

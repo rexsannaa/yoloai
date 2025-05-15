@@ -1,56 +1,41 @@
 /* style.css */
-/* EasyYOLO 核心樣式 - 精簡整合版 */
+/* EasyYOLO 核心樣式 - 精簡版 */
 
 :root {
-    /* 主要顏色變數 */
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --success-color: #00ff00;
-    --warning-color: #ffa500;
-    --danger-color: #ff0000;
-    --info-color: #00bfff;
-    --text-color: #333333;
-    --bg-color: #f5f5f5;
-    --white: #ffffff;
-    --border-color: #e0e0e0;
+    --primary: #667eea;
+    --secondary: #764ba2;
+    --success: #00ff00;
+    --danger: #ff0000;
+    --text: #333;
+    --bg: #f5f5f5;
+    --white: #fff;
+    --border: #e0e0e0;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    
-    /* 繁體中文字體堆疊 */
-    --chinese-font: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "微軟正黑體", 
-                   "PingFang TC", "蘋方-繁", "Noto Sans TC", "思源黑體", sans-serif;
+    --font: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "微軟正黑體", sans-serif;
 }
 
-/* 全域重置與基礎樣式 */
-* {
-    margin: 0;
-    padding: 0;
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-}
-
 body {
-    font-family: var(--chinese-font);
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 容器與佈局 */
+/* 容器 */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* 標題區域 */
+/* 標題 */
 header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: var(--white);
     padding: 2rem 0;
     text-align: center;
@@ -60,15 +45,9 @@ header {
 h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
-    font-weight: 700;
 }
 
-.tagline {
-    font-size: 1.1rem;
-    opacity: 0.9;
-}
-
-/* 工作流程步驟 */
+/* 工作流程 */
 .workflow {
     display: flex;
     gap: 20px;
@@ -78,29 +57,29 @@ h1 {
 
 .workflow-step {
     flex: 1;
-    min-width: 250px;
+    min-width: 200px;
     background: var(--white);
     border-radius: 12px;
     padding: 25px;
     box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    transition: transform 0.3s;
     border: 3px solid transparent;
+    cursor: pointer;
 }
 
 .workflow-step:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .workflow-step.active {
-    border-color: var(--primary-color);
+    border-color: var(--primary);
 }
 
 .step-number {
     display: inline-block;
     width: 40px;
     height: 40px;
-    background: var(--primary-color);
+    background: var(--primary);
     color: var(--white);
     border-radius: 50%;
     text-align: center;
@@ -111,29 +90,31 @@ h1 {
 
 /* 上傳區域 */
 .upload-area {
-    border: 2px dashed var(--border-color);
+    border: 2px dashed var(--border);
     border-radius: 12px;
     padding: 40px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     background: var(--white);
     margin: 30px 0;
 }
 
 .upload-area:hover {
-    border-color: var(--primary-color);
+    border-color: var(--primary);
     background: #f7f9ff;
 }
 
 .upload-area.drag-over {
-    border-color: var(--primary-color);
+    border-color: var(--primary);
     background: #e8ebff;
 }
 
-.upload-area svg {
-    color: var(--primary-color);
-    margin-bottom: 15px;
+.upload-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 15px;
+    color: var(--primary);
 }
 
 /* 圖片預覽 */
@@ -149,7 +130,7 @@ h1 {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s;
 }
 
 .preview-item:hover {
@@ -162,165 +143,96 @@ h1 {
     object-fit: cover;
 }
 
-/* 畫布樣式 */
-.annotation-canvas,
-#visualizerCanvas,
-#detectionCanvas,
-#chartCanvas {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: crosshair;
-    margin: 20px 0;
-    max-width: 100%;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-}
-
-.annotation-canvas:hover {
-    border-color: var(--primary-color);
-}
-
-#visualizerCanvas {
-    background: linear-gradient(135deg, #f5f5fa 0%, #f0f0f5 100%);
-    cursor: default;
-}
-
-#chartCanvas {
-    background: rgba(255, 255, 255, 0.9);
-    margin: 0 auto;
-    display: block;
-}
-
-/* 訓練視覺化容器 */
-.training-visualizer {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 30px;
-    margin: 30px 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    animation: fadeIn 0.5s ease;
-}
-
-.training-visualizer::before {
-    content: '';
+.delete-btn {
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent, 
-        rgba(102, 126, 234, 0.05), 
-        transparent
-    );
-    animation: shimmer 2s infinite;
+    top: 5px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    color: var(--danger);
 }
 
-/* 按鈕樣式 */
+/* 按鈕 */
 .button {
-    background: var(--primary-color);
+    background: var(--primary);
     color: var(--white);
     border: none;
     padding: 12px 30px;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     margin: 10px;
-    font-family: var(--chinese-font);
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-}
-
-.button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.button:hover::before {
-    width: 300px;
-    height: 300px;
+    font-family: var(--font);
 }
 
 .button:hover {
     background: #5a67d8;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-}
-
-.button:active {
-    transform: translateY(0);
 }
 
 .button:disabled {
     background: #ccc;
     cursor: not-allowed;
-    transform: none;
+}
+
+/* 畫布 */
+.annotation-canvas,
+#visualizerCanvas,
+#detectionCanvas,
+#chartCanvas {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: var(--shadow);
+    display: block;
+    max-width: 100%;
+}
+
+.annotation-canvas {
+    cursor: crosshair;
+}
+
+/* 訓練視覺化 */
+.training-visualizer {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: var(--shadow);
 }
 
 /* 進度條 */
 .progress-bar {
     width: 100%;
     height: 8px;
-    background: var(--border-color);
+    background: var(--border);
     border-radius: 4px;
     overflow: hidden;
     margin: 20px 0;
-    position: relative;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transition: width 0.3s ease;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.3s;
     width: 0%;
-    position: relative;
-}
-
-.progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.3) 50%, 
-        transparent 100%
-    );
-    animation: shimmer 1.5s infinite;
-}
-
-/* 結果容器 */
-.result-container {
-    margin-top: 30px;
-    padding: 20px;
-    background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
 }
 
 /* 視訊容器 */
 #video-container {
     position: relative;
-    margin: 20px 0;
     display: inline-block;
+    margin: 20px 0;
 }
 
 #webcam {
-    width: 100%;
     max-width: 640px;
     border-radius: 8px;
     box-shadow: var(--shadow);
@@ -333,10 +245,10 @@ h1 {
     pointer-events: none;
 }
 
-/* 步驟內容 */
+/* 其他 */
 .step-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    animation: fadeIn 0.5s;
 }
 
 @keyframes fadeIn {
@@ -344,289 +256,30 @@ h1 {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 表單元素 */
 input[type="text"] {
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 14px;
-    font-family: var(--chinese-font);
-    transition: border-color 0.2s ease;
+    font-family: var(--font);
 }
 
 input[type="text"]:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary);
 }
 
-label {
-    font-weight: 500;
-    margin-right: 8px;
+.result-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
 }
 
-/* 計數器 */
-#imageCounter {
-    display: inline-block;
-    margin: 0 15px;
-    font-weight: 500;
-    color: var(--primary-color);
-}
-
-/* 狀態文字 */
-#trainingStatus {
-    text-align: center;
-    font-size: 16px;
-    color: var(--text-color);
-    margin-top: 10px;
-    transition: color 0.3s ease;
-    animation: pulse 2s infinite;
-}
-
-/* 偵測結果 */
-#detectionResults {
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    font-family: var(--chinese-font);
-}
-
-#detectionResults p {
-    margin: 5px 0;
-}
-
-/* 提示訊息 */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--white);
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-family: var(--chinese-font);
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-}
-
-/* 動畫效果 */
-.fade-in {
-    animation: fadeIn 0.5s ease;
-}
-
-.slide-up {
-    animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%) translateY(-100%); }
-    100% { transform: translateX(100%) translateY(100%); }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-/* 加載動畫 */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* 網路節點動畫 */
-.neural-node {
-    animation: nodeGlow 2s infinite alternate;
-}
-
-@keyframes nodeGlow {
-    0% { 
-        filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
-    }
-    100% { 
-        filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.8));
-    }
-}
-
-/* 訓練完成動畫 */
-@keyframes successPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-.training-complete {
-    animation: successPulse 0.5s ease;
-}
-
-/* 數據流動動畫 */
-@keyframes dataFlow {
-    0% { opacity: 0; transform: translateX(-50px); }
-    50% { opacity: 1; }
-    100% { opacity: 0; transform: translateX(50px); }
-}
-
-.data-particle {
-    animation: dataFlow 2s linear infinite;
-}
-
-/* 響應式設計 */
+/* RWD */
 @media (max-width: 768px) {
-    .workflow {
-        flex-direction: column;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    .button {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-    
-    .upload-area {
-        padding: 30px 20px;
-    }
-    
-    .training-visualizer {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
-    }
-    
-    h1 {
-        font-size: 1.5rem;
-    }
-    
-    .tagline {
-        font-size: 1rem;
-    }
-    
-    .workflow-step {
-        min-width: 100%;
-        padding: 20px;
-    }
-}
-
-/* 打印樣式 */
-@media print {
-    body {
-        background: var(--white);
-    }
-    
-    header {
-        background: none;
-        color: var(--text-color);
-        box-shadow: none;
-    }
-    
-    .button {
-        display: none;
-    }
-}
-
-/* 輔助類別 */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-left { text-align: left; }
-
-.mt-10 { margin-top: 10px; }
-.mt-20 { margin-top: 20px; }
-.mt-30 { margin-top: 30px; }
-
-.mb-10 { margin-bottom: 10px; }
-.mb-20 { margin-bottom: 20px; }
-.mb-30 { margin-bottom: 30px; }
-
-.hidden { display: none; }
-.block { display: block; }
-.inline-block { display: inline-block; }
-
-/* 繁體中文專用優化 */
-.chinese-text {
-    font-family: var(--chinese-font);
-    letter-spacing: 0.05em;
-    line-height: 1.8;
-}
-
-/* 確保 Canvas 繁體中文渲染 */
-canvas {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    text-rendering: optimizeLegibility;
-}
-
-/* 深色模式支援 */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #1a1a1a;
-        --text-color: #e0e0e0;
-        --border-color: #404040;
-    }
-    
-    .workflow-step,
-    .upload-area,
-    .result-container {
-        background: #2a2a2a;
-        color: #e0e0e0;
-    }
-    
-    .upload-area:hover {
-        background: #333;
-    }
-}
-
-/* 動畫效果 */
-.fade-in {
-    animation: fadeIn 0.5s ease;
-}
-
-.slide-up {
-    animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* 加載動畫 */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    .workflow { flex-direction: column; }
+    h1 { font-size: 2rem; }
+    .button { padding: 10px 20px; font-size: 14px; }
 }
