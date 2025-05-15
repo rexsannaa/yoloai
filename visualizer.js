@@ -78,6 +78,13 @@ class YOLOVisualizer {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // 繪製背景漸層
+        const gradient = ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        gradient.addColorStop(0, 'rgba(102, 126, 234, 0.02)');
+        gradient.addColorStop(1, 'rgba(118, 75, 162, 0.02)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
         // 設定標題 - 確保繁體中文正確顯示
         ctx.save();
         ctx.font = `bold 24px ${this.config.fontFamily}`;
@@ -113,20 +120,38 @@ class YOLOVisualizer {
                 const nodeProgress = Math.min(1, progress - layerIndex * 0.1);
                 const radius = 15 * nodeProgress;
                 
+                // 繪製節點光暈
+                if (nodeProgress > 0) {
+                    const glow = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+                    glow.addColorStop(0, layer.color);
+                    glow.addColorStop(0.3, layer.color + '88');
+                    glow.addColorStop(1, layer.color + '00');
+                    ctx.fillStyle = glow;
+                    ctx.globalAlpha = 0.5 * nodeProgress;
+                    ctx.fillRect(x - radius * 2, y - radius * 2, radius * 4, radius * 4);
+                    ctx.globalAlpha = 1;
+                }
+                
                 // 繪製節點
                 ctx.beginPath();
                 ctx.arc(x, y, radius, 0, 2 * Math.PI);
                 ctx.fillStyle = layer.color;
                 ctx.globalAlpha = nodeProgress;
                 ctx.fill();
+                
+                // 節點邊框
+                ctx.strokeStyle = layer.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
                 ctx.globalAlpha = 1;
                 
-                // 繪製節點光暈效果
+                // 脈動效果
                 if (progress > layerIndex * 0.1 && progress < (layerIndex + 1) * 0.1) {
+                    const pulseRadius = radius + 5 * Math.sin(progress * Math.PI * 10);
                     ctx.beginPath();
-                    ctx.arc(x, y, radius + 5, 0, 2 * Math.PI);
+                    ctx.arc(x, y, pulseRadius, 0, 2 * Math.PI);
                     ctx.strokeStyle = layer.color;
-                    ctx.globalAlpha = 0.5;
+                    ctx.globalAlpha = 0.3;
                     ctx.lineWidth = 2;
                     ctx.stroke();
                     ctx.globalAlpha = 1;
@@ -145,14 +170,27 @@ class YOLOVisualizer {
                         // 連接線動畫
                         const lineProgress = Math.min(1, (progress - layerIndex * 0.1 - 0.5) * 2);
                         if (lineProgress > 0) {
+                            // 計算貝塞爾曲線控制點
+                            const controlX = x + (nextX - x) / 2;
+                            const controlY = y + (nextY - y) / 4;
+                            
                             ctx.beginPath();
                             ctx.moveTo(x + radius, y);
+                            
+                            // 使用貝塞爾曲線繪製平滑連接
                             const endX = x + radius + (nextX - x - radius * 2) * lineProgress;
                             const endY = y + (nextY - y) * lineProgress;
-                            ctx.lineTo(endX, endY);
-                            ctx.strokeStyle = this.config.colors.grid;
-                            ctx.globalAlpha = 0.3 * lineProgress;
-                            ctx.lineWidth = 1;
+                            
+                            ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+                            
+                            // 漸變線條
+                            const lineGradient = ctx.createLinearGradient(x, y, endX, endY);
+                            lineGradient.addColorStop(0, layer.color);
+                            lineGradient.addColorStop(1, nextLayer.color);
+                            
+                            ctx.strokeStyle = lineGradient;
+                            ctx.globalAlpha = 0.4 * lineProgress;
+                            ctx.lineWidth = 1.5;
                             ctx.stroke();
                             ctx.globalAlpha = 1;
                         }
@@ -165,6 +203,7 @@ class YOLOVisualizer {
             ctx.font = `16px ${this.config.fontFamily}`;
             ctx.fillStyle = this.config.colors.text;
             ctx.textAlign = 'center';
+            ctx.globalAlpha = Math.min(1, progress * 2);
             ctx.fillText(layer.name, x, centerY + 150);
             ctx.restore();
         });
@@ -342,15 +381,56 @@ class YOLOVisualizer {
             // 繪製圖表
             this.drawTrainingCharts();
             
+            // 繪製粒子效果
+            this.drawParticleEffect(progress);
+            
             if (progress < 1) {
                 this.animationId = requestAnimationFrame(animate);
             } else {
                 this.isAnimating = false;
-                console.log('訓練動畫完成');
+                this.onTrainingComplete();
             }
         };
         
         animate();
+    }
+    
+    // 繪製粒子效果
+    drawParticleEffect(progress) {
+        const ctx = this.ctx;
+        const time = Date.now() / 1000;
+        
+        // 產生流動粒子
+        for (let i = 0; i < 20; i++) {
+            const x = (progress * this.canvas.width + i * 50) % this.canvas.width;
+            const y = this.canvas.height / 2 + Math.sin(time + i) * 50;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 2, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgba(102, 126, 234, ${0.5 * (1 - progress)})`;
+            ctx.fill();
+        }
+    }
+    
+    // 訓練完成回調
+    onTrainingComplete() {
+        console.log('訓練動畫完成');
+        
+        // 繪製完成效果
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.font = `bold 24px ${this.config.fontFamily}`;
+        ctx.fillStyle = this.config.colors.success;
+        ctx.textAlign = 'center';
+        ctx.fillText('訓練完成！', this.canvas.width / 2, this.canvas.height / 2);
+        ctx.restore();
+        
+        // 發送自定義事件
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('trainingComplete', {
+                detail: { data: this.trainingData }
+            }));
+        }
     }
     
     // 更新訓練數據
@@ -360,12 +440,16 @@ class YOLOVisualizer {
             this.trainingData.currentEpoch = epoch;
             this.trainingData.epochs.push(epoch);
             
-            // 模擬損失值下降
-            const loss = 0.8 * Math.exp(-epoch * 0.3) + 0.1 + Math.random() * 0.05;
+            // 使用更真實的損失值下降曲線
+            const baseLoss = 0.8 * Math.exp(-epoch * 0.2);
+            const noise = (Math.random() - 0.5) * 0.05;
+            const loss = Math.max(0.05, baseLoss + noise);
             this.trainingData.loss.push(loss);
             
-            // 模擬準確率提升
-            const accuracy = 0.95 - 0.85 * Math.exp(-epoch * 0.3) + Math.random() * 0.02;
+            // 使用更平滑的準確率提升曲線
+            const baseAccuracy = 0.95 - 0.85 * Math.exp(-epoch * 0.15);
+            const accNoise = (Math.random() - 0.5) * 0.02;
+            const accuracy = Math.min(0.99, Math.max(0, baseAccuracy + accNoise));
             this.trainingData.accuracy.push(accuracy);
         }
     }

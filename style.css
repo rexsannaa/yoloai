@@ -165,17 +165,30 @@ h1 {
 /* 畫布樣式 */
 .annotation-canvas,
 #visualizerCanvas,
-#detectionCanvas {
+#detectionCanvas,
+#chartCanvas {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     cursor: crosshair;
     margin: 20px 0;
     max-width: 100%;
     box-shadow: var(--shadow);
+    transition: all 0.3s ease;
 }
 
 .annotation-canvas:hover {
     border-color: var(--primary-color);
+}
+
+#visualizerCanvas {
+    background: linear-gradient(135deg, #f5f5fa 0%, #f0f0f5 100%);
+    cursor: default;
+}
+
+#chartCanvas {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 0 auto;
+    display: block;
 }
 
 /* 訓練視覺化容器 */
@@ -187,6 +200,22 @@ h1 {
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease;
+}
+
+.training-visualizer::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(102, 126, 234, 0.05), 
+        transparent
+    );
+    animation: shimmer 2s infinite;
 }
 
 /* 按鈕樣式 */
@@ -202,12 +231,32 @@ h1 {
     margin: 10px;
     font-family: var(--chinese-font);
     font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.button:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .button:hover {
     background: #5a67d8;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
 }
 
 .button:active {
@@ -228,6 +277,7 @@ h1 {
     border-radius: 4px;
     overflow: hidden;
     margin: 20px 0;
+    position: relative;
 }
 
 .progress-fill {
@@ -235,6 +285,22 @@ h1 {
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     transition: width 0.3s ease;
     width: 0%;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
 }
 
 /* 結果容器 */
@@ -312,6 +378,8 @@ label {
     font-size: 16px;
     color: var(--text-color);
     margin-top: 10px;
+    transition: color 0.3s ease;
+    animation: pulse 2s infinite;
 }
 
 /* 偵測結果 */
@@ -343,6 +411,83 @@ label {
 @keyframes slideIn {
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
+}
+
+/* 動畫效果 */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 加載動畫 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 網路節點動畫 */
+.neural-node {
+    animation: nodeGlow 2s infinite alternate;
+}
+
+@keyframes nodeGlow {
+    0% { 
+        filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
+    }
+    100% { 
+        filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.8));
+    }
+}
+
+/* 訓練完成動畫 */
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.training-complete {
+    animation: successPulse 0.5s ease;
+}
+
+/* 數據流動動畫 */
+@keyframes dataFlow {
+    0% { opacity: 0; transform: translateX(-50px); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(50px); }
+}
+
+.data-particle {
+    animation: dataFlow 2s linear infinite;
 }
 
 /* 響應式設計 */

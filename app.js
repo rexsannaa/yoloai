@@ -37,9 +37,9 @@ class EasyYOLO {
     
     setupCanvasContexts() {
         this.contexts = {
-            annotation: this.elements.annotationCanvas.getContext('2d'),
-            visualizer: this.elements.visualizerCanvas.getContext('2d'),
-            detection: this.elements.detectionCanvas.getContext('2d')
+            annotation: this.elements.annotationCanvas ? this.elements.annotationCanvas.getContext('2d') : null,
+            visualizer: this.elements.visualizerCanvas ? this.elements.visualizerCanvas.getContext('2d') : null,
+            detection: this.elements.detectionCanvas ? this.elements.detectionCanvas.getContext('2d') : null
         };
     }
     
@@ -48,35 +48,52 @@ class EasyYOLO {
         this.setupUploadEvents();
         
         // 步驟導航事件
-        document.getElementById('nextStep1').addEventListener('click', () => this.goToStep(2));
-        document.getElementById('nextStep2').addEventListener('click', () => this.goToStep(3));
-        document.getElementById('nextStep3').addEventListener('click', () => this.goToStep(4));
+        const nextStep1 = document.getElementById('nextStep1');
+        const nextStep2 = document.getElementById('nextStep2');
+        const nextStep3 = document.getElementById('nextStep3');
+        
+        if (nextStep1) nextStep1.addEventListener('click', () => this.goToStep(2));
+        if (nextStep2) nextStep2.addEventListener('click', () => this.goToStep(3));
+        if (nextStep3) nextStep3.addEventListener('click', () => this.goToStep(4));
         
         // 標註工具事件
         this.setupAnnotationEvents();
         
         // 訓練控制事件
-        document.getElementById('startTraining').addEventListener('click', () => this.startTraining());
+        const startTraining = document.getElementById('startTraining');
+        if (startTraining) startTraining.addEventListener('click', () => this.startTraining());
         
         // 攝影機控制事件
-        document.getElementById('startWebcam').addEventListener('click', () => this.startWebcam());
-        document.getElementById('stopWebcam').addEventListener('click', () => this.stopWebcam());
+        const startWebcam = document.getElementById('startWebcam');
+        const stopWebcam = document.getElementById('stopWebcam');
+        
+        if (startWebcam) startWebcam.addEventListener('click', () => this.startWebcam());
+        if (stopWebcam) stopWebcam.addEventListener('click', () => this.stopWebcam());
         
         // 匯出模型事件
-        document.getElementById('exportModel').addEventListener('click', () => this.exportModel());
+        const exportModel = document.getElementById('exportModel');
+        if (exportModel) exportModel.addEventListener('click', () => this.exportModel());
     }
     
     setupUploadEvents() {
         const { uploadArea, fileInput } = this.elements;
         
+        if (!uploadArea || !fileInput) {
+            console.error('上傳元素未找到');
+            return;
+        }
+        
         uploadArea.addEventListener('click', () => fileInput.click());
+        
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('drag-over');
         });
+        
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('drag-over');
         });
+        
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('drag-over');
@@ -90,6 +107,8 @@ class EasyYOLO {
     
     setupAnnotationEvents() {
         const canvas = this.elements.annotationCanvas;
+        if (!canvas) return;
+        
         let isDrawing = false;
         let startX, startY;
         
@@ -110,9 +129,11 @@ class EasyYOLO {
             this.redrawAnnotationCanvas();
             
             const ctx = this.contexts.annotation;
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+            if (ctx) {
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+            }
         });
         
         canvas.addEventListener('mouseup', (e) => {
@@ -128,9 +149,13 @@ class EasyYOLO {
         });
         
         // 圖片導航事件
-        document.getElementById('prevImage').addEventListener('click', () => this.navigateImage(-1));
-        document.getElementById('nextImage').addEventListener('click', () => this.navigateImage(1));
-        document.getElementById('saveAnnotations').addEventListener('click', () => this.saveAnnotations());
+        const prevImage = document.getElementById('prevImage');
+        const nextImage = document.getElementById('nextImage');
+        const saveAnnotations = document.getElementById('saveAnnotations');
+        
+        if (prevImage) prevImage.addEventListener('click', () => this.navigateImage(-1));
+        if (nextImage) nextImage.addEventListener('click', () => this.navigateImage(1));
+        if (saveAnnotations) saveAnnotations.addEventListener('click', () => this.saveAnnotations());
     }
     
     handleFiles(files) {
@@ -155,7 +180,8 @@ class EasyYOLO {
                 this.createImagePreview(e.target.result, file.name);
                 
                 if (this.state.uploadedImages.length >= 10) {
-                    document.getElementById('nextStep1').style.display = 'inline-block';
+                    const nextButton = document.getElementById('nextStep1');
+                    if (nextButton) nextButton.style.display = 'inline-block';
                 }
             };
             reader.readAsDataURL(file);
@@ -174,8 +200,11 @@ class EasyYOLO {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.workflow-step').forEach(el => el.classList.remove('active'));
         
-        document.getElementById(`step${step}`).style.display = 'block';
-        document.querySelector(`[data-step="${step}"]`).classList.add('active');
+        const stepContent = document.getElementById(`step${step}`);
+        const workflowStep = document.querySelector(`[data-step="${step}"]`);
+        
+        if (stepContent) stepContent.style.display = 'block';
+        if (workflowStep) workflowStep.classList.add('active');
         
         this.state.currentStep = step;
         
@@ -193,6 +222,9 @@ class EasyYOLO {
         this.state.currentImageIndex = index;
         const canvas = this.elements.annotationCanvas;
         const ctx = this.contexts.annotation;
+        
+        if (!canvas || !ctx) return;
+        
         const img = new Image();
         
         img.onload = () => {
@@ -208,20 +240,27 @@ class EasyYOLO {
         img.src = this.state.uploadedImages[index].data;
         
         // 更新計數器
-        document.getElementById('imageCounter').textContent = 
-            `${index + 1}/${this.state.uploadedImages.length}`;
+        const counter = document.getElementById('imageCounter');
+        if (counter) {
+            counter.textContent = `${index + 1}/${this.state.uploadedImages.length}`;
+        }
     }
     
     redrawAnnotationCanvas() {
         const canvas = this.elements.annotationCanvas;
         const ctx = this.contexts.annotation;
+        
+        if (!canvas || !ctx) return;
+        
         const img = new Image();
         
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
             
-            const imageKey = this.state.uploadedImages[this.state.currentImageIndex].name;
+            const imageKey = this.state.uploadedImages[this.state.currentImageIndex]?.name;
+            if (!imageKey) return;
+            
             const annotations = this.state.annotations[imageKey] || [];
             
             annotations.forEach(ann => {
@@ -236,21 +275,28 @@ class EasyYOLO {
             });
         };
         
-        img.src = this.state.uploadedImages[this.state.currentImageIndex].data;
+        if (this.state.uploadedImages[this.state.currentImageIndex]) {
+            img.src = this.state.uploadedImages[this.state.currentImageIndex].data;
+        }
     }
     
     addAnnotation(startX, startY, endX, endY) {
-        const imageKey = this.state.uploadedImages[this.state.currentImageIndex].name;
+        const imageKey = this.state.uploadedImages[this.state.currentImageIndex]?.name;
+        if (!imageKey) return;
+        
         if (!this.state.annotations[imageKey]) {
             this.state.annotations[imageKey] = [];
         }
+        
+        const objectName = document.getElementById('objectName');
+        const label = objectName ? objectName.value : '物件';
         
         this.state.annotations[imageKey].push({
             x: Math.min(startX, endX),
             y: Math.min(startY, endY),
             width: Math.abs(endX - startX),
             height: Math.abs(endY - startY),
-            label: document.getElementById('objectName').value || '物件'
+            label: label
         });
     }
     
@@ -269,6 +315,8 @@ class EasyYOLO {
     initializeVisualizer() {
         const ctx = this.contexts.visualizer;
         const canvas = this.elements.visualizerCanvas;
+        
+        if (!ctx || !canvas) return;
         
         // 清空畫布
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -338,42 +386,52 @@ class EasyYOLO {
         const progressFill = document.getElementById('progressFill');
         const status = document.getElementById('trainingStatus');
         
-        // 模擬訓練過程
-        for (let epoch = 0; epoch <= 100; epoch += 5) {
-            progressFill.style.width = `${epoch}%`;
-            status.textContent = `訓練進度：${epoch}% - Epoch ${epoch / 5}/20`;
-            
-            this.animateTraining(epoch);
-            
-            await new Promise(resolve => setTimeout(resolve, 200));
+        // 初始化視覺化器
+        if (!this.visualizer && typeof YOLOVisualizer !== 'undefined') {
+            this.visualizer = new YOLOVisualizer({
+                canvasId: 'visualizerCanvas',
+                chartCanvasId: 'chartCanvas'
+            });
         }
         
-        status.textContent = '訓練完成！';
-        button.textContent = '重新訓練';
-        button.disabled = false;
-        document.getElementById('nextStep3').style.display = 'inline-block';
+        // 開始視覺化動畫
+        if (this.visualizer) {
+            this.visualizer.animateTraining(10000);
+        }
         
-        await this.loadPretrainedModel();
+        // 模擬訓練過程（非阻塞）
+        const trainStep = async (epoch) => {
+            if (epoch > 100) {
+                // 訓練完成
+                status.textContent = '訓練完成！';
+                button.textContent = '重新訓練';
+                button.disabled = false;
+                document.getElementById('nextStep3').style.display = 'inline-block';
+                
+                // 載入預訓練模型
+                await this.loadPretrainedModel();
+                
+                this.state.isTraining = false;
+                return;
+            }
+            
+            // 更新進度
+            progressFill.style.width = `${epoch}%`;
+            status.textContent = `訓練進度：${epoch}% - Epoch ${Math.floor(epoch / 5)}/20`;
+            
+            // 使用 requestAnimationFrame 確保流暢
+            requestAnimationFrame(() => {
+                setTimeout(() => trainStep(epoch + 5), 100);
+            });
+        };
         
-        this.state.isTraining = false;
-    }
-    
-    animateTraining(progress) {
-        const ctx = this.contexts.visualizer;
-        const canvas = this.elements.visualizerCanvas;
+        // 開始訓練
+        trainStep(0);
         
-        // 重繪網路
-        this.drawNeuralNetwork(ctx);
-        
-        // 添加進度動畫效果
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
-        gradient.addColorStop(progress / 100, 'rgba(102, 126, 234, 0.8)');
-        gradient.addColorStop(progress / 100 + 0.1, 'rgba(102, 126, 234, 0.3)');
-        gradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 監聽訓練完成事件
+        window.addEventListener('trainingComplete', (event) => {
+            console.log('訓練完成事件:', event.detail);
+        }, { once: true });
     }
     
     async loadPretrainedModel() {
@@ -402,6 +460,8 @@ class EasyYOLO {
         const video = this.elements.webcam;
         const canvas = this.elements.detectionCanvas;
         
+        if (!video || !canvas) return;
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { width: 640, height: 480 } 
@@ -409,8 +469,11 @@ class EasyYOLO {
             video.srcObject = stream;
             this.state.webcamStream = stream;
             
-            document.getElementById('startWebcam').style.display = 'none';
-            document.getElementById('stopWebcam').style.display = 'inline-block';
+            const startButton = document.getElementById('startWebcam');
+            const stopButton = document.getElementById('stopWebcam');
+            
+            if (startButton) startButton.style.display = 'none';
+            if (stopButton) stopButton.style.display = 'inline-block';
             
             video.addEventListener('loadedmetadata', () => {
                 canvas.width = video.videoWidth;
@@ -434,12 +497,17 @@ class EasyYOLO {
             this.state.webcamStream = null;
         }
         
-        document.getElementById('startWebcam').style.display = 'inline-block';
-        document.getElementById('stopWebcam').style.display = 'none';
+        const startButton = document.getElementById('startWebcam');
+        const stopButton = document.getElementById('stopWebcam');
+        
+        if (startButton) startButton.style.display = 'inline-block';
+        if (stopButton) stopButton.style.display = 'none';
         
         const ctx = this.contexts.detection;
-        ctx.clearRect(0, 0, this.elements.detectionCanvas.width, 
-                      this.elements.detectionCanvas.height);
+        if (ctx && this.elements.detectionCanvas) {
+            ctx.clearRect(0, 0, this.elements.detectionCanvas.width, 
+                          this.elements.detectionCanvas.height);
+        }
     }
     
     async detectObjects() {
@@ -447,6 +515,8 @@ class EasyYOLO {
         const canvas = this.elements.detectionCanvas;
         const ctx = this.contexts.detection;
         const resultsDiv = document.getElementById('detectionResults');
+        
+        if (!video || !canvas || !ctx) return;
         
         const detect = async () => {
             if (!video.srcObject) return;
@@ -459,7 +529,8 @@ class EasyYOLO {
                 predictions.boxes.forEach((box, i) => {
                     const [x, y, width, height] = box;
                     const score = predictions.scores[i];
-                    const className = document.getElementById('objectName').value || '物件';
+                    const objectName = document.getElementById('objectName');
+                    const className = objectName ? objectName.value : '物件';
                     
                     // 繪製偵測框
                     ctx.strokeStyle = '#00ff00';
@@ -480,11 +551,13 @@ class EasyYOLO {
                 });
                 
                 // 更新偵測結果
-                resultsDiv.innerHTML = `
-                    <p>偵測到 ${predictions.boxes.length} 個物件</p>
-                    <p>信心度：${(predictions.scores[0] * 100).toFixed(1)}%</p>
-                    <p>類別：${document.getElementById('objectName').value || '物件'}</p>
-                `;
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = `
+                        <p>偵測到 ${predictions.boxes.length} 個物件</p>
+                        <p>信心度：${(predictions.scores[0] * 100).toFixed(1)}%</p>
+                        <p>類別：${document.getElementById('objectName')?.value || '物件'}</p>
+                    `;
+                }
             }
             
             requestAnimationFrame(detect);
@@ -499,7 +572,7 @@ class EasyYOLO {
                 name: 'EasyYOLO 自訂模型',
                 version: '1.0',
                 trainDate: new Date().toISOString(),
-                classes: [document.getElementById('objectName').value || '物件']
+                classes: [document.getElementById('objectName')?.value || '物件']
             },
             annotations: this.state.annotations,
             trainingParams: {
@@ -562,4 +635,8 @@ const utils = {
 // 匯出給其他模組使用
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { EasyYOLO, utils };
+} else {
+    // 確保類在全域範圍內可用
+    window.EasyYOLO = EasyYOLO;
+    window.utils = utils;
 }
