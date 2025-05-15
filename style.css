@@ -96,14 +96,14 @@ html, body {
   padding-left: 6px;
 }
 
-/* main content */
 .main-content {
-  margin-left: 260px;
   flex-grow: 1;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
+  background-color: #ffffff;
 }
 
 /* workspace card */
