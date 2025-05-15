@@ -1,0 +1,363 @@
+:root {
+    --sidebar-bg: #1a1d21; /* Adjusted darker shade */
+    --sidebar-text: #c5c7c9;
+    --sidebar-hover-bg: #2c313a;
+    --sidebar-active-bg: #6a0dad; /* Purple accent */
+    --sidebar-active-text: #ffffff;
+    --main-bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+    --primary-purple: #7e22ce; /* Roboflow Purple */
+    --light-purple-bg: #f3e8ff; /* Light purple for some backgrounds */
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--main-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+    padding: 0 20px 20px 20px;
+    border-bottom: 1px solid #333842; /* Darker border */
+}
+
+.sidebar-header .logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.sidebar-header .plan-info {
+    font-size: 12px;
+    color: #8a919f; /* Lighter grey */
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-nav ul, .sidebar-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li a, .sidebar-footer li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav li a:hover, .sidebar-footer li a:hover {
+    background-color: var(--sidebar-hover-bg);
+    color: #ffffff;
+}
+
+.sidebar-nav li.active a {
+    background-color: var(--primary-purple);
+    color: var(--sidebar-active-text);
+    border-left: 3px solid #ffffff; /* White active indicator */
+    padding-left: 17px; /* Adjust for border */
+}
+.sidebar-nav li.active a i {
+    color: var(--sidebar-active-text);
+}
+
+
+.sidebar-nav li a i, .sidebar-footer li a i.fas, .credits-info i {
+    margin-right: 12px;
+    width: 20px; /* Ensure icon alignment */
+    text-align: center;
+    color: #8a919f; /* Icon color */
+}
+.sidebar-nav li a i.arrow, .sidebar-footer li a i.arrow {
+    margin-left: auto;
+    font-size: 0.8em;
+}
+.lang-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    vertical-align: middle;
+}
+
+
+.sidebar-footer {
+    padding: 0 20px;
+    border-top: 1px solid #333842;
+}
+.sidebar-footer ul {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.credits-info {
+    padding: 15px 0;
+    font-size: 13px;
+    color: var(--sidebar-text);
+    border-top: 1px solid #333842;
+    display: flex;
+    align-items: center;
+}
+.credits-info span {
+    display: block;
+    font-size: 11px;
+    color: #8a919f;
+    margin-left: 5px;
+}
+
+.upgrade-btn {
+    width: calc(100% - 0px); /* Full width within padding */
+    padding: 10px;
+    background-color: #333842; /* Darker button */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 14px;
+}
+.upgrade-btn i {
+    margin-right: 8px;
+}
+
+.user-account {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #333842;
+}
+.user-account a {
+    font-size: 12px;
+    color: #8a919f;
+    text-decoration: none;
+    word-break: break-all;
+}
+.user-account a:hover {
+    text-decoration: underline;
+}
+
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 25px 40px; /* Increased padding */
+    overflow-y: auto;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.content-header h1 {
+    font-size: 28px; /* Larger heading */
+    margin: 0;
+    font-weight: 600;
+    color: #1e293b; /* Darker heading color */
+}
+
+.header-actions button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 12px;
+}
+.header-actions button i {
+    margin-right: 6px;
+}
+
+.invite-btn {
+    background-color: var(--light-purple-bg);
+    color: var(--primary-purple);
+    border: 1px solid var(--primary-purple); /* Border for invite button */
+}
+
+.new-project-btn {
+    background-color: var(--primary-purple);
+    color: white;
+}
+
+.controls-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    flex-grow: 1; /* Allow search bar to take more space */
+}
+
+.search-bar i {
+    color: #9ca3af; /* Lighter icon color */
+    margin-right: 8px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 14px;
+    width: 100%;
+}
+.search-bar input::placeholder {
+    color: #9ca3af;
+}
+
+.sort-dropdown {
+    position: relative;
+}
+
+.sort-dropdown button, .view-toggle-btn {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 9px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.sort-dropdown button i {
+    margin-left: 8px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--card-bg);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+    z-index: 1;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    right: 0; /* Align to the right of the button */
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.show {display: block;} /* For JS to toggle dropdown */
+
+.view-toggle-btn {
+    padding: 9px 12px; /* Slightly less padding for icon only button */
+}
+
+
+.project-list {
+    display: grid;
+    /* For a single card as in the screenshot, grid is overkill, but good for multiple */
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+    gap: 20px;
+}
+
+.project-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.project-thumbnail {
+    width: 80px; /* Increased size */
+    height: 80px;
+    background-color: #e9ecef; /* Lighter placeholder bg */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    color: #adb5bd; /* Lighter icon color */
+}
+.project-thumbnail i {
+    font-size: 32px; /* Larger icon */
+}
+
+.project-info {
+    flex-grow: 1;
+}
+
+.project-type {
+    font-size: 12px;
+    color: var(--primary-purple); /* Purple for type */
+    background-color: var(--light-purple-bg); /* Light purple bg for type */
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.project-title {
+    font-size: 18px; /* Larger title */
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #1e293b;
+}
+
+.project-meta {
+    font-size: 12px;
+    color: #6b7280; /* Muted grey */
+}
+.project-meta span {
+    margin-right: 5px;
+}
+
+
+.project-actions .more-options-btn {
+    background: none;
+    border: none;
+    color: #6b7280; /* Muted grey for icon */
+    font-size: 18px; /* Larger icon */
+    cursor: pointer;
+    padding: 5px;
+}
