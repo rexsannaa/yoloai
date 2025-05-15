@@ -1,4 +1,4 @@
-// app.js
+.preview-item:hover {// app.js
 // EasyYOLO 核心應用程式模組 - 精簡整合版
 
 class EasyYOLO {
@@ -83,23 +83,28 @@ class EasyYOLO {
             return;
         }
         
+        // 點擊上傳區域觸發檔案選擇
         uploadArea.addEventListener('click', () => fileInput.click());
         
+        // 拖曳進入
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('drag-over');
         });
         
+        // 拖曳離開
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('drag-over');
         });
         
+        // 拖放檔案
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('drag-over');
             this.handleFiles(e.dataTransfer.files);
         });
         
+        // 選擇檔案
         fileInput.addEventListener('change', (e) => {
             this.handleFiles(e.target.files);
         });
@@ -166,24 +171,44 @@ class EasyYOLO {
             return;
         }
         
+        // 清空之前的圖片
         this.state.uploadedImages = [];
         this.elements.imagePreview.innerHTML = '';
         
+        let loadedCount = 0;
+        
         imageFiles.forEach((file) => {
             const reader = new FileReader();
+            
             reader.onload = (e) => {
-                this.state.uploadedImages.push({
-                    name: file.name,
-                    data: e.target.result
-                });
-                
-                this.createImagePreview(e.target.result, file.name);
-                
-                if (this.state.uploadedImages.length >= 10) {
-                    const nextButton = document.getElementById('nextStep1');
-                    if (nextButton) nextButton.style.display = 'inline-block';
-                }
+                // 創建圖片物件來取得尺寸
+                const img = new Image();
+                img.onload = () => {
+                    this.state.uploadedImages.push({
+                        name: file.name,
+                        data: e.target.result,
+                        width: img.width,
+                        height: img.height,
+                        file: file
+                    });
+                    
+                    this.createImagePreview(e.target.result, file.name);
+                    
+                    loadedCount++;
+                    
+                    // 檢查是否有足夠的圖片
+                    if (loadedCount === imageFiles.length) {
+                        this.updateUploadStatus();
+                    }
+                };
+                img.src = e.target.result;
             };
+            
+            reader.onerror = (error) => {
+                console.error('讀取檔案錯誤:', error);
+                alert(`無法讀取檔案: ${file.name}`);
+            };
+            
             reader.readAsDataURL(file);
         });
     }
@@ -191,8 +216,59 @@ class EasyYOLO {
     createImagePreview(src, name) {
         const previewItem = document.createElement('div');
         previewItem.className = 'preview-item';
-        previewItem.innerHTML = `<img src="${src}" alt="${name}">`;
+        
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = name;
+        img.title = name;
+        
+        // 添加刪除按鈕
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.innerHTML = '×';
+        deleteBtn.onclick = () => this.removeImage(name);
+        
+        previewItem.appendChild(img);
+        previewItem.appendChild(deleteBtn);
+        
         this.elements.imagePreview.appendChild(previewItem);
+    }
+    
+    removeImage(filename) {
+        // 從狀態中移除圖片
+        this.state.uploadedImages = this.state.uploadedImages.filter(img => img.name !== filename);
+        
+        // 更新預覽
+        const previews = this.elements.imagePreview.querySelectorAll('.preview-item');
+        previews.forEach(preview => {
+            const img = preview.querySelector('img');
+            if (img && img.alt === filename) {
+                preview.remove();
+            }
+        });
+        
+        this.updateUploadStatus();
+    }
+    
+    updateUploadStatus() {
+        const uploadArea = this.elements.uploadArea;
+        const nextButton = document.getElementById('nextStep1');
+        
+        if (this.state.uploadedImages.length >= 10) {
+            // 顯示下一步按鈕
+            if (nextButton) nextButton.style.display = 'inline-block';
+            
+            // 更新上傳區域文字
+            const h3 = uploadArea.querySelector('h3');
+            if (h3) h3.textContent = '已上傳足夠的圖片！';
+        } else {
+            // 隱藏下一步按鈕
+            if (nextButton) nextButton.style.display = 'none';
+            
+            // 更新上傳區域文字
+            const h3 = uploadArea.querySelector('h3');
+            if (h3) h3.textContent = `已上傳 ${this.state.uploadedImages.length} 張，還需要 ${10 - this.state.uploadedImages.length} 張`;
+        }
     }
     
     goToStep(step) {
@@ -228,12 +304,25 @@ class EasyYOLO {
         const img = new Image();
         
         img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
+            // 調整畫布大小以適應圖片，但不超過最大值
+            const maxWidth = 800;
+            const maxHeight = 600;
+            
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width *= ratio;
+                height *= ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
             canvas.style.maxWidth = '100%';
             canvas.style.height = 'auto';
             
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(img, 0, 0, width, height);
             this.redrawAnnotationCanvas();
         };
         
@@ -256,7 +345,7 @@ class EasyYOLO {
         
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             const imageKey = this.state.uploadedImages[this.state.currentImageIndex]?.name;
             if (!imageKey) return;
@@ -268,10 +357,15 @@ class EasyYOLO {
                 ctx.lineWidth = 2;
                 ctx.strokeRect(ann.x, ann.y, ann.width, ann.height);
                 
-                // 繪製標籤 - 確保繁體中文正確顯示
-                ctx.fillStyle = 'green';
+                // 繪製標籤背景
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+                const textWidth = ctx.measureText(ann.label).width;
+                ctx.fillRect(ann.x, ann.y - 20, textWidth + 10, 20);
+                
+                // 繪製標籤文字 - 確保繁體中文正確顯示
+                ctx.fillStyle = 'white';
                 ctx.font = '14px "Microsoft JhengHei", "微軟正黑體", sans-serif';
-                ctx.fillText(ann.label, ann.x, ann.y - 5);
+                ctx.fillText(ann.label, ann.x + 5, ann.y - 5);
             });
         };
         
@@ -284,6 +378,15 @@ class EasyYOLO {
         const imageKey = this.state.uploadedImages[this.state.currentImageIndex]?.name;
         if (!imageKey) return;
         
+        // 確保框的尺寸不為零
+        const width = Math.abs(endX - startX);
+        const height = Math.abs(endY - startY);
+        
+        if (width < 10 || height < 10) {
+            alert('請框選更大的區域');
+            return;
+        }
+        
         if (!this.state.annotations[imageKey]) {
             this.state.annotations[imageKey] = [];
         }
@@ -294,8 +397,8 @@ class EasyYOLO {
         this.state.annotations[imageKey].push({
             x: Math.min(startX, endX),
             y: Math.min(startY, endY),
-            width: Math.abs(endX - startX),
-            height: Math.abs(endY - startY),
+            width: width,
+            height: height,
             label: label
         });
     }
@@ -309,7 +412,7 @@ class EasyYOLO {
     
     saveAnnotations() {
         localStorage.setItem('easyYoloAnnotations', JSON.stringify(this.state.annotations));
-        alert('標註已儲存');
+        alert('標註已儲存！');
     }
     
     initializeVisualizer() {
@@ -324,7 +427,8 @@ class EasyYOLO {
         // 設定繁體中文字體
         ctx.font = '20px "Microsoft JhengHei", "微軟正黑體", sans-serif';
         ctx.fillStyle = '#333';
-        ctx.fillText('YOLO神經網路訓練視覺化', 250, 30);
+        ctx.textAlign = 'center';
+        ctx.fillText('YOLO神經網路訓練視覺化', canvas.width / 2, 30);
         
         this.drawNeuralNetwork(ctx);
     }
@@ -443,7 +547,7 @@ class EasyYOLO {
                 predict: (input) => {
                     // 模擬預測結果
                     const randomX = Math.random() * 400 + 50;
-                    const randomY = Math.random() * 300 + 50;
+                    const randomY = Math.random() * 200 + 50;
                     return {
                         boxes: [[randomX, randomY, 100, 100]],
                         scores: [0.75 + Math.random() * 0.20],
