@@ -26,9 +26,10 @@
     </ul>
 
     <!-- 帳戶資訊 -->
+  <!-- 底部區域頭像和用戶信息 -->
     <div class="sidebar-footer">
       <div class="user-info" onclick="togglePopup('account-menu', this)">
-        <div class="user-avatar" id="user-avatar">名</div>
+        <div class="user-avatar" id="user-avatar">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -78,7 +79,10 @@
       document.getElementById("user-email").textContent = email;
       document.getElementById("menu-username").textContent = name;
       document.getElementById("menu-email").textContent = email;
-      document.getElementById("user-avatar").textContent = name.charAt(0) || "名";
+      
+      // 使用完整的第一個漢字作為頭像文字
+      const firstChar = name.charAt(0) || "測";
+      document.getElementById("user-avatar").textContent = firstChar;
     });
 
     function togglePopup(id, anchor) {
