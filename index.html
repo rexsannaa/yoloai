@@ -83,38 +83,57 @@
 
     function togglePopup(id, anchor) {
       const popup = document.getElementById(id);
-      const rect = anchor.getBoundingClientRect();
       const isVisible = popup.style.display === 'block';
 
+      // 先隱藏所有
       document.querySelectorAll('.settings-popup, #account-menu').forEach(p => p.style.display = 'none');
 
       if (!isVisible) {
+        // 暫時顯示，取得準確高度
+        popup.style.visibility = 'hidden';
+        popup.style.display = 'block';
+
+        const rect = anchor.getBoundingClientRect();
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const popupWidth = popup.offsetWidth || 260;
-        const popupHeight = popup.offsetHeight || 240;
+        const popupWidth = popup.offsetWidth;
+        const popupHeight = popup.offsetHeight;
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
 
-        let top = rect.bottom + scrollTop - 6; // 微上移
+        let top;
         let left = rect.right + 10;
 
-        // 若右側超出畫面，向左彈出
+        // 若右邊會超出畫面，就往左彈出
         if (left + popupWidth > screenWidth) {
           left = rect.left - popupWidth - 10;
         }
 
-        // 若下方超出畫面，向上彈出
-        if (top + popupHeight > scrollTop + screenHeight - 12) {
-          top = rect.top + scrollTop - popupHeight - 6;
+        // 若是帳戶選單，永遠往上彈出，並保證不貼頂
+        if (id === 'account-menu') {
+          top = rect.top + scrollTop - popupHeight - 8;
+          if (top < scrollTop + 8) {
+            top = scrollTop + 8;
+          }
+        } else {
+          // 設定彈窗可智慧上下切換
+          top = rect.bottom + scrollTop + 6;
+          if (top + popupHeight > scrollTop + screenHeight - 12) {
+            top = rect.top + scrollTop - popupHeight - 6;
+          }
         }
 
+        // 設定正確位置
         popup.style.top = `${top}px`;
         popup.style.left = `${left}px`;
-        popup.style.maxHeight = `${screenHeight - 20}px`;
+        popup.style.maxHeight = `${screenHeight - 40}px`;
         popup.style.overflowY = 'auto';
-        popup.style.display = 'block';
+
+        // 真正顯示
+        popup.style.visibility = 'visible';
       }
     }
+
+
 
     function logout() {
       localStorage.clear();

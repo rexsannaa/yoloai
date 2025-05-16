@@ -68,7 +68,7 @@ html, body {
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  flex-wrap: wrap;        /* ⭐ 允許帳號名稱換行 */
+  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -76,9 +76,9 @@ html, body {
   flex: 1;
   min-width: 0;
   word-break: break-word;
-  max-width: calc(100% - 42px); /* 減去 avatar + margin */
 }
 
+/* === 頭像樣式 === */
 .user-avatar {
   width: 32px;
   height: 32px;
@@ -92,7 +92,7 @@ html, body {
   margin-right: 10px;
 }
 
-/* === 主區域 === */
+/* === 主內容 === */
 .main-content {
   margin-left: 260px;
   flex: 1;
@@ -175,7 +175,7 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* === 彈窗與帳戶選單 === */
+/* === 彈窗 === */
 #account-menu, .settings-popup {
   display: none;
   position: absolute;
@@ -194,12 +194,8 @@ html, body {
   word-break: break-word;
 }
 
-
 #account-menu {
-  transform: translateY(-6px); /* 微調向上 */
-  max-height: calc(100vh - 24px); /* 保證彈窗不超出畫面下緣 */
-  overflow-y: auto;
-  box-sizing: border-box;
+  transform: translateY(-06px); /* 微調更自然 */
 }
 
 #account-menu div, .settings-popup div {
@@ -217,7 +213,7 @@ html, body {
   margin-bottom: 10px;
 }
 
-/* === 動畫效果 === */
+/* === 動畫 === */
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
@@ -257,6 +253,6 @@ html, body {
   .settings-popup {
     left: 50% !important;
     top: 80px !important;
-    transform: translateX(-50%);
+    transform: translateX(-50%) !important;
   }
 }
