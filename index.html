@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -10,42 +9,47 @@
 </head>
 <body>
 
+  <!-- 側邊欄 -->
   <div class="sidebar">
     <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
       <li><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li><span>公共計畫</span><span>&gt;</span></li>
       <li class="active"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
-      <li><span><i class="fas fa-cogs"></i> 工作流程</span></li>
-      <li><span><i class="fas fa-chart-line"></i> 監控</span></li>
-      <li><span><i class="fas fa-rocket"></i> 部署</span></li>
-      <li><span><i class="fas fa-compass"></i> 探索</span></li>
-      <li><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+      <li onclick="showComingSoon()"><span><i class="fas fa-cogs"></i> 工作流程</span></li>
+      <li onclick="showComingSoon()"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li onclick="showComingSoon()"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li onclick="showComingSoon()"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" onclick="togglePopup('settings-popup', this)">
+        <span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span>
+      </li>
     </ul>
 
+    <!-- 帳戶資訊 -->
     <div class="sidebar-footer">
-      <div class="user-info" onclick="toggleAccountMenu()">
-        <div style="display: flex; align-items: center;">
-          <div class="user-avatar" id="user-avatar">名</div>
-          <div>
-            <div id="user-name"><strong>測試帳戶</strong></div>
-            <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
-          </div>
+      <div class="user-info" onclick="togglePopup('account-menu', this)">
+        <div class="user-avatar" id="user-avatar">名</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
         </div>
       </div>
-
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
         <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
         <hr style="margin: 10px 0;">
-        <div onclick="alert('尚未開放')">⚙ 帳戶設定</div>
+        <div onclick="showComingSoon()">⚙ 我的帳戶</div>
+        <div onclick="showComingSoon()">🗂 工作區管理</div>
+        <div onclick="showComingSoon()">💳 訂閱方案</div>
+        <div onclick="showComingSoon()">📊 使用紀錄</div>
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
   </div>
 
-  <div class="main-content">
-    <div class="workspace-container card animated">
+  <!-- 主內容 -->
+  <main class="main-content">
+    <section class="workspace-container card animated fade-slide">
       <img src="./icon/01.png" alt="沒有專案">
       <h2>此工作區中沒有專案。</h2>
       <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
@@ -53,9 +57,19 @@
         <a href="#" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
         <a href="#" class="btn btn-secondary"><i class="fas fa-book-open"></i> 檢視教學</a>
       </div>
-    </div>
+    </section>
+  </main>
+
+  <!-- 設定彈窗 -->
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div onclick="showComingSoon()">🧾 訂閱方案與帳單</div>
+    <div onclick="showComingSoon()">💰 點數使用情況</div>
+    <div onclick="showComingSoon()">👥 使用者管理</div>
+    <div onclick="showComingSoon()">🔑 API 金鑰</div>
   </div>
 
+  <!-- Script -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const name = localStorage.getItem("username") || "測試帳戶";
@@ -67,25 +81,64 @@
       document.getElementById("user-avatar").textContent = name.charAt(0) || "名";
     });
 
-    function toggleAccountMenu() {
-      const menu = document.getElementById('account-menu');
-      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    }
+    function togglePopup(id, anchor) {
+      const popup = document.getElementById(id);
+      const rect = anchor.getBoundingClientRect();
+      const isVisible = popup.style.display === 'block';
 
-    document.addEventListener('click', function (e) {
-      const menu = document.getElementById('account-menu');
-      const avatar = document.querySelector('.user-info');
-      if (menu && !menu.contains(e.target) && !avatar.contains(e.target)) {
-        menu.style.display = 'none';
+      document.querySelectorAll('.settings-popup, #account-menu').forEach(p => p.style.display = 'none');
+
+      if (!isVisible) {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const popupWidth = popup.offsetWidth || 260;
+        const popupHeight = popup.offsetHeight || 240;
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        let top = rect.bottom + scrollTop - 6; // 微上移
+        let left = rect.right + 10;
+
+        // 若右側超出畫面，向左彈出
+        if (left + popupWidth > screenWidth) {
+          left = rect.left - popupWidth - 10;
+        }
+
+        // 若下方超出畫面，向上彈出
+        if (top + popupHeight > scrollTop + screenHeight - 12) {
+          top = rect.top + scrollTop - popupHeight - 6;
+        }
+
+        popup.style.top = `${top}px`;
+        popup.style.left = `${left}px`;
+        popup.style.maxHeight = `${screenHeight - 20}px`;
+        popup.style.overflowY = 'auto';
+        popup.style.display = 'block';
       }
-    });
+    }
 
     function logout() {
       localStorage.clear();
       window.location.href = "login.html";
     }
-  </script>
 
+    function showComingSoon() {
+      alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
+    }
+
+    document.addEventListener('click', function (e) {
+      const accountMenu = document.getElementById('account-menu');
+      const settingsPopup = document.getElementById('settings-popup');
+      const userInfo = document.querySelector('.user-info');
+      const settingsToggle = document.getElementById('settings-toggle');
+
+      if (
+        !accountMenu.contains(e.target) && !userInfo.contains(e.target) &&
+        !settingsPopup.contains(e.target) && !settingsToggle.contains(e.target)
+      ) {
+        accountMenu.style.display = 'none';
+        settingsPopup.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
-
