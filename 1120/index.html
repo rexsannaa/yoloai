@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li onclick="navigateTo('1120', this)"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li onclick="navigateTo('public-projects', this)"><span>公共計畫</span><span>&gt;</span></li>
+      <li id="projects-link" onclick="showProjectsView(this)"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="workflows-link" onclick="showWorkflowsView(this)"><span><i class="fas fa-cogs"></i> 工作流</span></li>
+      <li onclick="showComingSoon(this)"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li onclick="showComingSoon(this)"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li onclick="showComingSoon(this)"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" onclick="togglePopup('settings-popup', this)">
+        <span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" onclick="togglePopup('account-menu', this)">
+        <div class="user-avatar" id="user-avatar">測</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+        </div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
+        <div onclick="showComingSoon()">⚙ 我的帳戶</div>
+        <div onclick="showComingSoon()">🗂 工作區管理</div>
+        <div onclick="showComingSoon()">💳 訂閱方案</div>
+        <div onclick="showComingSoon()">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content" id="mainContentArea">
+    </main>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div onclick="showComingSoon()">🧾 訂閱方案與帳單</div>
+    <div onclick="showComingSoon()">💰 點數使用情況</div>
+    <div onclick="showComingSoon()">👥 使用者管理</div>
+    <div onclick="showComingSoon()">🔑 API 金鑰</div>
+  </div>
+
+  <script>
+    const mainContentArea = document.getElementById('mainContentArea');
+
+    function setActiveLink(element) {
+      document.querySelectorAll('.sidebar-menu li').forEach(li => {
+        li.classList.remove('active'); // 使用您 CSS 中定義的 active class
+      });
+      if (element) {
+        element.classList.add('active'); // 使用您 CSS 中定義的 active class
+      }
+    }
+
+    function showProjectsView(element) {
+      setActiveLink(element);
+      mainContentArea.innerHTML = `
+      <section class="workspace-container card animated fade-slide">
+        <img src="./icon/01.png" alt="沒有專案">
+        <h2>此工作區中沒有專案。</h2>
+        <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
+        <div>
+          <a href="#" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
+          <a href="#" class="btn btn-secondary"><i class="fas fa-book-open"></i> 檢視教學</a>
+        </div>
+      </section>
+      `;
+      // 確保動畫class在內容插入後添加，以觸發動畫
+      const newContent = mainContentArea.querySelector('.workspace-container');
+      if (newContent) {
+        // 稍微延遲添加動畫class，確保DOM更新完成
+        setTimeout(() => {
+            newContent.classList.add('fadeSlideUp'); // 使用您CSS中定義的動畫
+        }, 0);
+      }
+    }
+
+    function showWorkflowsView(element) {
+      setActiveLink(element);
+      mainContentArea.innerHTML = `
+      <div class="workflow-page-container animated fade-slide"> <div class="workflow-header">
+            <h2><i class="fas fa-cogs" style="margin-right: 10px;"></i>Workflows 工作流程</h2>
+            <div class="workflow-actions">
+                <input type="text" class="search-bar" placeholder="&#xF002; Search workflows..."> <a href="#" class="btn btn-outline" style="margin-right: 10px;" onclick="showComingSoon(this)"><i class="fas fa-layer-group"></i> Explore templates</a>
+                <a href="#" class="btn btn-primary" onclick="showComingSoon(this)"><i class="fas fa-plus"></i> Create Workflow</a>
+            </div>
+        </div>
+        <div class="workflow-content">
+            <div class="workflow-grid">
+                <div class="workflow-card">
+                    <div class="workflow-card-header">
+                        <h3>Custom Workflow 自訂工作流程</h3>
+                        <i class="fas fa-ellipsis-h" onclick="showComingSoon()"></i>
+                    </div>
+                    <div class="workflow-card-image-placeholder" style="padding: 10px;"> <img src="./icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <p>點擊以編輯或查看此自訂工作流程的詳細資訊。</p>
+                </div>
+                </div>
+        </div>
+      </div>
+      `;
+      // 確保動畫class在內容插入後添加
+      const newContent = mainContentArea.querySelector('.workflow-page-container');
+      if (newContent) {
+         setTimeout(() => {
+            newContent.classList.add('fadeSlideUp'); // 或其他您希望的動畫
+        }, 0);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const name = localStorage.getItem("username") || "測試帳戶";
+      const email = localStorage.getItem("email") || "test@demo.com";
+      document.getElementById("user-name").innerHTML = `<strong>${name}</strong>`; // 確保 strong 標籤正確應用
+      document.getElementById("user-email").textContent = email;
+      document.getElementById("menu-username").innerHTML = `<strong>${name}</strong>`;
+      document.getElementById("menu-email").textContent = email;
+
+      const firstChar = name.charAt(0) || "測";
+      document.getElementById("user-avatar").textContent = firstChar;
+
+      showProjectsView(document.getElementById('projects-link'));
+    });
+
+    function togglePopup(id, anchor) {
+      const popup = document.getElementById(id);
+      const isVisible = popup.style.display === 'block';
+      document.querySelectorAll('.settings-popup, #account-menu').forEach(p => p.style.display = 'none');
+      if (!isVisible) {
+        popup.style.visibility = 'hidden';
+        popup.style.display = 'block';
+        const rect = anchor.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const popupWidth = popup.offsetWidth;
+        const popupHeight = popup.offsetHeight;
+        const screenHeight = window.innerHeight;
+        let top = Math.max(10, Math.min(rect.top + rect.height / 2 - popupHeight / 2 + scrollTop, window.innerHeight - popupHeight - 10));
+        let left = 260 + 10; // 側邊欄寬度 + 一些間距
+        popup.style.top = `${top}px`;
+        popup.style.left = `${left}px`;
+        popup.style.maxHeight = `${screenHeight - 40}px`;
+        popup.style.overflowY = 'auto';
+        popup.style.visibility = 'visible';
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    function showComingSoon(element) { // 允許傳入 element 以便將來做高亮等操作
+        if (element && typeof element.classList !== 'undefined' && !element.classList.contains('active')) {
+            // 如果需要，可以在這裡臨時高亮 "Coming Soon" 的項目，但通常不需要
+        }
+      alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
+    }
+
+    function navigateTo(pageName, element) {
+      setActiveLink(element);
+      showComingSoon(); // 目前其他頁面都顯示 "Coming Soon"
+      console.log("Navigating to: " + pageName);
+    }
+
+    document.addEventListener('click', function (e) {
+      const accountMenu = document.getElementById('account-menu');
+      const settingsPopup = document.getElementById('settings-popup');
+      const userInfo = document.querySelector('.user-info');
+      const settingsToggle = document.getElementById('settings-toggle');
+
+      let isClickInsideAccount = accountMenu.contains(e.target) || (userInfo && userInfo.contains(e.target));
+      let isClickInsideSettings = settingsPopup.contains(e.target) || (settingsToggle && settingsToggle.contains(e.target));
+
+      if (!isClickInsideAccount) {
+        accountMenu.style.display = 'none';
+      }
+      if (!isClickInsideSettings) {
+        settingsPopup.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

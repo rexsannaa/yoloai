@@ -1,4 +1,4 @@
-<!-- login.html -->
+<!-- login.html - 優化版 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -15,10 +15,10 @@
 
     <div id="error" class="error-message">❌ 帳號或密碼錯誤</div>
 
-    <input type="text" id="username" placeholder="帳號 (admin)">
-    <input type="password" id="password" placeholder="密碼 (stustai)">
+    <input type="text" id="username" placeholder="帳號 (admin)" autocomplete="username">
+    <input type="password" id="password" placeholder="密碼 (stustai)" autocomplete="current-password">
 
-    <button class="login-btn" onclick="login()" id="login-btn">
+    <button class="login-btn" id="login-btn">
       登入
       <div class="spinner" id="spinner"></div>
     </button>
@@ -29,28 +29,63 @@
   </div>
 
   <script>
-    function login() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      const errorMsg = document.getElementById('error');
-      const spinner = document.getElementById('spinner');
+    // 獲取DOM元素
+    const elements = {
+      username: document.getElementById('username'),
+      password: document.getElementById('password'),
+      error: document.getElementById('error'),
+      spinner: document.getElementById('spinner'),
+      loginBtn: document.getElementById('login-btn')
+    };
 
-      errorMsg.style.display = "none";
-      spinner.style.display = "block";
+    // 表單輸入事件 - 按Enter鍵登入
+    function setupFormEvents() {
+      const form = [elements.username, elements.password];
+      form.forEach(input => {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') handleLogin();
+        });
+      });
+      
+      elements.loginBtn.addEventListener('click', handleLogin);
+    }
 
+    // 登入處理
+    function handleLogin() {
+      const user = elements.username.value.trim();
+      const pass = elements.password.value.trim();
+      
+      // 隱藏錯誤訊息並顯示載入動畫
+      elements.error.style.display = "none";
+      elements.spinner.style.display = "block";
+
+      // 驗證登入資訊
       setTimeout(() => {
-        if (user === "" || (user === "admin" && pass === "stustai")) {
-          const username = user || "測試帳戶";
-          const email = user ? `${user}@demo.com` : "test@demo.com";
-          localStorage.setItem("username", username);
-          localStorage.setItem("email", email);
+        if (isValidLogin(user, pass)) {
+          saveUserInfo(user);
           window.location.href = "index.html";
         } else {
-          spinner.style.display = "none";
-          errorMsg.style.display = "block";
+          elements.spinner.style.display = "none";
+          elements.error.style.display = "block";
         }
       }, 600);
     }
+
+    // 驗證登入
+    function isValidLogin(user, pass) {
+      return user === "" || (user === "admin" && pass === "stustai");
+    }
+
+    // 儲存使用者資訊
+    function saveUserInfo(user) {
+      const username = user || "測試帳戶";
+      const email = user ? `${user}@demo.com` : "test@demo.com";
+      localStorage.setItem("username", username);
+      localStorage.setItem("email", email);
+    }
+
+    // 頁面載入時初始化
+    document.addEventListener('DOMContentLoaded', setupFormEvents);
   </script>
 
 </body>
