@@ -9,7 +9,7 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: row;
-  background: linear-gradient(135deg, #f0f4ff, #dbeafe);
+  background: #f0f4ff; /* 簡化背景為單色，以匹配內容區域 */
   overflow: hidden;
 }
 
@@ -30,6 +30,7 @@ html, body {
   font-weight: bold;
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.1em; /* 稍微調整字體大小 */
 }
 
 .sidebar-menu {
@@ -43,19 +44,28 @@ html, body {
   padding: 14px 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center; /* 確保 > 圖示垂直居中 */
   cursor: pointer;
   border-left: 4px solid transparent;
   transition: all 0.3s ease;
+  font-size: 0.95em; /* 調整菜單項字體大小 */
+}
+
+.sidebar-menu li .fas { /* 給圖標一點右邊距 */
+    margin-right: 10px;
 }
 
 .sidebar-menu li:hover {
   background: rgba(255, 255, 255, 0.08);
-  padding-left: 24px;
+  /* padding-left: 24px; */ /* 移除以避免文字跳動，改用邊框 */
+  border-left-color: #5fa8ff; /* 懸停時的邊框顏色 */
 }
 
 .sidebar-menu li.active {
-  background: rgba(255, 255, 255, 0.15);
-  border-left-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.2); /* 使用更明顯的藍色調背景 */
+  border-left-color: #3b82f6; /* Roboflow 風格的藍色 */
+  color: #eff6ff; /* 活動時文字顏色更亮 */
+  font-weight: 500; /* 活動時文字稍粗 */
 }
 
 .sidebar-footer {
@@ -78,7 +88,6 @@ html, body {
   word-break: break-word;
 }
 
-/* === 底部區域頭像樣式 - 完美正圓形 === */
 .sidebar-footer .user-avatar {
   width: 40px;
   height: 40px;
@@ -90,80 +99,59 @@ html, body {
   justify-content: center;
   font-weight: bold;
   font-size: 16px;
-  margin-right: 10px;
+  /* margin-right: 10px; */ /* gap 屬性已處理間距 */
   aspect-ratio: 1 / 1;
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* 確保底部區域的用戶信息布局正確 */
-.sidebar-footer .user-info {
-  display: flex;
-  align-items: center;
-}
-
-/* 正圓形頭像通用樣式 */
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  min-width: 40px; /* 確保不會被壓縮 */
-  min-height: 40px; /* 確保不會被壓縮 */
-  border-radius: 50%;
-  background: #4f46e5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 16px;
-  aspect-ratio: 1;
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
 /* === 主內容 === */
 .main-content {
   margin-left: 260px;
   flex: 1;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  min-height: 100vh; /* 確保內容區域至少和視窗一樣高 */
+  display: flex; /* 改為 flex，方便內容垂直居中（如果需要）或對齊 */
+  flex-direction: column; /* 讓內容元素垂直排列 */
+  align-items: stretch; /* 讓子元素在交叉軸上拉伸，如果workflow-page-container想全寬*/
+  justify-content: flex-start; /* 從頂部開始對齊 */
+  padding: 20px; /* 統一內邊距 */
   box-sizing: border-box;
-  background-color: #f0f4ff;
+  background-color: #f8f9fa; /* 淺灰色背景，類似 Roboflow */
   transition: all 0.4s ease;
+  overflow-y: auto; /* 如果內容超出，允許滾動 */
 }
 
-/* === 卡片容器 === */
-.workspace-container {
+/* === 卡片容器 (專案視圖) === */
+.workspace-container.card { /* 添加 .card 以區分 */
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
-  padding: 48px 32px;
-  max-width: 720px;
+  border-radius: 12px; /* 調整圓角 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* 調整陰影 */
+  padding: 40px 32px; /* 調整內邊距 */
+  max-width: 680px; /* 調整最大寬度 */
   width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  animation: fadeSlideUp 0.6s ease-out both;
+  gap: 20px; /* 調整間距 */
+  margin: auto; /* 使其在 main-content 中居中 */
+  /* animation: fadeSlideUp 0.6s ease-out both; */ /* 動畫由JS控制 */
 }
 
 .workspace-container img {
-  width: 220px;
+  width: 180px; /* 調整圖片大小 */
   max-width: 100%;
-  opacity: 0.95;
+  opacity: 0.9;
   transition: transform 0.3s ease;
 }
 .workspace-container img:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .workspace-container h2 {
-  font-size: 1.5em;
+  font-size: 1.6em; /* 調整標題大小 */
+  color: #333;
   margin: 0;
 }
 
@@ -171,52 +159,195 @@ html, body {
   font-size: 1em;
   color: #555;
   margin: 0;
+  line-height: 1.6;
 }
 
-/* === 按鈕樣式 === */
+/* === 按鈕樣式 (通用及專案視圖) === */
 .btn {
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px 18px; /* 調整內邊距 */
+  border-radius: 6px; /* 調整圓角 */
   font-weight: 500;
-  font-size: 1em;
+  font-size: 0.95em; /* 調整字體大小 */
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex; /* 改為 inline-flex 以便圖標和文字對齊 */
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease-in-out;
   margin: 8px;
+  border: 1px solid transparent; /* 為 outline 按鈕準備 */
+  cursor: pointer;
+}
+.btn .fas { /* 按鈕內圖標的右邊距 */
+    margin-right: 8px;
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: #2563eb; /* 主要藍色 */
   color: white;
-  border: none;
 }
 .btn-primary:hover {
-  background: #1d4ed8;
+  background: #1d4ed8; /* 深一點的藍色 */
   transform: translateY(-1px);
 }
 
-.btn-secondary {
-  border: 1px solid #2563eb;
-  color: #2563eb;
-  background: transparent;
+.btn-secondary { /* 用於專案視圖的次要按鈕 */
+  border: 1px solid #cbd5e1; /* 淺灰色邊框 */
+  color: #0f172a; /* 深色文字 */
+  background: white;
 }
 .btn-secondary:hover {
-  background: #dbeafe;
+  background: #f8fafc; /* 非常淺的灰色背景 */
+  border-color: #94a3b8;
   transform: translateY(-1px);
 }
 
-/* === 彈窗 - 修改為左側彈出 === */
+/* === 工作流頁面專用樣式 === */
+.workflow-page-container {
+    width: 100%;
+    max-width: 1200px; /* 限制最大寬度，使其在寬螢幕上更美觀 */
+    margin: 0 auto; /* 水平居中 */
+    padding: 0 15px; /* 左右留白 */
+    box-sizing: border-box;
+    /* animation: fadeSlideUp 0.5s ease-out; */ /* 動畫由JS控制 */
+}
+
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px; /* 增加底部間距 */
+  padding: 10px 0; /* 移除左右padding，由父容器控制 */
+  background-color: transparent; /* 背景透明，使用main-content的背景 */
+  border-bottom: 1px solid #e5e7eb; /* 淺灰色分隔線 */
+}
+
+.workflow-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #111827; /* 更深的黑色 */
+  font-weight: 600; /* 加粗 */
+}
+
+.workflow-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 動作之間的間距 */
+}
+
+.workflow-actions .search-bar {
+  padding: 9px 14px; /* 調整搜索框內邊距 */
+  border: 1px solid #d1d5db; /* 邊框顏色 */
+  border-radius: 6px;
+  font-size: 0.9em;
+  width: 280px;
+  background-color: #fff; /* 白色背景 */
+  font-family: 'Font Awesome 6 Free', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* 確保能顯示圖標字體 */
+}
+.workflow-actions .search-bar::placeholder {
+  color: #9ca3af; /* placeholder 顏色 */
+}
+.workflow-actions .search-bar:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.btn-outline { /* 用於 "Explore templates" 按鈕 */
+  background-color: transparent;
+  color: #1f2937; /* 文字顏色 */
+  border: 1px solid #d1d5db; /* 邊框顏色 */
+}
+.btn-outline:hover {
+  background-color: #f9fafb; /* 滑鼠懸停背景色 */
+  border-color: #9ca3af;
+}
+
+.workflow-content {
+  padding: 15px 0; /* 上下內邊距，左右由父容器控制 */
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 響應式網格 */
+  gap: 25px; /* 卡片間距 */
+}
+
+.workflow-card {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.03); /* 更細微的陰影 */
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.workflow-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.workflow-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.workflow-card-header h3 {
+  margin: 0;
+  font-size: 1.15em;
+  color: #111827;
+  font-weight: 600;
+}
+
+.workflow-card-header .fas.fa-ellipsis-h { /* 三點操作圖示 */
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 5px; /* 增加點擊區域 */
+  border-radius: 50%;
+}
+.workflow-card-header .fas.fa-ellipsis-h:hover {
+  color: #1f2937;
+  background-color: #f3f4f6;
+}
+
+.workflow-card-image-placeholder {
+  width: 100%;
+  height: 130px; /* 調整高度 */
+  background-color: #f9fafb; /* 淺灰色背景 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af; /* 圖示和文字顏色 */
+  font-size: 0.9em;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px dashed #d1d5db;
+}
+.workflow-card-image-placeholder .fas {
+    font-size: 2.2em; /* 增大圖示 */
+    margin-bottom: 10px;
+}
+
+.workflow-card p {
+  font-size: 0.9em;
+  color: #4b5563; /* 調整文字顏色 */
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* === 彈窗 (帳戶和設定) === */
 #account-menu, .settings-popup {
   display: none;
   position: absolute;
-  max-width: 280px;
-  width: 240px;
-  max-height: 90vh;
+  max-width: 260px; /* 調整寬度 */
+  width: 230px; /* 調整寬度 */
+  max-height: 85vh; /* 調整最大高度 */
   overflow-y: auto;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  padding: 12px;
+  border-radius: 8px; /* 調整圓角 */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.04); /* 更精緻的陰影 */
+  padding: 8px; /* 調整內邊距 */
   z-index: 999;
   animation: popFromLeft 0.2s ease-out;
   color: #1e293b;
@@ -224,38 +355,44 @@ html, body {
   word-break: break-word;
 }
 
-/* 彈窗動畫修改為從左側彈出 */
 @keyframes popFromLeft {
-  from { 
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to { 
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-10px) scale(0.98); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 #account-menu div, .settings-popup div {
-  padding: 10px;
+  padding: 10px 12px; /* 調整內邊距 */
   border-radius: 6px;
   cursor: pointer;
+  font-size: 0.9em; /* 調整字體大小 */
+  color: #374151;
 }
 #account-menu div:hover, .settings-popup div:hover {
-  background: #f3f4f6;
+  background: #f3f4f6; /* 懸停背景色 */
+  color: #111827;
+}
+#account-menu hr {
+    margin: 6px 0; /* 調整分隔線間距 */
+    border-color: #e5e7eb;
 }
 
 .popup-title {
-  font-weight: bold;
-  font-size: 1em;
-  margin-bottom: 10px;
+  font-weight: 600; /* 加粗 */
+  font-size: 0.95em;
+  margin-bottom: 8px;
+  padding: 8px 12px; /* 標題也加上內邊距 */
+  color: #111827;
 }
 
-/* === 動畫 === */
+/* === 動畫 (通用) === */
+.animated.fade-slide { /* 這個class可以保留，用於JS觸發動畫 */
+    /* animation: fadeSlideUp 0.5s ease-out forwards; */ /* 改為JS觸發，避免CSS衝突 */
+}
+
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px); /* 調整動畫幅度 */
   }
   to {
     opacity: 1;
@@ -263,34 +400,85 @@ html, body {
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 /* === 響應式設計 === */
 @media (max-width: 768px) {
   html, body {
     flex-direction: column;
+    overflow-x: hidden; /* 防止水平滾動 */
   }
 
   .sidebar {
-    position: relative;
+    position: relative; /* 在小螢幕上改為相對定位 */
     width: 100%;
     height: auto;
-    flex-direction: row;
-    justify-content: space-around;
+    /* flex-direction: row; */ /* 保持垂直，但可以考慮橫向排列菜單 */
+    /* justify-content: space-around; */
+    z-index: 100; /* 確保在頂部 */
   }
+  .sidebar-header {
+    text-align: center;
+  }
+  /* 可以考慮將 .sidebar-menu 在小螢幕上設計為可折疊或水平滾動 */
 
   .main-content {
     margin-left: 0;
-    padding: 20px;
+    padding: 15px; /* 調整小螢幕的內邊距 */
+    min-height: calc(100vh - YOUR_SIDEBAR_HEIGHT_ON_MOBILE); /* 減去側邊欄高度 */
   }
+
+  .workspace-container.card {
+    padding: 25px 20px;
+    margin-top: 20px; /* 與頂部有一些間距 */
+  }
+  .workspace-container img {
+    width: 120px;
+  }
+  .workspace-container h2 {
+    font-size: 1.3em;
+  }
+
+  .workflow-page-container {
+    padding: 0 10px;
+  }
+  .workflow-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start; /* 左對齊 */
+  }
+  .workflow-actions {
+    flex-wrap: wrap; /* 允許換行 */
+    width: 100%;
+  }
+  .workflow-actions .search-bar {
+    width: 100%; /* 搜索框佔滿一行 */
+    margin-bottom: 10px; /* 與下方按鈕間距 */
+  }
+  .workflow-actions .btn {
+    flex-grow: 1; /* 讓按鈕平分剩餘空間，如果需要 */
+    font-size: 0.85em;
+  }
+  .workflow-grid {
+    grid-template-columns: 1fr; /* 小螢幕上單列顯示 */
+  }
+
 
   #account-menu,
   .settings-popup {
-    left: 0 !important;
-    top: 60px !important;
-    transform: none !important;
+    /* 彈窗在小螢幕上的定位需要仔細調整，以下是一種方案 */
+    left: 10px !important;
+    right: 10px !important;
+    top: auto !important; /* 取消固定頂部 */
+    bottom: 10px !important; /* 從底部彈出 */
+    width: auto !important; /* 寬度自適應 */
+    max-width: calc(100vw - 20px);
+    transform: translateY(100%); /* 初始隱藏在下方 */
+    animation: slideUpFromBottom 0.3s ease-out forwards;
   }
+
+  @keyframes slideUpFromBottom {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* 如果側邊欄在小螢幕變成橫向固定在頂部，彈窗邏輯可能需要再調整 */
 }
