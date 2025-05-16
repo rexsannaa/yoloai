@@ -97,31 +97,20 @@
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const popupWidth = popup.offsetWidth;
         const popupHeight = popup.offsetHeight;
-        const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
 
-        let top;
-        let left = rect.right + 10;
-
-        // 若右邊會超出畫面，就往左彈出
-        if (left + popupWidth > screenWidth) {
-          left = rect.left - popupWidth - 10;
-        }
-
-        // 若是帳戶選單，永遠往上彈出，並保證不貼頂
-        if (id === 'account-menu') {
-          top = rect.top + scrollTop - popupHeight - 8;
-          if (top < scrollTop + 8) {
-            top = scrollTop + 8;
-          }
-        } else {
-          // 設定彈窗可智慧上下切換
-          top = rect.bottom + scrollTop + 6;
-          if (top + popupHeight > scrollTop + screenHeight - 12) {
-            top = rect.top + scrollTop - popupHeight - 6;
-          }
-        }
-
+        // 定位彈窗在左側 - 模仿Roboflow風格
+        let top, left;
+        
+        // 使用錨點元素的垂直中心作為參考點
+        const anchorMiddle = rect.top + rect.height / 2;
+        
+        // 計算彈窗垂直位置，使其在錨點元素中間對齊，並確保不超出視窗
+        top = Math.max(10, Math.min(anchorMiddle - popupHeight / 2 + scrollTop, window.innerHeight - popupHeight - 10));
+        
+        // 對於左側彈出，我們將彈窗放在側邊欄的右側
+        left = 260; // 側邊欄寬度
+        
         // 設定正確位置
         popup.style.top = `${top}px`;
         popup.style.left = `${left}px`;
@@ -132,8 +121,6 @@
         popup.style.visibility = 'visible';
       }
     }
-
-
 
     function logout() {
       localStorage.clear();
