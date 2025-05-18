@@ -1,15 +1,35 @@
-html, body {
+/* login.css - 優化版 */
+
+:root {
+  --primary: #8a2be2;
+  --primary-dark: #7324bf;
+  --primary-light: rgba(138, 43, 226, 0.4);
+  --bg-gradient: linear-gradient(135deg, #8a2be2, #6a1db8);
+  --text-primary: #8a2be2;
+  --text-secondary: #666;
+  --text-light: #aaa;
+  --border-light: #ccc;
+  --bg-light: #f9fafb;
+  --box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  --transition: all 0.3s ease;
+}
+
+/* 基礎樣式 */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body {
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #8a2be2, #6a1db8);
+  background: var(--bg-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
-
 
 /* 登入卡片樣式 */
 .login-box {
@@ -18,21 +38,22 @@ html, body {
   padding: 40px 30px;
   width: 320px;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow);
   transform: scale(0.96);
   opacity: 0;
   animation: fadeInUp 0.8s ease forwards;
 }
 
+/* 文字與表單元素 */
 h1 {
   font-size: 1.4em;
-  color: #8a2be2;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
 p {
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 25px;
 }
 
@@ -40,43 +61,55 @@ input {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-light);
   border-radius: 6px;
   font-size: 0.95em;
-  box-sizing: border-box;
 }
 
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+}
+
+/* 按鈕樣式 */
 .login-btn {
   width: 100%;
   padding: 12px;
-  background: #8a2be2;
+  background: var(--primary);
   color: white;
   font-weight: bold;
   font-size: 1em;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   position: relative;
 }
 
 .login-btn:hover {
-  background: #7324bf;
+  background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(138, 43, 226, 0.4);
+  box-shadow: 0 8px 16px var(--primary-light);
 }
 
+/* 頁腳樣式 */
 .footer {
   font-size: 0.75em;
-  color: #aaa;
+  color: var(--text-light);
   margin-top: 20px;
 }
 
 .footer a {
-  color: #8a2be2;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* 錯誤訊息 */
 .error-message {
   color: red;
   font-size: 0.85em;
@@ -84,6 +117,7 @@ input {
   display: none;
 }
 
+/* 載入動畫 */
 .spinner {
   width: 20px;
   height: 20px;
@@ -113,4 +147,16 @@ input {
 @keyframes spin {
   0% { transform: translateY(-50%) rotate(0deg); }
   100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* 響應式設計 */
+@media (max-width: 360px) {
+  .login-box {
+    width: 90%;
+    padding: 30px 20px;
+  }
+  
+  h1 {
+    font-size: 1.2em;
+  }
 }

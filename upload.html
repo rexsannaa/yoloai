@@ -1,0 +1,409 @@
+<!-- upload.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>上傳檔案 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 上傳頁面特定樣式 */
+    .upload-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .upload-header {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .upload-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+    
+    .upload-path {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    
+    .upload-path i {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    
+    .upload-box {
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      background-color: #f9fafb;
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-box:hover, .upload-box.dragover {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      color: #3b82f6;
+      margin-bottom: 15px;
+    }
+    
+    .upload-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+    
+    .upload-text {
+      color: #4b5563;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    
+    .upload-formats {
+      color: #6b7280;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+    
+    .file-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      background-color: white;
+    }
+    
+    .file-icon {
+      font-size: 1.2rem;
+      color: #3b82f6;
+      margin-right: 10px;
+    }
+    
+    .file-info {
+      flex: 1;
+    }
+    
+    .file-name {
+      font-weight: 500;
+      color: #1f2937;
+      margin-bottom: 3px;
+    }
+    
+    .file-size {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    
+    .file-progress {
+      height: 6px;
+      width: 100%;
+      background-color: #e5e7eb;
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    
+    .file-progress-bar {
+      height: 100%;
+      background-color: #3b82f6;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .file-actions {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+    }
+    
+    .file-actions button {
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      color: #9ca3af;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      padding: 5px;
+    }
+    
+    .file-actions button:hover {
+      color: #ef4444;
+    }
+    
+    .upload-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    #file-input {
+      display: none;
+    }
+    
+    /* 模擬進度條 */
+    @keyframes progressAnimation {
+      0% { width: 0%; }
+      50% { width: 60%; }
+      75% { width: 85%; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 側邊欄 -->
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
+      <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" data-popup="account-menu">
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+        </div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
+        <div data-view="coming-soon">⚙ 我的帳戶</div>
+        <div data-view="coming-soon">🗂 工作區管理</div>
+        <div data-view="coming-soon">💳 訂閱方案</div>
+        <div data-view="coming-soon">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
+    <div data-view="coming-soon">💰 點數使用情況</div>
+    <div data-view="coming-soon">👥 使用者管理</div>
+    <div data-view="coming-soon">🔑 API 金鑰</div>
+  </div>
+
+  <!-- 主內容 -->
+  <main class="main-content">
+    <div class="upload-container">
+      <div class="upload-header">
+        <h1>上傳圖像 <span id="project-title"></span></h1>
+        <div class="upload-path">
+          <span>1120</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>專案</span>
+          <i class="fas fa-chevron-right"></i>
+          <span id="path-project-name">我的第一個專案</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>上傳</span>
+        </div>
+      </div>
+
+      <div class="upload-box" id="upload-box">
+        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+        <div class="upload-title">拖放圖片或點擊上傳</div>
+        <p class="upload-text">至少需要 8-10 張圖片取得較好的訓練效果。</p>
+        <p class="upload-formats">支援的格式: JPG, PNG, BMP, TIFF (每張檔案大小上限 20MB)</p>
+        <button class="btn btn-primary" id="upload-btn">
+          <i class="fas fa-images"></i> 選擇圖片
+        </button>
+        <input type="file" id="file-input" multiple accept="image/*">
+      </div>
+
+      <div class="file-list" id="file-list"></div>
+
+      <div class="upload-actions">
+        <button class="btn btn-secondary" onclick="navigateTo('index.html')">取消</button>
+        <button class="btn btn-primary" id="continue-btn" onclick="continueToAnnotation()">
+          <i class="fas fa-arrow-right"></i> 前往標註
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 引入統一功能模組 -->
+  <script src="common.js"></script>
+  
+  <!-- 上傳功能腳本 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 載入專案資訊
+      loadProjectInfo();
+      
+      // 設置上傳按鈕事件
+      const fileInput = document.getElementById('file-input');
+      const uploadBtn = document.getElementById('upload-btn');
+      const uploadBox = document.getElementById('upload-box');
+      
+      uploadBtn.addEventListener('click', function() {
+        fileInput.click();
+      });
+      
+      fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+      });
+      
+      // 設置拖放事件
+      uploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('dragover');
+      });
+      
+      uploadBox.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+      });
+      
+      uploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+        
+        if (e.dataTransfer.files) {
+          handleFiles(e.dataTransfer.files);
+        }
+      });
+    });
+
+    // 載入專案資訊
+    function loadProjectInfo() {
+      const projectInfo = JSON.parse(localStorage.getItem('currentProject') || '{}');
+      const projectName = projectInfo.name || '我的第一個專案';
+      
+      // 更新頁面標題和路徑
+      document.getElementById('project-title').textContent = `- ${projectName}`;
+      document.getElementById('path-project-name').textContent = projectName;
+    }
+
+    // 處理上傳的檔案
+    function handleFiles(files) {
+      const fileList = document.getElementById('file-list');
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // 檢查是否為圖片
+        if (!file.type.startsWith('image/')) {
+          alert(`檔案 "${file.name}" 不是支援的圖片格式`);
+          continue;
+        }
+        
+        // 建立檔案項目
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        let iconClass = 'fa-file-image';
+        
+        fileItem.innerHTML = `
+          <i class="fas ${iconClass} file-icon"></i>
+          <div class="file-info">
+            <div class="file-name">${file.name}</div>
+            <div class="file-size">${formatFileSize(file.size)}</div>
+            <div class="file-progress">
+              <div class="file-progress-bar" id="progress-${i}"></div>
+            </div>
+          </div>
+          <div class="file-actions">
+            <button onclick="removeFile(this)"><i class="fas fa-times"></i></button>
+          </div>
+        `;
+        
+        fileList.appendChild(fileItem);
+        
+        // 模擬上傳進度
+        simulateUpload(i);
+      }
+    }
+
+    // 模擬上傳進度
+    function simulateUpload(fileIndex) {
+      const progressBar = document.getElementById(`progress-${fileIndex}`);
+      if (!progressBar) return;
+      
+      progressBar.style.animation = 'progressAnimation 1.5s forwards';
+      
+      // 在進度完成後更新進度條顏色
+      setTimeout(() => {
+        progressBar.style.backgroundColor = '#10b981';
+      }, 1500);
+    }
+
+    // 移除檔案
+    function removeFile(button) {
+      const fileItem = button.closest('.file-item');
+      fileItem.classList.add('fadeOut');
+      
+      setTimeout(() => {
+        fileItem.remove();
+      }, 300);
+    }
+
+    // 格式化檔案大小
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // 前往標註頁面
+    function continueToAnnotation() {
+      // 檢查是否有上傳檔案
+      const fileList = document.getElementById('file-list');
+      if (fileList.children.length === 0) {
+        alert('請上傳至少一張圖片');
+        return;
+      }
+      
+      // 這裡只是模擬繼續到標註頁面
+      alert('🚧 標註功能正在開發中\n感謝您上傳了 ' + fileList.children.length + ' 張圖片！\n\n標註功能即將上線，敬請期待！');
+      
+      // 導回專案頁面
+      setTimeout(() => navigateTo('index.html'), 500);
+    }
+  </script>
+
+</body>
+</html>
