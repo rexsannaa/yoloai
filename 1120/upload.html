@@ -1,0 +1,549 @@
+<!-- upload.html (優化版) - 縮排側邊欄與專案流程 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>上傳檔案 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="upload.css">
+  <style>
+    /* 縮排側邊欄樣式 */
+    :root {
+      --mini-sidebar-width: 60px;
+      --expanded-sidebar-width: 260px;
+    }
+    
+    /* 側邊欄縮小版樣式 */
+    .sidebar.mini {
+      width: var(--mini-sidebar-width);
+      overflow: hidden;
+      transition: width 0.3s ease;
+      background: linear-gradient(to bottom, #010b40, #0c2095);
+    }
+    
+    .sidebar.mini .sidebar-header {
+      padding: 20px 0;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .sidebar.mini .sidebar-menu li span:last-child {
+      display: none;
+    }
+    
+    .sidebar.mini .sidebar-menu li span:first-child {
+      justify-content: center;
+      width: 100%;
+      padding: 0;
+    }
+    
+    .sidebar.mini .sidebar-menu li {
+      padding: 20px 0;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .sidebar.mini .sidebar-menu li i {
+      margin-right: 0;
+      font-size: 1.2rem;
+      display: inline-block;
+      color: white;
+    }
+    
+    .sidebar.mini .sidebar-menu li span:first-child span {
+      display: none;
+    }
+    
+    .sidebar.mini .sidebar-menu li.active {
+      border-left: 3px solid #3b82f6;
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+    
+    .sidebar.mini .sidebar-footer {
+      padding: 15px 0;
+      justify-content: center;
+    }
+    
+    .sidebar.mini .user-info > div,
+    .sidebar.mini #user-email {
+      display: none;
+    }
+    
+    /* 主內容區域在縮小側邊欄時的調整 */
+    .main-content.expanded {
+      margin-left: var(--mini-sidebar-width);
+    }
+    
+    /* 專案導航側邊欄 */
+    .project-sidebar {
+      width: 240px;
+      background: white;
+      border-right: 1px solid #e5e7eb;
+      height: 100vh;
+      position: fixed;
+      left: var(--mini-sidebar-width);
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .project-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .project-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .project-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .project-title {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .project-title h3 {
+      font-size: 1rem;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #111827;
+    }
+    
+    .project-title p {
+      font-size: 0.75rem;
+      margin: 0;
+      color: #6b7280;
+    }
+    
+    .project-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .project-menu li {
+      padding: 0;
+      border-left: 3px solid transparent;
+    }
+    
+    .project-menu a {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      color: #374151;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .project-menu li.active {
+      border-left-color: #3b82f6;
+      background-color: #EBF3FF;
+    }
+    
+    .project-menu li.active a {
+      color: #1e40af;
+      font-weight: 500;
+    }
+    
+    .project-menu li:hover a {
+      background-color: #f9fafb;
+    }
+    
+    .project-menu .menu-icon {
+      width: 20px;
+      margin-right: 10px;
+      text-align: center;
+      color: #3b82f6;
+    }
+    
+    .project-menu .menu-badge {
+      margin-left: auto;
+      font-size: 0.75rem;
+      background-color: #e5e7eb;
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: #4b5563;
+    }
+    
+    .project-menu li.active .menu-badge {
+      background-color: #d6e5ff;
+      color: #3b82f6;
+    }
+    
+    /* 主內容區域在雙側邊欄時的調整 */
+    .main-content.dual-sidebar {
+      margin-left: calc(var(--mini-sidebar-width) + 240px);
+    }
+    
+    /* 響應式調整 */
+    @media (max-width: 1200px) {
+      .project-sidebar {
+        left: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 15;
+      }
+      
+      .project-sidebar.show {
+        transform: translateX(0);
+      }
+      
+      .sidebar.mini {
+        transform: translateX(-100%);
+      }
+      
+      .main-content.dual-sidebar,
+      .main-content.expanded {
+        margin-left: 0;
+      }
+      
+      .mobile-header {
+        display: flex;
+        padding: 15px;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e7eb;
+        background-color: white;
+      }
+      
+      .mobile-header button {
+        background: none;
+        border: none;
+        color: #374151;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 5px;
+      }
+    }
+    
+    @media (min-width: 1201px) {
+      .mobile-header {
+        display: none;
+      }
+    }
+    
+    /* 上傳頁面特定調整 */
+    .upload-container {
+      padding: 0;
+      max-width: 100%;
+    }
+    
+    .upload-header {
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .batch-name-container,
+    .upload-area,
+    .format-section,
+    .upload-actions {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 縮小版側邊欄 -->
+  <div class="sidebar mini">
+    <div class="sidebar-header">
+      <div style="font-size: 1.5rem; color: white; font-weight: bold;">AI</div>
+    </div>
+    <ul class="sidebar-menu">
+      <li data-view="1120"><span><i class="fas fa-user-friends"></i></span></li>
+      <li data-view="public-projects"><span><i class="fas fa-globe"></i></span></li>
+      <li id="projects-link" data-view="projects" class="active"><span><i class="fas fa-project-diagram"></i></span></li>
+      <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i></span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i></span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i></span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-compass"></i></span></li>
+      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i></span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" data-popup="account-menu">
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div id="menu-email">test@demo.com</div>
+        <hr>
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 專案側邊欄 -->
+  <div class="project-sidebar">
+    <div class="project-header">
+      <div class="project-icon">
+        <img src="./project-icon.png" alt="專案圖示" id="project-icon-img" onerror="this.src='./icon/01.png'">
+      </div>
+      <div class="project-title">
+        <h3 id="project-name-display">我的第一個專案</h3>
+        <p>物件偵測</p>
+      </div>
+      <div id="project-actions-toggle" class="show-coming-soon" style="cursor: pointer;">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+    </div>
+    
+    <ul class="project-menu">
+      <li>
+        <a href="index.html">
+          <span class="menu-icon"><i class="fas fa-home"></i></span>
+          <span>專案概述</span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="upload.html">
+          <span class="menu-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+          <span>上傳檔案</span>
+          <span class="menu-badge">0</span>
+        </a>
+      </li>
+      <li class="show-coming-soon">
+        <a href="#">
+          <span class="menu-icon"><i class="fas fa-tags"></i></span>
+          <span>標註資料</span>
+        </a>
+      </li>
+      <li class="show-coming-soon">
+        <a href="#">
+          <span class="menu-icon"><i class="fas fa-cube"></i></span>
+          <span>訓練模型</span>
+        </a>
+      </li>
+      <li class="show-coming-soon">
+        <a href="#">
+          <span class="menu-icon"><i class="fas fa-play-circle"></i></span>
+          <span>運行測試</span>
+        </a>
+      </li>
+      <li class="show-coming-soon">
+        <a href="#">
+          <span class="menu-icon"><i class="fas fa-rocket"></i></span>
+          <span>部署模型</span>
+        </a>
+      </li>
+      <li class="show-coming-soon">
+        <a href="#">
+          <span class="menu-icon"><i class="fas fa-cog"></i></span>
+          <span>專案設定</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
+  </div>
+
+  <!-- 移動設備標題欄 -->
+  <div class="mobile-header">
+    <button id="toggle-project-sidebar">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div style="font-weight: 500;">上傳檔案</div>
+    <button class="show-coming-soon">
+      <i class="fas fa-ellipsis-v"></i>
+    </button>
+  </div>
+
+  <!-- 主內容 -->
+  <main class="main-content dual-sidebar">
+    <div class="upload-container">
+      <div class="upload-header">
+        <h1><i class="fas fa-cloud-upload-alt"></i> 上傳</h1>
+      </div>
+
+      <!-- 上傳批次名稱 -->
+      <div class="batch-name-container">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">批次名稱：</label>
+            <input type="text" class="form-control" value="上傳於 05/18/25 at 11:56 pm" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">標籤： <i class="fas fa-info-circle info-icon" title="為上傳的圖像添加標籤，便於分類和搜索"></i></label>
+            <input type="text" class="form-control" placeholder="輸入標籤關鍵字...">
+          </div>
+        </div>
+      </div>
+
+      <!-- 檔案拖放區域 -->
+      <div class="upload-area" id="upload-area">
+        <svg class="upload-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"></path>
+          <path d="M12 16V8"></path>
+          <path d="M8 12l4-4 4 4"></path>
+        </svg>
+        <div class="upload-title">拖曳檔案至此上傳</div>
+        <p class="upload-text">或者</p>
+        
+        <div class="btn-row">
+          <label class="file-btn" id="select-file-btn">
+            <i class="fas fa-file"></i> 選擇檔案
+          </label>
+          <label class="file-btn" id="select-folder-btn">
+            <i class="fas fa-folder"></i> 選擇資料夾
+          </label>
+        </div>
+        <input type="file" id="file-input" multiple accept="image/*">
+        <input type="file" id="folder-input" webkitdirectory directory multiple>
+        
+        <!-- 檔案列表區域 -->
+        <div class="file-list" id="file-list"></div>
+      </div>
+
+      <!-- 支援格式說明 -->
+      <div class="format-section">
+        <div class="format-title">支援的格式</div>
+        <div class="format-grid">
+          <div class="format-box">
+            <i class="fas fa-image"></i>
+            <h4>圖像</h4>
+            <p>.jpg, .png, .bmp, .webp, .avif</p>
+            <p class="format-note">建議尺寸: 2000 × 1500 像素</p>
+          </div>
+          <div class="format-box">
+            <i class="fas fa-sticky-note"></i>
+            <h4>標註</h4>
+            <p>各種標註格式</p>
+          </div>
+          <div class="format-box">
+            <i class="fas fa-video"></i>
+            <h4>影片</h4>
+            <p>.mov, .mp4</p>
+          </div>
+          <div class="format-box">
+            <i class="fas fa-file-pdf"></i>
+            <h4>文件</h4>
+            <p>.pdf</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部空間填充 -->
+      <div style="height: 30px"></div>
+
+      <!-- 底部操作按鈕 -->
+      <div class="upload-actions">
+        <button class="btn btn-secondary" onclick="navigateTo('index.html')">取消</button>
+        <button class="btn btn-primary" id="continue-btn" onclick="continueToAnnotation()">
+          <i class="fas fa-arrow-right"></i> 前往標註
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 引入統一功能模組 -->
+  <script src="common.js"></script>
+  <script src="upload.js"></script>
+  
+  <!-- 側邊欄與專案導航腳本 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 載入專案資訊
+      const projectInfo = JSON.parse(localStorage.getItem('currentProject') || '{}');
+      const projectNameDisplay = document.getElementById('project-name-display');
+      if (projectNameDisplay && projectInfo.name) {
+        projectNameDisplay.textContent = projectInfo.name;
+        document.title = `上傳檔案 - ${projectInfo.name} - 南臺科技大學AI視覺訓練平台`;
+      }
+      
+      // 移動端選單切換
+      const toggleProjectSidebar = document.getElementById('toggle-project-sidebar');
+      const projectSidebar = document.querySelector('.project-sidebar');
+      
+      if (toggleProjectSidebar && projectSidebar) {
+        toggleProjectSidebar.addEventListener('click', function() {
+          projectSidebar.classList.toggle('show');
+        });
+      }
+      
+      // 調整專案側邊欄上的徽章數字 - 獲取檔案數量
+      const fileList = document.getElementById('file-list');
+      const menuBadge = document.querySelector('.menu-badge');
+      
+      // 更新徽章數字的函數
+      function updateBadgeCount() {
+        if (menuBadge && fileList) {
+          const fileCount = fileList.children.length;
+          menuBadge.textContent = fileCount || '0';
+          
+          // 如果有檔案，更改徽章背景色
+          if (fileCount > 0) {
+            menuBadge.style.backgroundColor = '#d6e5ff';
+            menuBadge.style.color = '#3b82f6';
+          } else {
+            menuBadge.style.backgroundColor = '#e5e7eb';
+            menuBadge.style.color = '#4b5563';
+          }
+        }
+      }
+      
+      // 監聽檔案列表變化，更新徽章
+      const observer = new MutationObserver(updateBadgeCount);
+      if (fileList) {
+        observer.observe(fileList, { childList: true });
+      }
+      
+      // 初始更新徽章
+      updateBadgeCount();
+      
+      // 修補原有的檔案處理函數以支援徽章更新
+      const originalHandleFiles = window.handleFiles;
+      if (typeof originalHandleFiles === 'function') {
+        window.handleFiles = function(files) {
+          originalHandleFiles(files);
+          updateBadgeCount();
+        };
+      }
+      
+      const originalRemoveFile = window.removeFile;
+      if (typeof originalRemoveFile === 'function') {
+        window.removeFile = function(button) {
+          originalRemoveFile(button);
+          setTimeout(updateBadgeCount, 300); // 在淡出動畫後更新
+        };
+      }
+    });
+  </script>
+
+</body>
+</html>

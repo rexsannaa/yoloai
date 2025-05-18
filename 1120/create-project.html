@@ -1,4 +1,4 @@
-<!-- new-create-project.html -->
+<!-- create-project.html (更新版) -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -8,6 +8,62 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="create-project.css">
+  <style>
+    /* 新增的樣式 */
+    .project-layout {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .project-options {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .project-preview {
+      width: 500px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 30px;
+      display: none; /* 預設隱藏，選中專案類型後顯示 */
+    }
+    
+    .annotation-preview {
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--form-border-color);
+      overflow: hidden;
+    }
+    
+    .annotation-preview img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    @media (max-width: 1200px) {
+      .project-layout {
+        flex-direction: column;
+      }
+      
+      .project-preview {
+        width: 100%;
+        position: static;
+      }
+    }
+    
+    /* 修改專案類型選項的樣式 */
+    .project-type-option {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
 <body>
 
@@ -17,7 +73,7 @@
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
-      <li id="projects-link" data-view="projects" class="active"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
       <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
       <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
       <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
@@ -44,6 +100,14 @@
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
+    <div data-view="coming-soon">💰 點數使用情況</div>
+    <div data-view="coming-soon">👥 使用者管理</div>
+    <div data-view="coming-soon">🔑 API 金鑰</div>
   </div>
 
   <!-- 主內容 -->
@@ -84,92 +148,98 @@
           </div>
         </div>
 
-        <div class="form-section">
-          <h2>專案類型</h2>
+        <!-- 使用新的布局將專案類型選項和預覽分成左右兩列 -->
+        <div class="project-layout">
+          <div class="project-options">
+            <div class="form-section">
+              <h2>專案類型</h2>
+              
+              <div class="project-type-options">
+                <div class="project-type-option selected" data-type="object-detection">
+                  <div class="option-header">
+                    <div class="option-title">物件偵測</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-vector-square"></i> 邊界框</span>
+                      <span class="badge"><i class="fas fa-hashtag"></i> 計數</span>
+                      <span class="badge"><i class="fas fa-route"></i> 追蹤</span>
+                    </div>
+                  </div>
+                  <div class="option-description">使用邊界框識別物件及其位置。</div>
+                </div>
+
+                <div class="project-type-option" data-type="classification">
+                  <div class="option-header">
+                    <div class="option-title">分類</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-tag"></i> 圖像標籤</span>
+                      <span class="badge"><i class="fas fa-filter"></i> 過濾</span>
+                      <span class="badge"><i class="fas fa-shield-alt"></i> 內容審核</span>
+                    </div>
+                  </div>
+                  <div class="option-description">為整個圖像分配標籤。</div>
+                  <div class="option-radios">
+                    <label class="radio-label">
+                      <input type="radio" name="classif-type" value="single" checked>
+                      <span class="radio-custom"></span>
+                      單一標籤
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="classif-type" value="multi">
+                      <span class="radio-custom"></span>
+                      多標籤
+                    </label>
+                  </div>
+                </div>
+
+                <div class="project-type-option" data-type="segmentation">
+                  <div class="option-header">
+                    <div class="option-title">實例分割</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-draw-polygon"></i> 多邊形</span>
+                      <span class="badge"><i class="fas fa-ruler"></i> 測量</span>
+                      <span class="badge"><i class="fas fa-shapes"></i> 不規則形狀</span>
+                    </div>
+                  </div>
+                  <div class="option-description">檢測多個物件及其實際形狀。</div>
+                </div>
+
+                <div class="project-type-option" data-type="keypoint">
+                  <div class="option-header">
+                    <div class="option-title">關鍵點偵測</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-project-diagram"></i> 骨架結構</span>
+                      <span class="badge"><i class="fas fa-child"></i> 姿勢估計</span>
+                    </div>
+                  </div>
+                  <div class="option-description">識別主體上的關鍵點("骨架")。</div>
+                </div>
+
+                <div class="project-type-option" data-type="multimodal">
+                  <div class="option-header">
+                    <div class="option-title">多模態</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-comment-dots"></i> 提示</span>
+                      <span class="badge"><i class="fas fa-question-circle"></i> 視覺問答</span>
+                      <span class="badge"><i class="fas fa-closed-captioning"></i> 說明文字</span>
+                    </div>
+                  </div>
+                  <div class="option-description">使用文本對描述圖像。</div>
+                </div>
+              </div>
+
+              <div class="show-more">
+                <button id="show-more-btn">
+                  顯示更多 <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+          </div>
           
-          <div class="project-type-options">
-            <div class="project-type-option selected" data-type="object-detection">
-              <div class="option-header">
-                <div class="option-title">物件偵測</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-vector-square"></i> 邊界框</span>
-                  <span class="badge"><i class="fas fa-hashtag"></i> 計數</span>
-                  <span class="badge"><i class="fas fa-route"></i> 追蹤</span>
-                </div>
-              </div>
-              <div class="option-description">使用邊界框識別物件及其位置。</div>
+          <!-- 預覽區域移到右側 -->
+          <div class="project-preview" id="project-preview">
+            <div class="annotation-preview">
+              <img src="./icon/03.gif" alt="標註預覽" id="preview-image">
             </div>
-
-            <div class="project-type-option" data-type="classification">
-              <div class="option-header">
-                <div class="option-title">分類</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-tag"></i> 圖像標籤</span>
-                  <span class="badge"><i class="fas fa-filter"></i> 過濾</span>
-                  <span class="badge"><i class="fas fa-shield-alt"></i> 內容審核</span>
-                </div>
-              </div>
-              <div class="option-description">為整個圖像分配標籤。</div>
-              <div class="option-radios">
-                <label class="radio-label">
-                  <input type="radio" name="classif-type" value="single" checked>
-                  <span class="radio-custom"></span>
-                  單一標籤
-                </label>
-                <label class="radio-label">
-                  <input type="radio" name="classif-type" value="multi">
-                  <span class="radio-custom"></span>
-                  多標籤
-                </label>
-              </div>
-            </div>
-
-            <div class="project-type-option" data-type="segmentation">
-              <div class="option-header">
-                <div class="option-title">實例分割</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-draw-polygon"></i> 多邊形</span>
-                  <span class="badge"><i class="fas fa-ruler"></i> 測量</span>
-                  <span class="badge"><i class="fas fa-shapes"></i> 不規則形狀</span>
-                </div>
-              </div>
-              <div class="option-description">檢測多個物件及其實際形狀。</div>
-            </div>
-
-            <div class="project-type-option" data-type="keypoint">
-              <div class="option-header">
-                <div class="option-title">關鍵點偵測</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-project-diagram"></i> 骨架結構</span>
-                  <span class="badge"><i class="fas fa-child"></i> 姿勢估計</span>
-                </div>
-              </div>
-              <div class="option-description">識別主體上的關鍵點("骨架")。</div>
-            </div>
-
-            <div class="project-type-option" data-type="multimodal">
-              <div class="option-header">
-                <div class="option-title">多模態</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-comment-dots"></i> 提示</span>
-                  <span class="badge"><i class="fas fa-question-circle"></i> 視覺問答</span>
-                  <span class="badge"><i class="fas fa-closed-captioning"></i> 說明文字</span>
-                </div>
-              </div>
-              <div class="option-description">使用文本對描述圖像。</div>
-            </div>
-          </div>
-
-          <div class="show-more">
-            <button id="show-more-btn">
-              顯示更多 <i class="fas fa-chevron-down"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="preview-section">
-          <div class="annotation-preview">
-            <img src="./sample-images/vehicles-annotation.jpg" alt="標註預覽" id="preview-image">
           </div>
         </div>
 
@@ -181,11 +251,17 @@
     </div>
   </main>
 
+  <!-- 引入統一功能模組 -->
+  <script src="common.js"></script>
+  
+  <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
   <script>
-    // 初始化頁面
-    document.addEventListener('DOMContentLoaded', () => {
-      // 設置用戶信息
-      loadUserInfo();
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化預覽區域可見性
+      const projectPreview = document.getElementById('project-preview');
+      if (projectPreview) {
+        projectPreview.style.display = 'block';
+      }
       
       // 專案類型選擇
       document.querySelectorAll('.project-type-option').forEach(option => {
@@ -207,128 +283,44 @@
           '顯示較少 <i class="fas fa-chevron-up"></i>' : 
           '顯示更多 <i class="fas fa-chevron-down"></i>';
       });
-
-      // 設置側邊欄菜單點擊事件
-      document.querySelectorAll('.sidebar-menu li').forEach(li => {
-        li.addEventListener('click', () => {
-          const viewName = li.getAttribute('data-view');
-          if (viewName === 'projects') {
-            navigateTo('index.html'); // 專案頁導航到 index.html
-          } else if (viewName === 'coming-soon') {
-            showComingSoonMessage();
-          } else if (viewName) {
-            // 其他頁面正常導航
-            navigateTo(`${viewName}.html`);
-          }
-        });
-      });
       
-      // 設置彈出窗口觸發器
-      document.querySelectorAll('[data-popup]').forEach(el => {
-        el.addEventListener('click', (e) => {
-          const popupId = el.getAttribute('data-popup');
-          togglePopup(popupId, el);
-          e.stopPropagation();
-        });
-      });
-      
-      // 關閉彈出窗口
-      document.addEventListener('click', closePopups);
+      // 初始化預覽，顯示物件偵測的預覽圖
+      updatePreviewImage('object-detection');
     });
-
-    // 加載使用者信息
-    function loadUserInfo() {
-      const name = localStorage.getItem("username") || "測試帳戶";
-      const email = localStorage.getItem("email") || "test@demo.com";
-      
-      document.getElementById("user-name").innerHTML = `<strong>${name}</strong>`;
-      document.getElementById("user-email").textContent = email;
-      document.getElementById("menu-username").textContent = name;
-      document.getElementById("menu-email").textContent = email;
-      
-      // 設置用戶頭像
-      const firstChar = name.charAt(0) || "測";
-      document.getElementById("user-avatar").textContent = firstChar;
-    }
 
     // 更新預覽圖
     function updatePreviewImage(type) {
       const previewImage = document.getElementById('preview-image');
+      const projectPreview = document.getElementById('project-preview');
+      
+      // 只有多模態不顯示預覽
+      if (type === 'multimodal') {
+        projectPreview.style.display = 'none';
+        return;
+      } else {
+        projectPreview.style.display = 'block';
+      }
+      
+      // 更新預覽圖片
       switch(type) {
         case 'object-detection':
-          previewImage.src = './sample-images/vehicles-annotation.jpg';
+          previewImage.src = './icon/03.gif';
           break;
         case 'classification':
-          previewImage.src = './sample-images/classification-preview.jpg';
+          previewImage.src = './icon/04.png';
           break;
         case 'segmentation':
-          previewImage.src = './sample-images/segmentation-preview.jpg';
+          previewImage.src = './icon/05.png';
           break;
         case 'keypoint':
-          previewImage.src = './sample-images/keypoint-preview.jpg';
-          break;
-        case 'multimodal':
-          previewImage.src = './sample-images/multimodal-preview.jpg';
+          previewImage.src = './icon/06.gif';
           break;
         default:
-          previewImage.src = './sample-images/vehicles-annotation.jpg';
+          previewImage.src = './icon/03.gif';
       }
     }
-
-    // 切換彈出窗口
-    function togglePopup(id, anchor) {
-      const popup = document.getElementById(id);
-      const isVisible = popup.style.display === 'block';
-      
-      // 隱藏所有彈出窗口
-      document.querySelectorAll('#account-menu, #settings-popup').forEach(p => p.style.display = 'none');
-      
-      if (!isVisible) {
-        popup.style.visibility = 'hidden';
-        popup.style.display = 'block';
-        
-        const rect = anchor.getBoundingClientRect();
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const popupWidth = popup.offsetWidth;
-        const popupHeight = popup.offsetHeight;
-        const screenHeight = window.innerHeight;
-        
-        const top = Math.max(10, Math.min(rect.top + rect.height / 2 - popupHeight / 2 + scrollTop, window.innerHeight - popupHeight - 10));
-        const left = 260 + 10; // 側邊欄寬度 + 間距
-        
-        popup.style.top = `${top}px`;
-        popup.style.left = `${left}px`;
-        popup.style.maxHeight = `${screenHeight - 40}px`;
-        popup.style.overflowY = 'auto';
-        popup.style.visibility = 'visible';
-      }
-    }
-
-    // 關閉彈出窗口
-    function closePopups(e) {
-      const accountMenu = document.getElementById('account-menu');
-      const settingsPopup = document.getElementById('settings-popup');
-      const userInfo = document.querySelector('.user-info');
-      const settingsToggle = document.getElementById('settings-toggle');
-
-      const isClickInsideAccount = accountMenu && (accountMenu.contains(e.target) || (userInfo && userInfo.contains(e.target)));
-      const isClickInsideSettings = settingsPopup && (settingsPopup.contains(e.target) || (settingsToggle && settingsToggle.contains(e.target)));
-
-      if (accountMenu && !isClickInsideAccount) accountMenu.style.display = 'none';
-      if (settingsPopup && !isClickInsideSettings) settingsPopup.style.display = 'none';
-    }
-
-    // 顯示即將推出訊息
-    function showComingSoonMessage() {
-      alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️\n\n🔗 點我捐款支持");
-    }
-
-    // 頁面導航
-    function navigateTo(page) {
-      window.location.href = page;
-    }
-
-    // 創建專案
+    
+    // 覆寫 common.js 中的 createProject 函數
     function createProject() {
       const projectName = document.getElementById('project-name').value.trim();
       const annotationGroup = document.getElementById('annotation-group').value.trim();
@@ -348,25 +340,25 @@
       
       const projectType = selectedType.getAttribute('data-type');
       
-      // 儲存專案資訊到本地存儲
-      const projectInfo = {
-        name: projectName,
-        annotationGroup: annotationGroup,
-        license: license,
-        type: projectType,
-        createdAt: new Date().toISOString()
-      };
-      
-      localStorage.setItem('currentProject', JSON.stringify(projectInfo));
-      
-      // 跳轉到上傳頁面
-      navigateTo('upload.html');
-    }
-
-    // 登出
-    function logout() {
-      localStorage.clear();
-      navigateTo("login.html");
+      // 僅當選擇「物件偵測」時繼續正常流程
+      if (projectType === 'object-detection') {
+        // 儲存專案資訊到本地存儲
+        const projectInfo = {
+          name: projectName,
+          annotationGroup: annotationGroup,
+          license: license,
+          type: projectType,
+          createdAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('currentProject', JSON.stringify(projectInfo));
+        
+        // 跳轉到上傳頁面
+        navigateTo('upload.html');
+      } else {
+        // 對於其他專案類型，顯示彈窗
+        showComingSoonMessage();
+      }
     }
   </script>
 

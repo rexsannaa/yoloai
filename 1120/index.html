@@ -1,4 +1,4 @@
-<!-- index.html -->
+<!-- index.html (更新版) -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -35,10 +35,10 @@
         <div><strong id="menu-username">測試帳戶</strong></div>
         <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
         <hr style="margin: 10px 0;">
-        <div data-view="coming-soon">⚙ 我的帳戶</div>
-        <div data-view="coming-soon">🗂 工作區管理</div>
-        <div data-view="coming-soon">💳 訂閱方案</div>
-        <div data-view="coming-soon">📊 使用紀錄</div>
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
@@ -48,171 +48,13 @@
 
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>
-    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
-    <div data-view="coming-soon">💰 點數使用情況</div>
-    <div data-view="coming-soon">👥 使用者管理</div>
-    <div data-view="coming-soon">🔑 API 金鑰</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
   </div>
 
-  <script>
-    // 視圖內容模板
-    const viewTemplates = {
-      projects: `
-      <section class="workspace-container card animated fade-slide">
-        <img src="./icon/01.png" alt="沒有專案">
-        <h2>此工作區中沒有專案。</h2>
-        <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
-        <div>
-          <a href="create-project.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
-          <a href="#" class="btn btn-secondary"><i class="fas fa-book-open"></i> 檢視教學</a>
-        </div>
-      </section>
-    `,
-      workflows: `
-        <div class="workflow-page-container animated fade-slide">
-          <div class="workflow-header">
-            <h2><i class="fas fa-cogs" style="margin-right: 10px;"></i>Workflows 工作流程</h2>
-            <div class="workflow-actions">
-              <input type="text" class="search-bar" placeholder="&#xF002; Search workflows...">
-              <a href="#" class="btn btn-outline" style="margin-right: 10px;" data-view="coming-soon"><i class="fas fa-layer-group"></i> Explore templates</a>
-              <a href="#" class="btn btn-primary" data-view="coming-soon"><i class="fas fa-plus"></i> Create Workflow</a>
-            </div>
-          </div>
-          <div class="workflow-content">
-            <div class="workflow-grid">
-              <div class="workflow-card">
-                <div class="workflow-card-header">
-                  <h3>Custom Workflow 自訂工作流程</h3>
-                  <i class="fas fa-ellipsis-h" data-view="coming-soon"></i>
-                </div>
-                <div class="workflow-card-image-placeholder" style="padding: 10px;">
-                  <img src="./icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                </div>
-                <p>點擊以編輯或查看此自訂工作流程的詳細資訊。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-    };
-
-    // 主內容區域元素
-    const mainContentArea = document.getElementById('mainContentArea');
-
-    // 設置活動連結
-    function setActiveLink(element) {
-      document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-      if (element) element.classList.add('active');
-    }
-
-    // 顯示視圖
-    function showView(viewName, element) {
-      setActiveLink(element);
-      
-      if (viewName === 'coming-soon') {
-        alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️\n\n🔗 點我捐款支持");
-        return;
-      }
-      
-      if (viewTemplates[viewName]) {
-        mainContentArea.innerHTML = viewTemplates[viewName];
-        
-        // 添加動畫類
-        const newContent = mainContentArea.querySelector('.animated');
-        if (newContent) {
-          setTimeout(() => newContent.classList.add('fadeSlideUp'), 0);
-        }
-      }
-    }
-
-    // 切換彈出窗口
-    function togglePopup(id, anchor) {
-      const popup = document.getElementById(id);
-      const isVisible = popup.style.display === 'block';
-      
-      // 隱藏所有彈出窗口
-      document.querySelectorAll('.settings-popup, #account-menu').forEach(p => p.style.display = 'none');
-      
-      if (!isVisible) {
-        popup.style.visibility = 'hidden';
-        popup.style.display = 'block';
-        
-        const rect = anchor.getBoundingClientRect();
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const popupWidth = popup.offsetWidth;
-        const popupHeight = popup.offsetHeight;
-        const screenHeight = window.innerHeight;
-        
-        const top = Math.max(10, Math.min(rect.top + rect.height / 2 - popupHeight / 2 + scrollTop, window.innerHeight - popupHeight - 10));
-        const left = 260 + 10; // 側邊欄寬度 + 間距
-        
-        popup.style.top = `${top}px`;
-        popup.style.left = `${left}px`;
-        popup.style.maxHeight = `${screenHeight - 40}px`;
-        popup.style.overflowY = 'auto';
-        popup.style.visibility = 'visible';
-      }
-    }
-
-    // 登出
-    function logout() {
-      localStorage.clear();
-      window.location.href = "login.html";
-    }
-
-    // 初始化頁面事件
-    document.addEventListener('DOMContentLoaded', () => {
-      // 設置用戶信息
-      const name = localStorage.getItem("username") || "測試帳戶";
-      const email = localStorage.getItem("email") || "test@demo.com";
-      
-      document.getElementById("user-name").innerHTML = `<strong>${name}</strong>`;
-      document.getElementById("user-email").textContent = email;
-      document.getElementById("menu-username").textContent = name;
-      document.getElementById("menu-email").textContent = email;
-      
-      // 設置用戶頭像
-      const firstChar = name.charAt(0) || "測";
-      document.getElementById("user-avatar").textContent = firstChar;
-      
-      // 設置側邊欄菜單點擊事件
-      document.querySelectorAll('.sidebar-menu li').forEach(li => {
-        li.addEventListener('click', () => {
-          const viewName = li.getAttribute('data-view');
-          if (viewName) showView(viewName, li);
-        });
-      });
-      
-      // 設置彈出窗口觸發器
-      document.querySelectorAll('[data-popup]').forEach(el => {
-        el.addEventListener('click', () => {
-          const popupId = el.getAttribute('data-popup');
-          togglePopup(popupId, el);
-        });
-      });
-      
-      // 設置 coming-soon 視圖觸發器
-      document.querySelectorAll('[data-view="coming-soon"]').forEach(el => {
-        el.addEventListener('click', () => showView('coming-soon'));
-      });
-      
-      // 顯示默認視圖（專案）
-      showView('projects', document.getElementById('projects-link'));
-    });
-
-    // 點擊文檔關閉彈出窗口
-    document.addEventListener('click', function(e) {
-      const accountMenu = document.getElementById('account-menu');
-      const settingsPopup = document.getElementById('settings-popup');
-      const userInfo = document.querySelector('.user-info');
-      const settingsToggle = document.getElementById('settings-toggle');
-
-      const isClickInsideAccount = accountMenu.contains(e.target) || (userInfo && userInfo.contains(e.target));
-      const isClickInsideSettings = settingsPopup.contains(e.target) || (settingsToggle && settingsToggle.contains(e.target));
-
-      if (!isClickInsideAccount) accountMenu.style.display = 'none';
-      if (!isClickInsideSettings) settingsPopup.style.display = 'none';
-    });
-  </script>
+  <!-- 引入統一功能模組 -->
+  <script src="common.js"></script>
 </body>
 </html>
