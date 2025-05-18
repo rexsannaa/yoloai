@@ -1,4 +1,4 @@
-<!-- create-project.html (更新版) -->
+<!-- create-project.html (最終更新版) -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -37,10 +37,10 @@
         <div><strong id="menu-username">測試帳戶</strong></div>
         <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
         <hr style="margin: 10px 0;">
-        <div data-view="coming-soon">⚙ 我的帳戶</div>
-        <div data-view="coming-soon">🗂 工作區管理</div>
-        <div data-view="coming-soon">💳 訂閱方案</div>
-        <div data-view="coming-soon">📊 使用紀錄</div>
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
@@ -48,10 +48,10 @@
 
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>
-    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
-    <div data-view="coming-soon">💰 點數使用情況</div>
-    <div data-view="coming-soon">👥 使用者管理</div>
-    <div data-view="coming-soon">🔑 API 金鑰</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
   </div>
 
   <!-- 主內容 -->
@@ -169,7 +169,7 @@
           </div>
 
           <div class="show-more">
-            <button id="show-more-btn">
+            <button id="show-more-btn" class="show-coming-soon">
               顯示更多 <i class="fas fa-chevron-down"></i>
             </button>
           </div>
@@ -192,7 +192,7 @@
   <!-- 引入統一功能模組 -->
   <script src="common.js"></script>
   
-  <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
+  <!-- 專案類型選擇的附加腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // 專案類型選擇
@@ -207,13 +207,6 @@
           const type = this.getAttribute('data-type');
           updatePreviewImage(type);
         });
-      });
-      
-      // 顯示更多按鈕
-      document.getElementById('show-more-btn').addEventListener('click', function() {
-        this.innerHTML = this.innerHTML.includes('顯示更多') ? 
-          '顯示較少 <i class="fas fa-chevron-up"></i>' : 
-          '顯示更多 <i class="fas fa-chevron-down"></i>';
       });
     });
 
