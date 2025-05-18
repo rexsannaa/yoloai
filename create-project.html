@@ -1,4 +1,4 @@
-<!-- create-project.html (最終更新版) -->
+<!-- create-project.html (更新版) -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -37,10 +37,10 @@
         <div><strong id="menu-username">測試帳戶</strong></div>
         <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
         <hr style="margin: 10px 0;">
-        <div class="show-coming-soon">⚙ 我的帳戶</div>
-        <div class="show-coming-soon">🗂 工作區管理</div>
-        <div class="show-coming-soon">💳 訂閱方案</div>
-        <div class="show-coming-soon">📊 使用紀錄</div>
+        <div data-view="coming-soon">⚙ 我的帳戶</div>
+        <div data-view="coming-soon">🗂 工作區管理</div>
+        <div data-view="coming-soon">💳 訂閱方案</div>
+        <div data-view="coming-soon">📊 使用紀錄</div>
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
@@ -48,10 +48,10 @@
 
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>
-    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
-    <div class="show-coming-soon">💰 點數使用情況</div>
-    <div class="show-coming-soon">👥 使用者管理</div>
-    <div class="show-coming-soon">🔑 API 金鑰</div>
+    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
+    <div data-view="coming-soon">💰 點數使用情況</div>
+    <div data-view="coming-soon">👥 使用者管理</div>
+    <div data-view="coming-soon">🔑 API 金鑰</div>
   </div>
 
   <!-- 主內容 -->
@@ -169,7 +169,7 @@
           </div>
 
           <div class="show-more">
-            <button id="show-more-btn" class="show-coming-soon">
+            <button id="show-more-btn">
               顯示更多 <i class="fas fa-chevron-down"></i>
             </button>
           </div>
@@ -177,7 +177,7 @@
 
         <div class="preview-section">
           <div class="annotation-preview">
-            <img src="./sample-images/vehicles-annotation.jpg" alt="標註預覽" id="preview-image">
+            <img src="./icon/03.gif" alt="標註預覽" id="preview-image">
           </div>
         </div>
 
@@ -192,7 +192,7 @@
   <!-- 引入統一功能模組 -->
   <script src="common.js"></script>
   
-  <!-- 專案類型選擇的附加腳本 -->
+  <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // 專案類型選擇
@@ -208,6 +208,13 @@
           updatePreviewImage(type);
         });
       });
+      
+      // 顯示更多按鈕
+      document.getElementById('show-more-btn').addEventListener('click', function() {
+        this.innerHTML = this.innerHTML.includes('顯示更多') ? 
+          '顯示較少 <i class="fas fa-chevron-up"></i>' : 
+          '顯示更多 <i class="fas fa-chevron-down"></i>';
+      });
     });
 
     // 更新預覽圖
@@ -215,22 +222,63 @@
       const previewImage = document.getElementById('preview-image');
       switch(type) {
         case 'object-detection':
-          previewImage.src = './sample-images/vehicles-annotation.jpg';
+          previewImage.src = './icon/03.gif';
           break;
         case 'classification':
-          previewImage.src = './sample-images/classification-preview.jpg';
+          previewImage.src = './icon/04.png';
           break;
         case 'segmentation':
-          previewImage.src = './sample-images/segmentation-preview.jpg';
+          previewImage.src = './icon/05.png';
           break;
         case 'keypoint':
-          previewImage.src = './sample-images/keypoint-preview.jpg';
+          previewImage.src = './icon/06.gif';
           break;
         case 'multimodal':
-          previewImage.src = './sample-images/multimodal-preview.jpg';
+          previewImage.src = './icon/05.png'; // 假設多模態使用相同圖片
           break;
         default:
-          previewImage.src = './sample-images/vehicles-annotation.jpg';
+          previewImage.src = './icon/03.gif';
+      }
+    }
+    
+    // 覆寫 common.js 中的 createProject 函數
+    function createProject() {
+      const projectName = document.getElementById('project-name').value.trim();
+      const annotationGroup = document.getElementById('annotation-group').value.trim();
+      const license = document.getElementById('license').value;
+      
+      if (!projectName) {
+        alert('請輸入專案名稱！');
+        return;
+      }
+      
+      // 獲取選擇的專案類型
+      const selectedType = document.querySelector('.project-type-option.selected');
+      if (!selectedType) {
+        alert('請選擇專案類型！');
+        return;
+      }
+      
+      const projectType = selectedType.getAttribute('data-type');
+      
+      // 僅當選擇「物件偵測」時繼續正常流程
+      if (projectType === 'object-detection') {
+        // 儲存專案資訊到本地存儲
+        const projectInfo = {
+          name: projectName,
+          annotationGroup: annotationGroup,
+          license: license,
+          type: projectType,
+          createdAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('currentProject', JSON.stringify(projectInfo));
+        
+        // 跳轉到上傳頁面
+        navigateTo('upload.html');
+      } else {
+        // 對於其他專案類型，顯示彈窗
+        showComingSoonMessage();
       }
     }
   </script>

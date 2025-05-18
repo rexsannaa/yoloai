@@ -1,4 +1,5 @@
-// common.js - 優化版本
+// common.js - 統一功能模組 (修改版)
+
 /**
  * 南臺科技大學AI視覺訓練平台 - 共用功能模組
  * 提供統一的側邊欄、用戶資訊和彈出視窗功能
@@ -13,7 +14,7 @@ const viewTemplates = {
       <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
       <div>
         <a href="create-project.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
-        <a href="#" class="btn btn-secondary show-coming-soon"><i class="fas fa-book-open"></i> 檢視教學</a>
+        <a href="#" class="btn btn-secondary" data-view="coming-soon"><i class="fas fa-book-open"></i> 檢視教學</a>
       </div>
     </section>
   `,
@@ -23,8 +24,8 @@ const viewTemplates = {
         <h2><i class="fas fa-cogs" style="margin-right: 10px;"></i>Workflows 工作流程</h2>
         <div class="workflow-actions">
           <input type="text" class="search-bar" placeholder="&#xF002; Search workflows...">
-          <a href="#" class="btn btn-outline show-coming-soon" style="margin-right: 10px;"><i class="fas fa-layer-group"></i> Explore templates</a>
-          <a href="#" class="btn btn-primary show-coming-soon"><i class="fas fa-plus"></i> Create Workflow</a>
+          <a href="#" class="btn btn-outline" style="margin-right: 10px;" data-view="coming-soon"><i class="fas fa-layer-group"></i> Explore templates</a>
+          <a href="#" class="btn btn-primary" data-view="coming-soon"><i class="fas fa-plus"></i> Create Workflow</a>
         </div>
       </div>
       <div class="workflow-content">
@@ -32,7 +33,7 @@ const viewTemplates = {
           <div class="workflow-card">
             <div class="workflow-card-header">
               <h3>Custom Workflow 自訂工作流程</h3>
-              <i class="fas fa-ellipsis-h show-coming-soon"></i>
+              <i class="fas fa-ellipsis-h" data-view="coming-soon"></i>
             </div>
             <div class="workflow-card-image-placeholder" style="padding: 10px;">
               <img src="./icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
@@ -44,9 +45,6 @@ const viewTemplates = {
     </div>
   `
 };
-
-// 全局變量，避免重複顯示彈窗
-let isShowingComingSoon = false;
 
 // 初始化應用程式
 function initApp() {
@@ -81,23 +79,18 @@ function initApp() {
     markCurrentPage();
   }
 
-  // 綁定單一事件處理，避免重複註冊
-  document.addEventListener('click', function(e) {
-    // 處理即將推出的功能
-    if (e.target.classList.contains('show-coming-soon') || 
-        e.target.closest('.show-coming-soon') || 
-        (e.target.closest('[data-view="coming-soon"]'))) {
+  // 設置 coming-soon 視圖觸發器
+  document.querySelectorAll('[data-view="coming-soon"]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      // 防止事件冒泡，避免多次觸發
       e.preventDefault();
       e.stopPropagation();
-      
-      // 顯示即將推出訊息
       showComingSoonMessage();
-      return;
-    }
-    
-    // 處理彈出窗口
-    closePopups(e);
-  }, true);
+    });
+  });
+
+  // 點擊文檔關閉彈出窗口
+  document.addEventListener('click', closePopups);
 }
 
 // 檢查登入狀態
@@ -142,11 +135,13 @@ function loadUserInfo() {
 // 設置側邊欄選單事件
 function setupSidebarMenu() {
   document.querySelectorAll('.sidebar-menu li').forEach(li => {
-    li.addEventListener('click', function(event) {
-      const viewName = this.getAttribute('data-view');
+    li.addEventListener('click', (event) => {
+      const viewName = li.getAttribute('data-view');
       
       if (viewName === 'coming-soon') {
-        // 防止繼續執行
+        // 防止事件冒泡，避免多次觸發
+        event.stopPropagation();
+        showComingSoonMessage();
         return;
       }
       
@@ -157,7 +152,7 @@ function setupSidebarMenu() {
         
         if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
           // 如果已經在index.html，則只顯示視圖
-          showView('workflows', this);
+          showView('workflows', li);
         } else {
           // 導航到index.html並添加參數指定要顯示的視圖
           window.location.href = 'index.html?view=workflows';
@@ -171,7 +166,7 @@ function setupSidebarMenu() {
         
         if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
           // 如果已經在index.html，則只顯示視圖
-          showView('projects', this);
+          showView('projects', li);
         } else {
           // 導航到index.html
           window.location.href = 'index.html';
@@ -298,24 +293,25 @@ function showView(viewName, element) {
     if (newContent) {
       setTimeout(() => newContent.classList.add('fadeSlideUp'), 0);
     }
+
+    // 設置新視圖中的 coming-soon 元素事件
+    mainContentArea.querySelectorAll('[data-view="coming-soon"]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        showComingSoonMessage();
+      });
+    });
   }
 }
 
 // 顯示即將推出訊息
 function showComingSoonMessage() {
-  // 防止重複顯示
-  if (isShowingComingSoon) return;
+  // 檢查是否已經顯示彈窗 (使用一個標誌變量避免重複彈窗)
+  if (window.isShowingAlert) return;
   
-  isShowingComingSoon = true;
-  
-  setTimeout(function() {
-    alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️\n\n🔗 點我捐款支持");
-    
-    // 延遲重置標誌，以確保不會因為用戶快速點擊而重複顯示
-    setTimeout(function() {
-      isShowingComingSoon = false;
-    }, 500);
-  }, 10);
+  window.isShowingAlert = true;
+  alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️\n\n🔗 點我捐款支持");
+  window.isShowingAlert = false;
 }
 
 // 頁面導航
@@ -329,7 +325,7 @@ function logout() {
   navigateTo("login.html");
 }
 
-// 創建專案
+// 創建專案 (在 create-project.html 中重新定義，這裡只作為備份)
 function createProject() {
   const projectName = document.getElementById('project-name').value.trim();
   const annotationGroup = document.getElementById('annotation-group').value.trim();
