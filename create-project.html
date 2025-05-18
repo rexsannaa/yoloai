@@ -8,6 +8,62 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="create-project.css">
+  <style>
+    /* 新增的樣式 */
+    .project-layout {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .project-options {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .project-preview {
+      width: 500px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 30px;
+      display: none; /* 預設隱藏，選中專案類型後顯示 */
+    }
+    
+    .annotation-preview {
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--form-border-color);
+      overflow: hidden;
+    }
+    
+    .annotation-preview img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    @media (max-width: 1200px) {
+      .project-layout {
+        flex-direction: column;
+      }
+      
+      .project-preview {
+        width: 100%;
+        position: static;
+      }
+    }
+    
+    /* 修改專案類型選項的樣式 */
+    .project-type-option {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
 <body>
 
@@ -92,92 +148,98 @@
           </div>
         </div>
 
-        <div class="form-section">
-          <h2>專案類型</h2>
+        <!-- 使用新的布局將專案類型選項和預覽分成左右兩列 -->
+        <div class="project-layout">
+          <div class="project-options">
+            <div class="form-section">
+              <h2>專案類型</h2>
+              
+              <div class="project-type-options">
+                <div class="project-type-option selected" data-type="object-detection">
+                  <div class="option-header">
+                    <div class="option-title">物件偵測</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-vector-square"></i> 邊界框</span>
+                      <span class="badge"><i class="fas fa-hashtag"></i> 計數</span>
+                      <span class="badge"><i class="fas fa-route"></i> 追蹤</span>
+                    </div>
+                  </div>
+                  <div class="option-description">使用邊界框識別物件及其位置。</div>
+                </div>
+
+                <div class="project-type-option" data-type="classification">
+                  <div class="option-header">
+                    <div class="option-title">分類</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-tag"></i> 圖像標籤</span>
+                      <span class="badge"><i class="fas fa-filter"></i> 過濾</span>
+                      <span class="badge"><i class="fas fa-shield-alt"></i> 內容審核</span>
+                    </div>
+                  </div>
+                  <div class="option-description">為整個圖像分配標籤。</div>
+                  <div class="option-radios">
+                    <label class="radio-label">
+                      <input type="radio" name="classif-type" value="single" checked>
+                      <span class="radio-custom"></span>
+                      單一標籤
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="classif-type" value="multi">
+                      <span class="radio-custom"></span>
+                      多標籤
+                    </label>
+                  </div>
+                </div>
+
+                <div class="project-type-option" data-type="segmentation">
+                  <div class="option-header">
+                    <div class="option-title">實例分割</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-draw-polygon"></i> 多邊形</span>
+                      <span class="badge"><i class="fas fa-ruler"></i> 測量</span>
+                      <span class="badge"><i class="fas fa-shapes"></i> 不規則形狀</span>
+                    </div>
+                  </div>
+                  <div class="option-description">檢測多個物件及其實際形狀。</div>
+                </div>
+
+                <div class="project-type-option" data-type="keypoint">
+                  <div class="option-header">
+                    <div class="option-title">關鍵點偵測</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-project-diagram"></i> 骨架結構</span>
+                      <span class="badge"><i class="fas fa-child"></i> 姿勢估計</span>
+                    </div>
+                  </div>
+                  <div class="option-description">識別主體上的關鍵點("骨架")。</div>
+                </div>
+
+                <div class="project-type-option" data-type="multimodal">
+                  <div class="option-header">
+                    <div class="option-title">多模態</div>
+                    <div class="option-badges">
+                      <span class="badge"><i class="fas fa-comment-dots"></i> 提示</span>
+                      <span class="badge"><i class="fas fa-question-circle"></i> 視覺問答</span>
+                      <span class="badge"><i class="fas fa-closed-captioning"></i> 說明文字</span>
+                    </div>
+                  </div>
+                  <div class="option-description">使用文本對描述圖像。</div>
+                </div>
+              </div>
+
+              <div class="show-more">
+                <button id="show-more-btn">
+                  顯示更多 <i class="fas fa-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+          </div>
           
-          <div class="project-type-options">
-            <div class="project-type-option selected" data-type="object-detection">
-              <div class="option-header">
-                <div class="option-title">物件偵測</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-vector-square"></i> 邊界框</span>
-                  <span class="badge"><i class="fas fa-hashtag"></i> 計數</span>
-                  <span class="badge"><i class="fas fa-route"></i> 追蹤</span>
-                </div>
-              </div>
-              <div class="option-description">使用邊界框識別物件及其位置。</div>
+          <!-- 預覽區域移到右側 -->
+          <div class="project-preview" id="project-preview">
+            <div class="annotation-preview">
+              <img src="./icon/03.gif" alt="標註預覽" id="preview-image">
             </div>
-
-            <div class="project-type-option" data-type="classification">
-              <div class="option-header">
-                <div class="option-title">分類</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-tag"></i> 圖像標籤</span>
-                  <span class="badge"><i class="fas fa-filter"></i> 過濾</span>
-                  <span class="badge"><i class="fas fa-shield-alt"></i> 內容審核</span>
-                </div>
-              </div>
-              <div class="option-description">為整個圖像分配標籤。</div>
-              <div class="option-radios">
-                <label class="radio-label">
-                  <input type="radio" name="classif-type" value="single" checked>
-                  <span class="radio-custom"></span>
-                  單一標籤
-                </label>
-                <label class="radio-label">
-                  <input type="radio" name="classif-type" value="multi">
-                  <span class="radio-custom"></span>
-                  多標籤
-                </label>
-              </div>
-            </div>
-
-            <div class="project-type-option" data-type="segmentation">
-              <div class="option-header">
-                <div class="option-title">實例分割</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-draw-polygon"></i> 多邊形</span>
-                  <span class="badge"><i class="fas fa-ruler"></i> 測量</span>
-                  <span class="badge"><i class="fas fa-shapes"></i> 不規則形狀</span>
-                </div>
-              </div>
-              <div class="option-description">檢測多個物件及其實際形狀。</div>
-            </div>
-
-            <div class="project-type-option" data-type="keypoint">
-              <div class="option-header">
-                <div class="option-title">關鍵點偵測</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-project-diagram"></i> 骨架結構</span>
-                  <span class="badge"><i class="fas fa-child"></i> 姿勢估計</span>
-                </div>
-              </div>
-              <div class="option-description">識別主體上的關鍵點("骨架")。</div>
-            </div>
-
-            <div class="project-type-option" data-type="multimodal">
-              <div class="option-header">
-                <div class="option-title">多模態</div>
-                <div class="option-badges">
-                  <span class="badge"><i class="fas fa-comment-dots"></i> 提示</span>
-                  <span class="badge"><i class="fas fa-question-circle"></i> 視覺問答</span>
-                  <span class="badge"><i class="fas fa-closed-captioning"></i> 說明文字</span>
-                </div>
-              </div>
-              <div class="option-description">使用文本對描述圖像。</div>
-            </div>
-          </div>
-
-          <div class="show-more">
-            <button id="show-more-btn">
-              顯示更多 <i class="fas fa-chevron-down"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="preview-section">
-          <div class="annotation-preview">
-            <img src="./icon/03.gif" alt="標註預覽" id="preview-image">
           </div>
         </div>
 
@@ -195,6 +257,12 @@
   <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // 初始化預覽區域可見性
+      const projectPreview = document.getElementById('project-preview');
+      if (projectPreview) {
+        projectPreview.style.display = 'block';
+      }
+      
       // 專案類型選擇
       document.querySelectorAll('.project-type-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -215,11 +283,25 @@
           '顯示較少 <i class="fas fa-chevron-up"></i>' : 
           '顯示更多 <i class="fas fa-chevron-down"></i>';
       });
+      
+      // 初始化預覽，顯示物件偵測的預覽圖
+      updatePreviewImage('object-detection');
     });
 
     // 更新預覽圖
     function updatePreviewImage(type) {
       const previewImage = document.getElementById('preview-image');
+      const projectPreview = document.getElementById('project-preview');
+      
+      // 只有多模態不顯示預覽
+      if (type === 'multimodal') {
+        projectPreview.style.display = 'none';
+        return;
+      } else {
+        projectPreview.style.display = 'block';
+      }
+      
+      // 更新預覽圖片
       switch(type) {
         case 'object-detection':
           previewImage.src = './icon/03.gif';
@@ -232,9 +314,6 @@
           break;
         case 'keypoint':
           previewImage.src = './icon/06.gif';
-          break;
-        case 'multimodal':
-          previewImage.src = './icon/05.png'; // 假設多模態使用相同圖片
           break;
         default:
           previewImage.src = './icon/03.gif';

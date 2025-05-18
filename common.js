@@ -306,6 +306,8 @@ function showView(viewName, element) {
 
 // 顯示即將推出訊息
 function showComingSoonMessage() {
+  alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️\n\n🔗 點我捐款支持");
+
   // 檢查是否已經顯示彈窗 (使用一個標誌變量避免重複彈窗)
   if (window.isShowingAlert) return;
   
