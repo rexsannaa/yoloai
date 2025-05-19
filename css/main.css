@@ -1,9 +1,10 @@
-/* style.css - EasyYOLO 主題樣式 (優化版) */
+/* main.css - 核心共用樣式 */
 
 /* === 全域設定 === */
 :root {
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
+  --primary-light: rgba(59, 130, 246, 0.15);
   --sidebar-bg: linear-gradient(to bottom, #0f172a, #1e3a8a);
   --sidebar-width: 260px;
   --text-light: #dbeafe;
@@ -16,7 +17,7 @@
   --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.04);
   --transition: all 0.3s ease;
-  --avatar-size: 40px; /* 新增頭像尺寸變數 */
+  --avatar-size: 40px;
 }
 
 * {
@@ -109,7 +110,6 @@ html, body {
   word-break: break-word;
 }
 
-/* 修改頭像樣式，確保完全圓形 */
 .user-avatar {
   width: var(--avatar-size);
   height: var(--avatar-size);

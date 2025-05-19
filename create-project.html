@@ -1,4 +1,4 @@
-<!-- create-project.html (更新版) -->
+<!-- create-project.html - 創建專案頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -6,64 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>建立專案 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="create-project.css">
-  <style>
-    /* 新增的樣式 */
-    .project-layout {
-      display: flex;
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-    
-    .project-options {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .project-preview {
-      width: 500px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 30px;
-      display: none; /* 預設隱藏，選中專案類型後顯示 */
-    }
-    
-    .annotation-preview {
-      height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f8fafc;
-      border-radius: 8px;
-      border: 1px solid var(--form-border-color);
-      overflow: hidden;
-    }
-    
-    .annotation-preview img {
-      max-width: 100%;
-      max-height: 400px;
-      object-fit: contain;
-    }
-    
-    @media (max-width: 1200px) {
-      .project-layout {
-        flex-direction: column;
-      }
-      
-      .project-preview {
-        width: 100%;
-        position: static;
-      }
-    }
-    
-    /* 修改專案類型選項的樣式 */
-    .project-type-option {
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-bottom: 8px;
-    }
-  </style>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/forms.css">
 </head>
 <body>
 
@@ -73,7 +17,7 @@
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
-      <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="projects-link" class="active" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
       <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
       <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
       <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
@@ -83,7 +27,7 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div class="user-avatar" id="user-avatar">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -93,10 +37,10 @@
         <div><strong id="menu-username">測試帳戶</strong></div>
         <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
         <hr style="margin: 10px 0;">
-        <div data-view="coming-soon">⚙ 我的帳戶</div>
-        <div data-view="coming-soon">🗂 工作區管理</div>
-        <div data-view="coming-soon">💳 訂閱方案</div>
-        <div data-view="coming-soon">📊 使用紀錄</div>
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
         <div onclick="logout()">⇦ 登出</div>
       </div>
     </div>
@@ -104,10 +48,10 @@
 
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>
-    <div data-view="coming-soon">🧾 訂閱方案與帳單</div>
-    <div data-view="coming-soon">💰 點數使用情況</div>
-    <div data-view="coming-soon">👥 使用者管理</div>
-    <div data-view="coming-soon">🔑 API 金鑰</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
   </div>
 
   <!-- 主內容 -->
@@ -213,18 +157,6 @@
                   </div>
                   <div class="option-description">識別主體上的關鍵點("骨架")。</div>
                 </div>
-
-                <div class="project-type-option" data-type="multimodal">
-                  <div class="option-header">
-                    <div class="option-title">多模態</div>
-                    <div class="option-badges">
-                      <span class="badge"><i class="fas fa-comment-dots"></i> 提示</span>
-                      <span class="badge"><i class="fas fa-question-circle"></i> 視覺問答</span>
-                      <span class="badge"><i class="fas fa-closed-captioning"></i> 說明文字</span>
-                    </div>
-                  </div>
-                  <div class="option-description">使用文本對描述圖像。</div>
-                </div>
               </div>
 
               <div class="show-more">
@@ -251,8 +183,8 @@
     </div>
   </main>
 
-  <!-- 引入統一功能模組 -->
-  <script src="common.js"></script>
+  <!-- 引入腳本 -->
+  <script src="js/app.js"></script>
   
   <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
   <script>
@@ -317,47 +249,6 @@
           break;
         default:
           previewImage.src = './icon/03.gif';
-      }
-    }
-    
-    // 覆寫 common.js 中的 createProject 函數
-    function createProject() {
-      const projectName = document.getElementById('project-name').value.trim();
-      const annotationGroup = document.getElementById('annotation-group').value.trim();
-      const license = document.getElementById('license').value;
-      
-      if (!projectName) {
-        alert('請輸入專案名稱！');
-        return;
-      }
-      
-      // 獲取選擇的專案類型
-      const selectedType = document.querySelector('.project-type-option.selected');
-      if (!selectedType) {
-        alert('請選擇專案類型！');
-        return;
-      }
-      
-      const projectType = selectedType.getAttribute('data-type');
-      
-      // 僅當選擇「物件偵測」時繼續正常流程
-      if (projectType === 'object-detection') {
-        // 儲存專案資訊到本地存儲
-        const projectInfo = {
-          name: projectName,
-          annotationGroup: annotationGroup,
-          license: license,
-          type: projectType,
-          createdAt: new Date().toISOString()
-        };
-        
-        localStorage.setItem('currentProject', JSON.stringify(projectInfo));
-        
-        // 跳轉到上傳頁面
-        navigateTo('upload.html');
-      } else {
-        // 對於其他專案類型，顯示彈窗
-        showComingSoonMessage();
       }
     }
   </script>

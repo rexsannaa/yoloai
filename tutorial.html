@@ -1,4 +1,4 @@
-<!-- tutorial.html - 教學頁面模板 -->
+<!-- tutorial.html - 教學平台入口頁 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI教學平台 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="tutorial.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/tutorial.css">
 </head>
 <body>
   <!-- 側邊欄 -->
@@ -75,11 +75,11 @@
 
       <!-- 教學分類 -->
       <div class="tutorial-filters">
-        <button class="tutorial-filter-btn active" onclick="filterTutorialsByCategory('all')">全部</button>
-        <button class="tutorial-filter-btn" onclick="filterTutorialsByCategory('object-detection')">物件偵測</button>
-        <button class="tutorial-filter-btn" onclick="filterTutorialsByCategory('classification')">分類</button>
-        <button class="tutorial-filter-btn" onclick="filterTutorialsByCategory('segmentation')">分割</button>
-        <button class="tutorial-filter-btn" onclick="filterTutorialsByCategory('keypoint')">關鍵點</button>
+        <button class="tutorial-filter-btn active" data-category="all">全部</button>
+        <button class="tutorial-filter-btn" data-category="object-detection">物件偵測</button>
+        <button class="tutorial-filter-btn" data-category="classification">分類</button>
+        <button class="tutorial-filter-btn" data-category="segmentation">分割</button>
+        <button class="tutorial-filter-btn" data-category="keypoint">關鍵點</button>
       </div>
 
       <!-- 教學卡片網格 -->
@@ -99,7 +99,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 20分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('object-detection-basic'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   繼續學習
                 </button>
               </div>
@@ -122,7 +122,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 15分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('classification-basic'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   繼續學習
                 </button>
               </div>
@@ -144,7 +144,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 30分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('segmentation-basic'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   開始學習
                 </button>
               </div>
@@ -166,7 +166,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 25分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('keypoint-basic'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   開始學習
                 </button>
               </div>
@@ -188,7 +188,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 40分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('object-detection-advanced'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   開始學習
                 </button>
               </div>
@@ -210,7 +210,7 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 35分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn" onclick="startTutorial('multimodal-basic'); event.stopPropagation();">
+                <button class="tutorial-btn">
                   開始學習
                 </button>
               </div>
@@ -223,7 +223,7 @@
       <div class="tutorial-resources">
         <h3 class="tutorial-block-title">學習資源</h3>
         
-        <div class="resource-item" onclick="showComingSoonMessage()">
+        <div class="resource-item show-coming-soon">
           <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
           <div class="resource-info">
             <h4 class="resource-title">視覺AI基礎手冊</h4>
@@ -232,7 +232,7 @@
           <button class="resource-download"><i class="fas fa-download"></i></button>
         </div>
         
-        <div class="resource-item" onclick="showComingSoonMessage()">
+        <div class="resource-item show-coming-soon">
           <div class="resource-icon"><i class="fas fa-file-code"></i></div>
           <div class="resource-info">
             <h4 class="resource-title">示例代碼包</h4>
@@ -241,7 +241,7 @@
           <button class="resource-download"><i class="fas fa-download"></i></button>
         </div>
         
-        <div class="resource-item" onclick="showComingSoonMessage()">
+        <div class="resource-item show-coming-soon">
           <div class="resource-icon"><i class="fas fa-video"></i></div>
           <div class="resource-info">
             <h4 class="resource-title">視頻教學系列</h4>
@@ -254,7 +254,7 @@
   </main>
 
   <!-- 引入腳本 -->
-  <script src="common.js"></script>
-  <script src="tutorial.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/tutorial.js"></script>
 </body>
 </html>

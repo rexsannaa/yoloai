@@ -1,4 +1,4 @@
-/* tutorial.css - 教學平台共用樣式 */
+/* tutorial.css - 教學模組樣式 */
 
 /* === 全域設定 === */
 :root {
@@ -13,7 +13,7 @@
   --text-light: #9ca3af;
   --border-color: #e5e7eb;
   --bg-light: #f9fafb;
-  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --border-radius: 8px;
   --transition: all 0.2s ease;
@@ -439,6 +439,88 @@
   margin: 0;
 }
 
+/* === 工作流教學樣式 === */
+.tutorial-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.tutorial-option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+}
+
+.tutorial-option:hover {
+  background-color: #f3f4f6;
+  transform: translateX(3px);
+}
+
+.tutorial-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.tutorial-icon i {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.gesture-icon {
+  background: linear-gradient(135deg, #818cf8, #4f46e5);
+}
+
+.object-icon {
+  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+}
+
+.audio-icon {
+  background: linear-gradient(135deg, #fda4af, #f43f5e);
+}
+
+/* === 相關教學推薦 === */
+.related-tutorials {
+  margin-top: 30px;
+}
+
+.tutorial-actions-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.tutorial-nav {
+  margin-bottom: 20px;
+}
+
+.tutorial-nav-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.tutorial-nav-link i {
+  margin-right: 8px;
+}
+
 /* === 響應式調整 === */
 @media (max-width: 768px) {
   .tutorial-grid {
@@ -454,5 +536,19 @@
   
   .tutorial-step-connector {
     width: 20px;
+  }
+  
+  .tutorial-filters {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 15px;
+  }
+  
+  .tutorial-filter-btn {
+    flex-shrink: 0;
+  }
+  
+  .tutorial-btn.btn-primary {
+    width: 100%;
   }
 }

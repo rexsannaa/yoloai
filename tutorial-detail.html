@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>物件偵測基礎 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="tutorial.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/tutorial.css">
 </head>
 <body>
   <!-- 側邊欄 -->
@@ -93,7 +93,7 @@
 
       <!-- 教學視頻 -->
       <div class="tutorial-video">
-        <div class="tutorial-video-placeholder" onclick="showComingSoonMessage()">
+        <div class="tutorial-video-placeholder show-coming-soon">
           <i class="fas fa-play-circle"></i>
           <p>點擊播放教學視頻</p>
         </div>
@@ -163,10 +163,10 @@
 
         <!-- 操作按鈕 -->
         <div class="tutorial-actions-container">
-          <button class="tutorial-btn" onclick="navigateTo('tutorial-detail.html')">
+          <button class="tutorial-btn show-coming-soon">
             <i class="fas fa-arrow-left"></i> 上一步
           </button>
-          <button class="tutorial-btn btn-primary" onclick="showComingSoonMessage()">
+          <button class="tutorial-btn btn-primary show-coming-soon">
             下一步 <i class="fas fa-arrow-right"></i>
           </button>
         </div>
@@ -176,7 +176,7 @@
       <div class="related-tutorials">
         <h3 class="tutorial-block-title">推薦教學</h3>
         <div class="tutorial-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
-          <div class="tutorial-card" onclick="showComingSoonMessage()">
+          <div class="tutorial-card show-coming-soon">
             <div class="tutorial-card-image">
               <img src="./icon/02.png" alt="資料標註技巧教學">
             </div>
@@ -186,7 +186,7 @@
             </div>
           </div>
           
-          <div class="tutorial-card" onclick="showComingSoonMessage()">
+          <div class="tutorial-card show-coming-soon">
             <div class="tutorial-card-image">
               <img src="./icon/01.png" alt="資料集擴增教學">
             </div>
@@ -201,7 +201,7 @@
   </main>
 
   <!-- 引入腳本 -->
-  <script src="common.js"></script>
-  <script src="tutorial.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/tutorial.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
-// common.js - 統一功能模組 (修正彈窗問題版)
+// app.js - 核心應用邏輯
 
 /**
- * 南臺科技大學AI視覺訓練平台 - 共用功能模組
+ * 南臺科技大學AI視覺訓練平台 - 核心功能模組
  * 提供統一的側邊欄、用戶資訊和彈出視窗功能
  */
 
@@ -49,6 +49,12 @@ const viewTemplates = {
 // 用於跟踪彈窗狀態的變量
 let isMessageShowing = false;
 
+// 當DOM載入後初始化應用
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始化應用程式
+  initApp();
+});
+
 // 初始化應用程式
 function initApp() {
   // 檢查登入狀態
@@ -82,7 +88,7 @@ function initApp() {
     markCurrentPage();
   }
 
-  // 設置 coming-soon 視圖觸發器 - 使用類選擇器而非屬性選擇器，避免重複綁定
+  // 設置 coming-soon 視圖觸發器
   setupComingSoonHandlers();
 
   // 點擊文檔關閉彈出窗口
@@ -216,6 +222,12 @@ function markCurrentPage() {
   if (currentPath.includes('create-project.html')) {
     const projectsLink = document.getElementById('projects-link');
     if (projectsLink) projectsLink.classList.add('active');
+  } else if (currentPath.includes('upload.html')) {
+    const projectsLink = document.getElementById('projects-link');
+    if (projectsLink) projectsLink.classList.add('active');
+  } else if (currentPath.includes('tutorial.html') || currentPath.includes('tutorial-detail.html')) {
+    const workflowsLink = document.getElementById('workflows-link');
+    if (workflowsLink) workflowsLink.classList.add('active');
   } else if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
     // 檢查URL參數，確定要顯示的視圖
     const urlParams = new URLSearchParams(window.location.search);
@@ -352,7 +364,7 @@ function logout() {
   navigateTo("login.html");
 }
 
-// 創建專案 (在 create-project.html 中重新定義，這裡只作為備份)
+// 創建專案
 function createProject() {
   const projectName = document.getElementById('project-name').value.trim();
   const annotationGroup = document.getElementById('annotation-group').value.trim();
@@ -372,20 +384,23 @@ function createProject() {
   
   const projectType = selectedType.getAttribute('data-type');
   
-  // 儲存專案資訊到本地存儲
-  const projectInfo = {
-    name: projectName,
-    annotationGroup: annotationGroup,
-    license: license,
-    type: projectType,
-    createdAt: new Date().toISOString()
-  };
-  
-  localStorage.setItem('currentProject', JSON.stringify(projectInfo));
-  
-  // 跳轉到上傳頁面
-  navigateTo('upload.html');
+  // 僅當選擇「物件偵測」時繼續正常流程
+  if (projectType === 'object-detection') {
+    // 儲存專案資訊到本地存儲
+    const projectInfo = {
+      name: projectName,
+      annotationGroup: annotationGroup,
+      license: license,
+      type: projectType,
+      createdAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('currentProject', JSON.stringify(projectInfo));
+    
+    // 跳轉到上傳頁面
+    navigateTo('upload.html');
+  } else {
+    // 對於其他專案類型，顯示彈窗
+    showComingSoonMessage();
+  }
 }
-
-// 在頁面加載時初始化應用
-document.addEventListener('DOMContentLoaded', initApp);

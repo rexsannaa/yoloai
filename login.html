@@ -1,11 +1,11 @@
-<!-- login.html - 優化版 -->
+<!-- login.html - 登入頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>南臺科技大學AI視覺訓練平台 - 登入</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
     </button>
 
     <div class="footer">
-      登入即代表您同意 <a href="#">服務條款</a> 和 <a href="#">隱私政策</a>
+      登入即代表您同意 <a href="#" class="show-coming-soon">服務條款</a> 和 <a href="#" class="show-coming-soon">隱私政策</a>
     </div>
   </div>
 
@@ -48,6 +48,14 @@
       });
       
       elements.loginBtn.addEventListener('click', handleLogin);
+      
+      // 添加彈窗事件处理
+      document.querySelectorAll('.show-coming-soon').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
+        });
+      });
     }
 
     // 登入處理
