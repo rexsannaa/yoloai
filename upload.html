@@ -733,28 +733,28 @@
       <div class="logo-text">AI</div>
     </div>
     <ul class="sidebar-menu">
-      <li title="1120">
+      <li title="1120" onclick="showComingSoonMessage()">
         <i class="fas fa-user-friends"></i>
       </li>
-      <li title="公共計畫">
+      <li title="公共計畫" onclick="showComingSoonMessage()">
         <i class="fas fa-globe"></i>
       </li>
-      <li class="active" title="專案">
+      <li class="active" title="專案" onclick="navigateTo('index.html')">
         <i class="fas fa-project-diagram"></i>
       </li>
-      <li title="工作流">
+      <li title="工作流" onclick="navigateTo('index.html?view=workflows')">
         <i class="fas fa-cogs"></i>
       </li>
-      <li title="監控">
+      <li title="監控" onclick="showComingSoonMessage()">
         <i class="fas fa-chart-line"></i>
       </li>
-      <li title="部署">
+      <li title="部署" onclick="showComingSoonMessage()">
         <i class="fas fa-rocket"></i>
       </li>
-      <li title="探索">
+      <li title="探索" onclick="showComingSoonMessage()">
         <i class="fas fa-compass"></i>
       </li>
-      <li title="設定">
+      <li title="設定" onclick="showComingSoonMessage()">
         <i class="fas fa-cog"></i>
       </li>
     </ul>
@@ -794,31 +794,31 @@
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="#" onclick="showComingSoonMessage(); return false;">
           <span class="menu-icon"><i class="fas fa-tags"></i></span>
           <span>標註資料</span>
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="#" onclick="showComingSoonMessage(); return false;">
           <span class="menu-icon"><i class="fas fa-cube"></i></span>
           <span>訓練模型</span>
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="#" onclick="showComingSoonMessage(); return false;">
           <span class="menu-icon"><i class="fas fa-play-circle"></i></span>
           <span>運行測試</span>
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="#" onclick="showComingSoonMessage(); return false;">
           <span class="menu-icon"><i class="fas fa-rocket"></i></span>
           <span>部署模型</span>
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="#" onclick="showComingSoonMessage(); return false;">
           <span class="menu-icon"><i class="fas fa-cog"></i></span>
           <span>專案設定</span>
         </a>
@@ -831,20 +831,20 @@
     <div><strong id="menu-username">測試帳戶</strong></div>
     <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
     <hr>
-    <div>⚙ 我的帳戶</div>
-    <div>🗂 工作區管理</div>
-    <div>💳 訂閱方案</div>
-    <div>📊 使用紀錄</div>
+    <div onclick="showComingSoonMessage()">⚙ 我的帳戶</div>
+    <div onclick="showComingSoonMessage()">🗂 工作區管理</div>
+    <div onclick="showComingSoonMessage()">💳 訂閱方案</div>
+    <div onclick="showComingSoonMessage()">📊 使用紀錄</div>
     <div id="logout-btn">⇦ 登出</div>
   </div>
 
   <!-- 設定彈窗 -->
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>
-    <div>🧾 訂閱方案與帳單</div>
-    <div>💰 點數使用情況</div>
-    <div>👥 使用者管理</div>
-    <div>🔑 API 金鑰</div>
+    <div onclick="showComingSoonMessage()">🧾 訂閱方案與帳單</div>
+    <div onclick="showComingSoonMessage()">💰 點數使用情況</div>
+    <div onclick="showComingSoonMessage()">👥 使用者管理</div>
+    <div onclick="showComingSoonMessage()">🔑 API 金鑰</div>
   </div>
 
   <!-- 移動設備標題欄 -->
@@ -1057,24 +1057,6 @@
           window.location.href = 'login.html';
         });
       }
-      
-      // 側邊欄功能按鈕
-      document.querySelectorAll('.sidebar-menu li').forEach(li => {
-        li.addEventListener('click', () => {
-          showComingSoonMessage();
-        });
-      });
-      
-      // 專案選單功能按鈕
-      document.querySelectorAll('.project-menu li:not(.active)').forEach(li => {
-        li.addEventListener('click', (e) => {
-          const activeLink = li.querySelector('a');
-          if (activeLink && activeLink.getAttribute('href') === '#') {
-            e.preventDefault();
-            showComingSoonMessage();
-          }
-        });
-      });
     }
     
     /**
@@ -1089,13 +1071,29 @@
         userAvatar.addEventListener('click', (e) => {
           e.stopPropagation();
           
-          // 顯示帳號選單
-          const rect = userAvatar.getBoundingClientRect();
-          accountMenu.style.display = accountMenu.style.display === 'block' ? 'none' : 'block';
+          // 隱藏之前先顯示為none，以便我們可以計算元素大小
+          accountMenu.style.display = 'none';
           
-          // 設置選單位置
-          accountMenu.style.left = `${rect.left + 10}px`;
-          accountMenu.style.top = `${rect.bottom + 10}px`;
+          // 現在檢查顯示狀態和切換
+          const isVisible = accountMenu.style.display === 'block';
+          accountMenu.style.display = isVisible ? 'none' : 'block';
+          
+          if (!isVisible) {
+            // 獲取用戶頭像位置
+            const rect = userAvatar.getBoundingClientRect();
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            
+            // 為移動設備調整位置
+            if (window.innerWidth <= 1200) {
+              // 在移動設備上，將選單置於頭像下方居中
+              accountMenu.style.left = `${rect.left - (accountMenu.offsetWidth / 2) + (rect.width / 2)}px`;
+              accountMenu.style.top = `${rect.bottom + scrollTop + 10}px`;
+            } else {
+              // 在桌面設備上，將選單置於頭像右側
+              accountMenu.style.left = `${rect.right + 10}px`;
+              accountMenu.style.top = `${rect.top + scrollTop - 10}px`;
+            }
+          }
         });
       }
       
@@ -1288,6 +1286,14 @@
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    /**
+     * 頁面導航
+     * @param {string} page - 目標頁面URL
+     */
+    function navigateTo(page) {
+      window.location.href = page;
     }
     
     /**

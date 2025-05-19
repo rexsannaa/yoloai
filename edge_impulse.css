@@ -1,0 +1,354 @@
+/* 基本重設與全域樣式 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 類似圖片中的字體 */
+    background-color: #f4f7f6; /* 整體背景色 */
+    color: #333;
+    font-size: 14px;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 左側邊欄 */
+.sidebar {
+    width: 240px;
+    background-color: #ffffff; /* 圖片中側邊欄背景色 */
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar .logo {
+    padding: 0 20px 20px 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333; /* 假設的 Logo 顏色 */
+    text-align: center;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav ul li a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #555; /* 導航連結顏色 */
+    border-left: 3px solid transparent;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
+    background-color: #eef2f5; /* 滑鼠懸停/選中背景色 */
+    color: #2a6fdb; /* 選中項目文字顏色 */
+    border-left-color: #2a6fdb; /* 選中項目左邊框顏色 */
+}
+
+.sidebar .sidebar-footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.sidebar .sidebar-footer a {
+    color: #555;
+    text-decoration: none;
+}
+
+/* 主要內容區域 */
+.main-content {
+    flex-grow: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 主要內容頂部標題 */
+.main-header {
+    background: linear-gradient(to right, #4a3f9d, #6355c4); /* 圖片中的漸層色 */
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.main-header p {
+    margin: 5px 0 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-right .icon-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.header-right .user-profile {
+    /* 可添加頭像等樣式 */
+    font-weight: bold;
+}
+
+
+/* 統計卡片 */
+.stats-cards {
+    display: flex;
+    gap: 20px; /* 卡片間距 */
+    padding: 25px 30px;
+    background-color: #ffffff; /* 卡片區塊背景 */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    min-width: 150px; /* 最小寬度 */
+}
+
+.card h2 {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.card .stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.card-blue { background-color: #695ae8; } /* 總任務數量 */
+.card-teal { background-color: #33c3cc; } /* 進行中任務 */
+.card-lightblue { background-color: #6ac7e6; } /* 待處理任務 */
+.card-orange { background-color: #f68c5c; } /* 已完成任務 */
+
+/* 內容區域與分頁 */
+.content-area {
+    padding: 0 30px 30px 30px;
+    background-color: #f4f7f6; /* 調整為與整體背景色一致或稍淺 */
+    flex-grow: 1;
+}
+
+.tabs {
+    border-bottom: 1px solid #d1d9e0;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    background-color: #ffffff; /* 分頁條背景 */
+    padding: 0 15px;
+}
+
+.tab-button {
+    padding: 15px 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1em;
+    color: #555; /* 未選中分頁文字顏色 */
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px; /* 使底部邊框與父元素邊框重疊 */
+}
+
+.tab-button.active {
+    color: #2a6fdb; /* 選中分頁文字顏色 */
+    border-bottom-color: #2a6fdb; /* 選中分頁底部邊框顏色 */
+    font-weight: bold;
+}
+
+.tab-content {
+    background-color: #ffffff; /* 主要內容區塊背景 */
+    padding: 25px;
+    border-radius: 0 0 8px 8px; /* 如果tabs有背景且與content分開 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 表單樣式 */
+.form-section, .details-section {
+    margin-bottom: 20px;
+}
+
+.form-section h3, .details-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group select:focus {
+    border-color: #2a6fdb;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(42, 111, 219, 0.2);
+}
+
+
+/* 按鈕樣式 */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.btn-primary {
+    background-color: #2a6fdb; /* 主要按鈕顏色 */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #205cb0;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* 次要按鈕顏色 */
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* 危險/刪除按鈕顏色 */
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-link {
+    background-color: transparent;
+    color: #2a6fdb;
+    text-decoration: underline;
+    padding-left: 0;
+    padding-right: 0;
+}
+.btn-link:hover {
+    color: #205cb0;
+}
+
+
+/* 右側邊欄 */
+.right-sidebar {
+    width: 300px; /* 根據圖片調整 */
+    background-color: #ffffff;
+    padding: 25px;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.right-sidebar h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.filter-section, .task-details-section {
+    /* 樣式已包含在 h4 和 form-group 中 */
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: .25rem;
+    height: 20px;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    background-color: #28a745; /* 進度條顏色 */
+    height: 100%;
+    border-radius: .25rem;
+    text-align: center;
+    color: white;
+    line-height: 20px;
+    font-size: 0.8em;
+}
+
+/* 響應式調整範例 (可選) */
+@media (max-width: 1200px) {
+    .right-sidebar {
+        display: none; /* 在較小螢幕上隱藏右側邊欄 */
+    }
+    .stats-cards {
+        flex-wrap: wrap; /* 卡片換行 */
+    }
+    .card {
+        flex-basis: calc(50% - 10px); /* 每行顯示兩個卡片 */
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px; /* 縮小左側邊欄 */
+    }
+    .sidebar .logo, .sidebar nav ul li a span /* 假設導航有文字 */ {
+        display: none; /* 只顯示圖標 */
+    }
+     .main-header h1 {
+        font-size: 1.4em;
+    }
+    .card {
+        flex-basis: 100%; /* 每行顯示一個卡片 */
+    }
+    .main-content {
+        padding: 15px;
+    }
+    .tabs {
+        /* 可以考慮將分頁轉為下拉選單 */
+    }
+}
