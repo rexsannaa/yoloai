@@ -1,0 +1,121 @@
+<!-- workflow.html - 工作流頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>工作流 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="workflow.css">
+</head>
+<body>
+
+  <!-- 側邊欄 -->
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
+      <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="workflows-link" class="active" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" data-popup="account-menu">
+        <div class="user-avatar" id="user-avatar">測</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+        </div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
+  </div>
+
+  <!-- 主內容 -->
+  <main class="main-content">
+    <div class="workflow-page-container animated fadeSlideUp">
+      <div class="workflow-header">
+        <h2><i class="fas fa-cogs"></i> Workflows 工作流程</h2>
+        <div class="workflow-actions">
+          <input type="text" class="search-bar" placeholder="&#xF002; Search workflows...">
+          <a href="#" class="btn btn-outline show-coming-soon"><i class="fas fa-layer-group"></i> Explore templates</a>
+          <a href="#" class="btn btn-primary show-coming-soon"><i class="fas fa-plus"></i> Create Workflow</a>
+        </div>
+      </div>
+      
+      <!-- 工作流列表 -->
+      <div class="workflow-content">
+        <div class="workflow-grid">
+          <!-- 自訂工作流 -->
+          <div class="workflow-card">
+            <div class="workflow-card-header">
+              <h3>Custom Workflow 自訂工作流程</h3>
+              <i class="fas fa-ellipsis-h show-coming-soon"></i>
+            </div>
+            <div class="workflow-card-image">
+              <img src="./icon/02.png" alt="Custom Workflow Icon">
+            </div>
+            <p>點擊以編輯或查看此自訂工作流程的詳細資訊。</p>
+          </div>
+          
+          <!-- 教學工作流 - 新增區塊 -->
+          <div class="workflow-card tutorial-card">
+            <div class="workflow-card-header">
+              <h3>Start with a tutorial</h3>
+              <span class="tutorial-badge">教學</span>
+            </div>
+            <div class="tutorial-options">
+              <div class="tutorial-option" onclick="showComingSoonMessage()">
+                <div class="tutorial-icon gesture-icon">
+                  <i class="fas fa-hand-paper"></i>
+                </div>
+                <div class="tutorial-label">Motion: Gesture recognition</div>
+              </div>
+              <div class="tutorial-option" onclick="showComingSoonMessage()">
+                <div class="tutorial-icon object-icon">
+                  <i class="fas fa-vector-square"></i>
+                </div>
+                <div class="tutorial-label">Images: Object detection</div>
+              </div>
+              <div class="tutorial-option" onclick="showComingSoonMessage()">
+                <div class="tutorial-icon audio-icon">
+                  <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="tutorial-label">Audio: Audio classification</div>
+              </div>
+            </div>
+            <p class="tutorial-description">Not sure where to start? Follow a tutorial to build your first model in just minutes!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 引入統一功能模組 -->
+  <script src="common.js"></script>
+  <script src="workflow.js"></script>
+</body>
+</html>

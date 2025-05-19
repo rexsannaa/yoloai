@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專案管理介面</title>
+    <link rel="stylesheet" href="edge_impulse.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">公司標誌</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">儀表板</a></li>
+                    <li><a href="#">任務列表</a></li>
+                    <li><a href="#">行事曆</a></li>
+                    <li><a href="#">檔案</a></li>
+                    <li><a href="#">設定</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#">登出</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>1120 project 1</h1>
+                    <p>用於監控專案進度與相關統計數據的儀表板。</p>
+                </div>
+                <div class="header-right">
+                    <button class="icon-button">通知</button>
+                    <div class="user-profile">使用者</div>
+                </div>
+            </header>
+
+            <section class="stats-cards">
+                <div class="card card-blue">
+                    <h2>總任務數量</h2>
+                    <p class="stat-number">150</p>
+                </div>
+                <div class="card card-teal">
+                    <h2>進行中任務</h2>
+                    <p class="stat-number">65</p>
+                </div>
+                <div class="card card-lightblue">
+                    <h2>待處理任務</h2>
+                    <p class="stat-number">35</p>
+                </div>
+                <div class="card card-orange">
+                    <h2>已完成任務</h2>
+                    <p class="stat-number">50</p>
+                </div>
+            </section>
+
+            <section class="content-area">
+                <div class="tabs">
+                    <button class="tab-button active">項目列表</button>
+                    <button class="tab-button">圖表分析</button>
+                    <button class="tab-button">使用者分析</button>
+                    <button class="tab-button">任務時間追蹤</button>
+                </div>
+
+                <div class="tab-content">
+                    <div class="form-section">
+                        <h3>基本資訊</h3>
+                        <div class="form-group">
+                            <label for="projectName">專案名稱</label>
+                            <input type="text" id="projectName" value="新網站開發">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectOwner">專案負責人</label>
+                            <input type="text" id="projectOwner" value="陳大文">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDeadline">截止日期</label>
+                            <input type="date" id="projectDeadline" value="2025-12-31">
+                        </div>
+                        <button class="btn btn-primary">儲存變更</button>
+                    </div>
+
+                    <div class="details-section">
+                        <h3>更多設定 (範例)</h3>
+                        <p>此處為根據所選分頁顯示的詳細內容。</p>
+                        <div class="form-group">
+                            <label for="priority">優先順序</label>
+                            <select id="priority">
+                                <option>高</option>
+                                <option>中</option>
+                                <option>低</option>
+                            </select>
+                        </div>
+                         <button class="btn btn-secondary">新增任務</button>
+                         <button class="btn btn-danger">刪除專案</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <aside class="right-sidebar">
+            <div class="filter-section">
+                <h4>篩選</h4>
+                <div class="form-group">
+                    <label for="statusFilter">狀態</label>
+                    <select id="statusFilter">
+                        <option>全部</option>
+                        <option>進行中</option>
+                        <option>已完成</option>
+                    </select>
+                </div>
+                 <button class="btn btn-link">清除篩選</button>
+            </div>
+            <div class="task-details-section">
+                <h4>任務詳情</h4>
+                <p>目前沒有選取任務。</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 60%;">60%</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>

@@ -1,0 +1,240 @@
+/* workflow.css - 工作流頁面專用樣式 */
+
+/* 工作流頁面容器 */
+.workflow-page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  animation: fadeSlideUp 0.5s ease-out forwards;
+}
+
+/* 頁面標題區塊 */
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.workflow-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #111827;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.workflow-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-bar {
+  padding: 9px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9em;
+  width: 280px;
+  background-color: #fff;
+  font-family: 'Font Awesome 6 Free', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.search-bar::placeholder {
+  color: #9ca3af;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* 工作流內容區域 */
+.workflow-content {
+  padding: 15px 0;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* 工作流卡片樣式 */
+.workflow-card {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.workflow-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.workflow-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.workflow-card-header h3 {
+  margin: 0;
+  font-size: 1.15em;
+  color: #111827;
+  font-weight: 600;
+}
+
+.workflow-card-header .fas.fa-ellipsis-h {
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.workflow-card-header .fas.fa-ellipsis-h:hover {
+  color: #1f2937;
+  background-color: #f3f4f6;
+}
+
+.workflow-card-image {
+  width: 100%;
+  height: 130px;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.workflow-card-image img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.workflow-card p {
+  font-size: 0.9em;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 教學卡片專用樣式 */
+.tutorial-card {
+  border: 1px dashed #d1d5db;
+  background-color: #fafbfc;
+}
+
+.tutorial-badge {
+  background-color: #e1effe;
+  color: #1e40af;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.tutorial-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.tutorial-option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+}
+
+.tutorial-option:hover {
+  background-color: #f3f4f6;
+  transform: translateX(3px);
+}
+
+.tutorial-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.tutorial-icon i {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.gesture-icon {
+  background: linear-gradient(135deg, #818cf8, #4f46e5);
+}
+
+.object-icon {
+  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+}
+
+.audio-icon {
+  background: linear-gradient(135deg, #fda4af, #f43f5e);
+}
+
+.tutorial-label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.tutorial-description {
+  font-size: 0.85em;
+  color: #6b7280;
+  margin: 10px 0 0 0;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .workflow-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .workflow-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .workflow-actions .btn {
+    flex-grow: 1;
+    font-size: 0.85em;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}
