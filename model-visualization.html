@@ -1,19 +1,18 @@
-<!-- visualization.html - 視覺化頁面 -->
+<!-- model-visualization.html - 模型視覺化頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>視覺化展示 - EasyYOLO 視覺訓練平台</title>
+  <title>神經網路視覺化 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/visualization.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/visualization.css">
 </head>
 <body>
   <!-- 側邊欄 -->
   <div class="sidebar">
-    <div class="sidebar-header">EasyYOLO 視覺訓練平台</div>
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
@@ -27,7 +26,7 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -58,7 +57,7 @@
   <div class="project-sidebar">
     <div class="project-header">
       <div class="project-icon">
-        <img src="../icon/01.png" alt="專案圖示" id="project-icon-img">
+        <img src="./icon/01.png" alt="專案圖示" id="project-icon-img">
       </div>
       <div class="project-title">
         <h3 id="project-name-display">我的第一個專案</h3>
@@ -84,7 +83,7 @@
         </a>
       </li>
       <li>
-        <a href="editor.html">
+        <a href="visual-editor.html">
           <span class="menu-icon"><i class="fas fa-tags"></i></span>
           <span>視覺化編輯</span>
         </a>
@@ -102,7 +101,7 @@
         </a>
       </li>
       <li class="active">
-        <a href="visualization.html">
+        <a href="model-visualization.html">
           <span class="menu-icon"><i class="fas fa-brain"></i></span>
           <span>視覺化展示</span>
         </a>
@@ -153,7 +152,7 @@
           <div class="viz-section">
             <h3 class="viz-section-title">輸入圖像</h3>
             <div class="input-image-container">
-              <img src="../icon/sample1.jpg" alt="輸入圖像" id="input-image">
+              <img src="./icon/sample1.jpg" alt="輸入圖像" id="input-image">
               <div class="image-overlay">
                 <button class="btn btn-outline" id="change-image-btn">
                   <i class="fas fa-exchange-alt"></i> 更換圖像
@@ -286,39 +285,39 @@
               <!-- 特徵圖將通過JavaScript動態添加 -->
               <div class="feature-map">
                 <div class="feature-map-info">特徵 1</div>
-                <img src="../icon/feature_map1.png" alt="特徵圖 1">
+                <img src="./icon/feature_map1.png" alt="特徵圖 1">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 2</div>
-                <img src="../icon/feature_map2.png" alt="特徵圖 2">
+                <img src="./icon/feature_map2.png" alt="特徵圖 2">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 3</div>
-                <img src="../icon/feature_map3.png" alt="特徵圖 3">
+                <img src="./icon/feature_map3.png" alt="特徵圖 3">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 4</div>
-                <img src="../icon/feature_map4.png" alt="特徵圖 4">
+                <img src="./icon/feature_map4.png" alt="特徵圖 4">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 5</div>
-                <img src="../icon/feature_map5.png" alt="特徵圖 5">
+                <img src="./icon/feature_map5.png" alt="特徵圖 5">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 6</div>
-                <img src="../icon/feature_map6.png" alt="特徵圖 6">
+                <img src="./icon/feature_map6.png" alt="特徵圖 6">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 7</div>
-                <img src="../icon/feature_map7.png" alt="特徵圖 7">
+                <img src="./icon/feature_map7.png" alt="特徵圖 7">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 8</div>
-                <img src="../icon/feature_map8.png" alt="特徵圖 8">
+                <img src="./icon/feature_map8.png" alt="特徵圖 8">
               </div>
               <div class="feature-map">
                 <div class="feature-map-info">特徵 9</div>
-                <img src="../icon/feature_map9.png" alt="特徵圖 9">
+                <img src="./icon/feature_map9.png" alt="特徵圖 9">
               </div>
               <!-- 更多特徵圖... -->
             </div>
@@ -346,7 +345,7 @@
               </div>
               
               <div class="detail-image-container">
-                <img src="../icon/feature_map1.png" alt="特徵 1 詳情" class="detail-image">
+                <img src="./icon/feature_map1.png" alt="特徵 1 詳情" class="detail-image">
               </div>
               
               <div class="detail-stats">
@@ -373,7 +372,7 @@
                 <div class="histogram-plot">
                   <!-- 直方圖將通過JavaScript動態添加 -->
                   <div class="histogram-placeholder">
-                    <img src="../icon/histogram.png" alt="激活分佈">
+                    <img src="./icon/histogram.png" alt="激活分佈">
                   </div>
                 </div>
               </div>
@@ -422,16 +421,16 @@
       <div class="modal-body">
         <div class="image-grid">
           <div class="image-select-item active">
-            <img src="../icon/sample1.jpg" alt="圖像 1">
+            <img src="./icon/sample1.jpg" alt="圖像 1">
           </div>
           <div class="image-select-item">
-            <img src="../icon/sample2.jpg" alt="圖像 2">
+            <img src="./icon/sample2.jpg" alt="圖像 2">
           </div>
           <div class="image-select-item">
-            <img src="../icon/sample3.jpg" alt="圖像 3">
+            <img src="./icon/sample3.jpg" alt="圖像 3">
           </div>
           <div class="image-select-item">
-            <img src="../icon/sample4.jpg" alt="圖像 4">
+            <img src="./icon/sample4.jpg" alt="圖像 4">
           </div>
           <!-- 更多圖像... -->
         </div>
@@ -443,9 +442,8 @@
     </div>
   </div>
 
-  <!-- 引入核心邏輯 -->
-  <script src="../js/core.js"></script>
-  <!-- 引入視覺化腳本 -->
-  <script src="../js/visualization.js"></script>
+  <!-- 引入腳本 -->
+  <script src="js/app.js"></script>
+  <script src="js/visualization.js"></script>
 </body>
 </html>

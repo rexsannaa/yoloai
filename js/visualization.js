@@ -1,19 +1,9 @@
-// visualization.js - 視覺化功能
+// visualization.js - 視覺化頁面腳本
 
 /**
- * EasyYOLO - 視覺化機器學習教學平台 
- * 視覺化功能模組
+ * 視覺化頁面功能模組
+ * 處理特徵圖顯示、層級選擇和交互功能
  */
-
-// 全局變量
-let currentVizType = 'feature-maps';
-let currentLayer = '卷積層 1 - 卷積 (3x3)';
-let currentFeature = 1;
-let zoomLevel = 100;
-let channelCount = 16;
-let currentPage = 1;
-let totalPages = 4;
-let selectedImage = './icon/sample1.jpg';
 
 document.addEventListener('DOMContentLoaded', function() {
   // 檢查登入狀態
@@ -28,8 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
   setupMobileSidebar();
   
   // 設置彈窗功能
-  setupVisModalFunctions();
+  setupModals();
 });
+
+// 全局變量
+let currentVizType = 'feature-maps';
+let currentLayer = '卷積層 1 - 卷積 (3x3)';
+let currentFeature = 1;
+let zoomLevel = 100;
+let channelCount = 16;
+let currentPage = 1;
+let totalPages = 4;
+let selectedImage = './icon/sample1.jpg';
 
 /**
  * 初始化視覺化功能
@@ -42,10 +42,7 @@ function initVisualization() {
   setupLayerSelection();
   
   // 設置運行視覺化按鈕
-  const runBtn = document.getElementById('run-viz-btn');
-  if (runBtn) {
-    runBtn.addEventListener('click', runVisualization);
-  }
+  document.getElementById('run-viz-btn').addEventListener('click', runVisualization);
   
   // 設置特徵圖點擊事件
   setupFeatureMapClick();
@@ -60,13 +57,9 @@ function initVisualization() {
   setupColormapSelector();
   
   // 設置更換圖像按鈕
-  const changeImgBtn = document.getElementById('change-image-btn');
-  if (changeImgBtn) {
-    changeImgBtn.addEventListener('click', function() {
-      const modal = document.getElementById('image-select-modal');
-      if (modal) modal.classList.add('active');
-    });
-  }
+  document.getElementById('change-image-btn').addEventListener('click', function() {
+    document.getElementById('image-select-modal').classList.add('active');
+  });
 }
 
 /**
@@ -74,7 +67,6 @@ function initVisualization() {
  */
 function setupVizTypeSelector() {
   const vizTypeSelector = document.getElementById('viz-type-selector');
-  if (!vizTypeSelector) return;
   
   vizTypeSelector.addEventListener('change', function() {
     currentVizType = this.value;
@@ -163,30 +155,29 @@ function setupFeatureMapClick() {
  */
 function updateFeatureDetails() {
   // 更新詳情標題
-  const detailHeader = document.querySelector('.feature-detail-header h4');
-  const detailSubtitle = document.querySelector('.detail-subtitle');
-  
-  if (detailHeader) detailHeader.textContent = `特徵 ${currentFeature}`;
-  if (detailSubtitle) detailSubtitle.textContent = currentLayer;
+  document.querySelector('.feature-detail-header h4').textContent = `特徵 ${currentFeature}`;
+  document.querySelector('.detail-subtitle').textContent = currentLayer;
   
   // 更新詳情圖片
   const detailImage = document.querySelector('.detail-image');
   const featureMapImage = document.querySelector(`.feature-map:nth-child(${currentFeature}) img`);
   
-  if (detailImage && featureMapImage) {
+  if (featureMapImage) {
     detailImage.src = featureMapImage.src;
   }
   
   // 更新統計數據（模擬數據）
-  const statValues = document.querySelectorAll('.stat-value');
-  if (statValues.length >= 4) {
-    // 模擬不同特徵的不同統計值
-    const seed = currentFeature * 0.1;
-    statValues[0].textContent = (-0.2 - seed).toFixed(4);
-    statValues[1].textContent = (0.8 + seed).toFixed(4);
-    statValues[2].textContent = (0.3 + seed * 0.5).toFixed(4);
-    statValues[3].textContent = (0.1 + seed * 0.2).toFixed(4);
-  }
+  const minValue = document.querySelector('.stat-value:nth-of-type(1)');
+  const maxValue = document.querySelector('.stat-value:nth-of-type(2)');
+  const avgValue = document.querySelector('.stat-value:nth-of-type(3)');
+  const stdValue = document.querySelector('.stat-value:nth-of-type(4)');
+  
+  // 模擬不同特徵的不同統計值
+  const seed = currentFeature * 0.1;
+  minValue.textContent = (-0.2 - seed).toFixed(4);
+  maxValue.textContent = (0.8 + seed).toFixed(4);
+  avgValue.textContent = (0.3 + seed * 0.5).toFixed(4);
+  stdValue.textContent = (0.1 + seed * 0.2).toFixed(4);
 }
 
 /**
@@ -196,8 +187,6 @@ function setupPagination() {
   const prevPageBtn = document.getElementById('prev-page-btn');
   const nextPageBtn = document.getElementById('next-page-btn');
   const pageIndicator = document.querySelector('.page-indicator');
-  
-  if (!prevPageBtn || !nextPageBtn || !pageIndicator) return;
   
   prevPageBtn.addEventListener('click', function() {
     if (currentPage > 1) {
@@ -237,56 +226,44 @@ function setupSettingsControls() {
   const channelsSlider = document.getElementById('viz-channels');
   const channelsValue = document.getElementById('channels-value');
   
-  if (zoomSlider && zoomValue) {
-    zoomSlider.addEventListener('input', function() {
-      zoomLevel = this.value;
-      zoomValue.textContent = `${zoomLevel}%`;
-      
-      // 應用縮放效果
-      document.querySelectorAll('.feature-map img').forEach(img => {
-        img.style.transform = `scale(${zoomLevel / 100})`;
-      });
-      
-      const detailImage = document.querySelector('.detail-image');
-      if (detailImage) {
-        detailImage.style.transform = `scale(${zoomLevel / 100})`;
-      }
+  zoomSlider.addEventListener('input', function() {
+    zoomLevel = this.value;
+    zoomValue.textContent = `${zoomLevel}%`;
+    
+    // 應用縮放效果
+    document.querySelectorAll('.feature-map img').forEach(img => {
+      img.style.transform = `scale(${zoomLevel / 100})`;
     });
-  }
+    
+    document.querySelector('.detail-image').style.transform = `scale(${zoomLevel / 100})`;
+  });
   
-  if (channelsSlider && channelsValue) {
-    channelsSlider.addEventListener('input', function() {
-      channelCount = this.value;
-      channelsValue.textContent = channelCount;
-      
-      // 更新特徵圖顯示數量
-      updateVisualization();
-    });
-  }
+  channelsSlider.addEventListener('input', function() {
+    channelCount = this.value;
+    channelsValue.textContent = channelCount;
+    
+    // 更新特徵圖顯示數量
+    updateVisualization();
+  });
   
   // 設置標準化和網格複選框
   const normalizeCheckbox = document.getElementById('normalize-checkbox');
   const gridCheckbox = document.getElementById('grid-checkbox');
   
-  if (normalizeCheckbox) {
-    normalizeCheckbox.addEventListener('change', function() {
-      // 更新視覺化顯示
-      updateVisualization();
-    });
-  }
+  normalizeCheckbox.addEventListener('change', function() {
+    // 更新視覺化顯示
+    updateVisualization();
+  });
   
-  if (gridCheckbox) {
-    gridCheckbox.addEventListener('change', function() {
-      const featureMapGrid = document.querySelector('.feature-map-grid');
-      if (featureMapGrid) {
-        if (this.checked) {
-          featureMapGrid.style.gap = '15px';
-        } else {
-          featureMapGrid.style.gap = '0';
-        }
-      }
-    });
-  }
+  gridCheckbox.addEventListener('change', function() {
+    const featureMapGrid = document.querySelector('.feature-map-grid');
+    
+    if (this.checked) {
+      featureMapGrid.style.gap = '15px';
+    } else {
+      featureMapGrid.style.gap = '0';
+    }
+  });
 }
 
 /**
@@ -294,7 +271,6 @@ function setupSettingsControls() {
  */
 function setupColormapSelector() {
   const colormapSelector = document.getElementById('viz-colormap');
-  if (!colormapSelector) return;
   
   colormapSelector.addEventListener('change', function() {
     // 更新視覺化顯示
@@ -308,8 +284,6 @@ function setupColormapSelector() {
 function runVisualization() {
   // 顯示加載中
   const vizDisplayArea = document.querySelector('.viz-display-area');
-  if (!vizDisplayArea) return;
-  
   vizDisplayArea.innerHTML = '<div class="loading-indicator"><i class="fas fa-spinner fa-spin"></i><p>正在處理視覺化...</p></div>';
   
   // 模擬加載延遲
@@ -328,7 +302,6 @@ function runVisualization() {
 function updateVisualization() {
   // 獲取視覺化顯示區域
   const vizDisplayArea = document.querySelector('.viz-display-area');
-  if (!vizDisplayArea) return;
   
   // 根據視覺化類型顯示不同的內容
   if (currentVizType === 'feature-maps') {
@@ -364,10 +337,7 @@ function updateVisualization() {
     
     // 更新總頁數
     totalPages = Math.ceil(64 / featuresPerPage);
-    const pageIndicator = document.querySelector('.page-indicator');
-    if (pageIndicator) {
-      pageIndicator.textContent = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
-    }
+    document.querySelector('.page-indicator').textContent = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
     
   } else if (currentVizType === 'activation') {
     // 激活函數視覺化（簡單示例）
@@ -400,27 +370,28 @@ function updateVisualization() {
  * 更新信息欄
  */
 function updateInfoBar() {
-  const infoValues = document.querySelectorAll('.viz-info-item .info-value');
-  if (infoValues.length < 3) return;
+  const layerInfo = document.querySelector('.viz-info-item:nth-child(1) .info-value');
+  const featureCountInfo = document.querySelector('.viz-info-item:nth-child(2) .info-value');
+  const imageSizeInfo = document.querySelector('.viz-info-item:nth-child(3) .info-value');
   
-  infoValues[0].textContent = currentLayer;
+  layerInfo.textContent = currentLayer;
   
   // 根據層級設置特徵數量和圖像尺寸
   if (currentLayer.includes('卷積層 1')) {
-    infoValues[1].textContent = '64';
-    infoValues[2].textContent = '112 × 112 px';
+    featureCountInfo.textContent = '64';
+    imageSizeInfo.textContent = '112 × 112 px';
   } else if (currentLayer.includes('卷積層 2')) {
-    infoValues[1].textContent = '128';
-    infoValues[2].textContent = '56 × 56 px';
+    featureCountInfo.textContent = '128';
+    imageSizeInfo.textContent = '56 × 56 px';
   } else if (currentLayer.includes('全連接層')) {
-    infoValues[1].textContent = '1024';
-    infoValues[2].textContent = '1 × 1024';
+    featureCountInfo.textContent = '1024';
+    imageSizeInfo.textContent = '1 × 1024';
   } else if (currentLayer.includes('輸出層')) {
-    infoValues[1].textContent = '10';
-    infoValues[2].textContent = '1 × 10';
+    featureCountInfo.textContent = '10';
+    imageSizeInfo.textContent = '1 × 10';
   } else {
-    infoValues[1].textContent = '3';
-    infoValues[2].textContent = '224 × 224 px';
+    featureCountInfo.textContent = '3';
+    imageSizeInfo.textContent = '224 × 224 px';
   }
 }
 
@@ -439,14 +410,14 @@ function setupMobileSidebar() {
 }
 
 /**
- * 設置視覺化彈窗功能
+ * 設置彈窗功能
  */
-function setupVisModalFunctions() {
+function setupModals() {
   // 設置關閉按鈕
   document.querySelectorAll('.close-modal-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const modal = this.closest('.modal');
-      if (modal) modal.classList.remove('active');
+      modal.classList.remove('active');
     });
   });
   
@@ -471,37 +442,25 @@ function setupVisModalFunctions() {
       this.classList.add('active');
       
       // 選擇的圖像
-      const imgEl = this.querySelector('img');
-      if (imgEl) {
-        selectedImage = imgEl.src;
-      }
+      selectedImage = this.querySelector('img').src;
     });
   });
   
   // 設置確認圖像選擇按鈕
-  const confirmBtn = document.getElementById('confirm-image-select-btn');
-  if (confirmBtn) {
-    confirmBtn.addEventListener('click', function() {
-      // 更新輸入圖像
-      const inputImage = document.getElementById('input-image');
-      if (inputImage) inputImage.src = selectedImage;
-      
-      // 關閉彈窗
-      const modal = document.getElementById('image-select-modal');
-      if (modal) modal.classList.remove('active');
-      
-      // 更新視覺化
-      runVisualization();
-    });
-  }
+  document.getElementById('confirm-image-select-btn').addEventListener('click', function() {
+    // 更新輸入圖像
+    document.getElementById('input-image').src = selectedImage;
+    
+    // 關閉彈窗
+    document.getElementById('image-select-modal').classList.remove('active');
+    
+    // 更新視覺化
+    runVisualization();
+  });
   
   // 設置取消圖像選擇按鈕
-  const cancelBtn = document.getElementById('cancel-image-select-btn');
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', function() {
-      // 關閉彈窗
-      const modal = document.getElementById('image-select-modal');
-      if (modal) modal.classList.remove('active');
-    });
-  }
+  document.getElementById('cancel-image-select-btn').addEventListener('click', function() {
+    // 關閉彈窗
+    document.getElementById('image-select-modal').classList.remove('active');
+  });
 }

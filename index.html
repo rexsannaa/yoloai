@@ -1,17 +1,17 @@
-<!-- index.html - 入口頁面 -->
+<!-- index.html - 主頁面 (修改後) -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EasyYOLO - 視覺化機器學習教學平台</title>
+  <title>南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
+
   <div class="sidebar">
-    <div class="sidebar-header">EasyYOLO 視覺訓練平台</div>
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
@@ -25,7 +25,7 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -54,7 +54,7 @@
     <div class="show-coming-soon">🔑 API 金鑰</div>
   </div>
 
-  <!-- 引入核心邏輯 -->
-  <script src="js/core.js"></script>
+  <!-- 引入核心應用邏輯 -->
+  <script src="js/app.js"></script>
 </body>
 </html>

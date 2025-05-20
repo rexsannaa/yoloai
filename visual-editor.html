@@ -1,19 +1,18 @@
-<!-- editor.html - 視覺編輯器頁面 -->
+<!-- visual-editor.html - 視覺化編輯器頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>視覺化編輯器 - EasyYOLO 視覺訓練平台</title>
+  <title>視覺化編輯器 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/editor.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/visual-editor.css">
 </head>
 <body>
   <!-- 側邊欄 -->
   <div class="sidebar">
-    <div class="sidebar-header">EasyYOLO 視覺訓練平台</div>
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
@@ -27,7 +26,7 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -58,7 +57,7 @@
   <div class="project-sidebar">
     <div class="project-header">
       <div class="project-icon">
-        <img src="../icon/01.png" alt="專案圖示" id="project-icon-img">
+        <img src="./icon/01.png" alt="專案圖示" id="project-icon-img">
       </div>
       <div class="project-title">
         <h3 id="project-name-display">我的第一個專案</h3>
@@ -84,7 +83,7 @@
         </a>
       </li>
       <li class="active">
-        <a href="editor.html">
+        <a href="visual-editor.html">
           <span class="menu-icon"><i class="fas fa-tags"></i></span>
           <span>視覺化編輯</span>
         </a>
@@ -102,9 +101,9 @@
         </a>
       </li>
       <li>
-        <a href="visualization.html">
-          <span class="menu-icon"><i class="fas fa-brain"></i></span>
-          <span>視覺化展示</span>
+        <a href="#" class="show-coming-soon">
+          <span class="menu-icon"><i class="fas fa-rocket"></i></span>
+          <span>部署模型</span>
         </a>
       </li>
       <li>
@@ -160,7 +159,7 @@
           <div class="image-list">
             <div class="image-item active">
               <div class="image-thumbnail">
-                <img src="../icon/sample1.jpg" alt="圖片1">
+                <img src="./icon/sample1.jpg" alt="圖片1">
               </div>
               <div class="image-info">
                 <div class="image-name">sample1.jpg</div>
@@ -171,7 +170,7 @@
             </div>
             <div class="image-item">
               <div class="image-thumbnail">
-                <img src="../icon/sample2.jpg" alt="圖片2">
+                <img src="./icon/sample2.jpg" alt="圖片2">
               </div>
               <div class="image-info">
                 <div class="image-name">sample2.jpg</div>
@@ -183,7 +182,7 @@
             <!-- 更多圖片項目 -->
             <div class="image-item">
               <div class="image-thumbnail">
-                <img src="../icon/sample3.jpg" alt="圖片3">
+                <img src="./icon/sample3.jpg" alt="圖片3">
               </div>
               <div class="image-info">
                 <div class="image-name">sample3.jpg</div>
@@ -194,7 +193,7 @@
             </div>
             <div class="image-item">
               <div class="image-thumbnail">
-                <img src="../icon/sample4.jpg" alt="圖片4">
+                <img src="./icon/sample4.jpg" alt="圖片4">
               </div>
               <div class="image-info">
                 <div class="image-name">sample4.jpg</div>
@@ -210,7 +209,7 @@
         <div class="editor-workspace">
           <div class="editor-canvas">
             <div class="canvas-container">
-              <img src="../icon/sample1.jpg" alt="編輯圖片" id="editor-image">
+              <img src="./icon/sample1.jpg" alt="編輯圖片" id="editor-image">
               <!-- 標註框將通過JavaScript動態添加 -->
               <div class="annotation-box" style="left: 120px; top: 80px; width: 180px; height: 160px;">
                 <div class="annotation-label">人</div>
@@ -408,7 +407,7 @@
         <div class="ai-preview">
           <h4>AI預覽標註</h4>
           <div class="ai-preview-image">
-            <img src="../icon/sample1.jpg" alt="預覽圖片">
+            <img src="./icon/sample1.jpg" alt="預覽圖片">
             <div class="preview-box" style="left: 120px; top: 80px; width: 180px; height: 160px;">
               <span>人 (92%)</span>
             </div>
@@ -425,9 +424,8 @@
     </div>
   </div>
 
-  <!-- 引入核心腳本 -->
-  <script src="../js/core.js"></script>
-  <!-- 引入編輯器腳本 -->
-  <script src="../js/editor.js"></script>
+  <!-- 引入腳本 -->
+  <script src="js/app.js"></script>
+  <script src="js/visual-editor.js"></script>
 </body>
 </html>

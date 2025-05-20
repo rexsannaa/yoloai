@@ -4,16 +4,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>工作流 - EasyYOLO 視覺訓練平台</title>
+  <title>工作流 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* 工作流頁面專用樣式 */
+    .tutorial-badge {
+      background-color: #e1effe;
+      color: #1e40af;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tutorial-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .tutorial-option {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+    }
+
+    .tutorial-option:hover {
+      background-color: #f3f4f6;
+      transform: translateX(3px);
+    }
+
+    .tutorial-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .tutorial-icon i {
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .gesture-icon {
+      background: linear-gradient(135deg, #818cf8, #4f46e5);
+    }
+
+    .object-icon {
+      background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+    }
+
+    .audio-icon {
+      background: linear-gradient(135deg, #fda4af, #f43f5e);
+    }
+
+    .tutorial-label {
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .tutorial-description {
+      font-size: 0.85em;
+      color: #6b7280;
+      margin: 10px 0 0 0;
+    }
+  </style>
 </head>
 <body>
 
   <!-- 側邊欄 -->
   <div class="sidebar">
-    <div class="sidebar-header">EasyYOLO 視覺訓練平台</div>
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
       <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
@@ -27,7 +99,7 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
@@ -76,7 +148,7 @@
               <i class="fas fa-ellipsis-h show-coming-soon"></i>
             </div>
             <div class="workflow-card-image-placeholder" style="padding: 10px;">
-              <img src="../icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+              <img src="./icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <p>點擊以編輯或查看此自訂工作流程的詳細資訊。</p>
           </div>
@@ -114,7 +186,7 @@
     </div>
   </main>
 
-  <!-- 引入核心邏輯 -->
-  <script src="../js/core.js"></script>
+  <!-- 引入核心應用邏輯 -->
+  <script src="js/app.js"></script>
 </body>
 </html>

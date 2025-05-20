@@ -1,8 +1,8 @@
-// editor.js - 視覺編輯器功能
+// visual-editor.js - 視覺化編輯器頁面腳本
 
 /**
- * EasyYOLO - 視覺化機器學習教學平台 
- * 視覺編輯器功能模組
+ * 視覺化編輯器頁面功能模組
+ * 處理標註框拖拽、調整大小和標籤管理
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -54,16 +54,10 @@ function initEditor() {
   setupCoordinateInputs();
   
   // 設置保存按鈕事件
-  const saveBtn = document.getElementById('save-labels-btn');
-  if (saveBtn) {
-    saveBtn.addEventListener('click', saveLabels);
-  }
+  document.getElementById('save-labels-btn').addEventListener('click', saveLabels);
   
   // 設置AI自動標註按鈕事件
-  const autoLabelBtn = document.getElementById('auto-label-btn');
-  if (autoLabelBtn) {
-    autoLabelBtn.addEventListener('click', showAILabelModal);
-  }
+  document.getElementById('auto-label-btn').addEventListener('click', showAILabelModal);
   
   // 設置圖片選擇事件
   setupImageSelection();
@@ -75,10 +69,7 @@ function initEditor() {
   setupImageFilter();
   
   // 設置視覺化顯示按鈕
-  const vizBtn = document.getElementById('show-visualization-btn');
-  if (vizBtn) {
-    vizBtn.addEventListener('click', showVisualization);
-  }
+  document.getElementById('show-visualization-btn').addEventListener('click', showVisualization);
 }
 
 /**
@@ -125,8 +116,6 @@ function setupZoomControls() {
   const zoomOutBtn = document.getElementById('zoom-out-btn');
   const zoomLevelDisplay = document.querySelector('.zoom-level');
   
-  if (!zoomInBtn || !zoomOutBtn || !zoomLevelDisplay) return;
-  
   zoomInBtn.addEventListener('click', function() {
     if (zoomLevel < 200) {
       zoomLevel += 10;
@@ -143,10 +132,7 @@ function setupZoomControls() {
   
   function updateZoom() {
     zoomLevelDisplay.textContent = `${zoomLevel}%`;
-    const img = document.getElementById('editor-image');
-    if (img) {
-      img.style.transform = `scale(${zoomLevel / 100})`;
-    }
+    document.getElementById('editor-image').style.transform = `scale(${zoomLevel / 100})`;
   }
 }
 
@@ -168,17 +154,13 @@ function setupLabelItems() {
       activeLabel = this.querySelector('.label-name').textContent;
       
       // 更新表單
-      const nameInput = document.getElementById('label-name-input');
-      if (nameInput) nameInput.value = activeLabel;
-      
-      const colorInput = document.getElementById('label-color-input');
+      document.getElementById('label-name-input').value = activeLabel;
       const labelColor = this.querySelector('.label-color').style.backgroundColor;
-      if (colorInput) colorInput.value = rgbToHex(labelColor);
+      document.getElementById('label-color-input').value = rgbToHex(labelColor);
       
       // 如果有活動的標註框，更新其標籤
       if (activeBox) {
-        const labelEl = activeBox.querySelector('.annotation-label');
-        if (labelEl) labelEl.textContent = activeLabel;
+        activeBox.querySelector('.annotation-label').textContent = activeLabel;
       }
     });
   });
@@ -212,10 +194,7 @@ function setupAnnotationBoxes() {
         updateCoordinateInputs(this);
         
         // 更新標籤表單
-        const labelEl = this.querySelector('.annotation-label');
-        if (labelEl) {
-          updateLabelForm(labelEl.textContent);
-        }
+        updateLabelForm(this.querySelector('.annotation-label').textContent);
       }
     });
   });
@@ -324,7 +303,6 @@ function resizeBox(e) {
     activeBox.style.width = `${startWidth + dx}px`;
     activeBox.style.height = `${startHeight - dy}px`;
     activeBox.style.top = `${startTop + dy}px`;
-
   } else if (resizeHandle.classList.contains('bottom-left')) {
     activeBox.style.width = `${startWidth - dx}px`;
     activeBox.style.height = `${startHeight + dy}px`;
@@ -356,8 +334,6 @@ function stopResizing() {
  */
 function setupCanvasEvents() {
   const canvasContainer = document.querySelector('.canvas-container');
-  if (!canvasContainer) return;
-  
   let isDrawing = false;
   let startDrawX, startDrawY;
   
@@ -474,8 +450,6 @@ function updateCoordinateInputs(box) {
   const sizeWInput = document.getElementById('size-w-input');
   const sizeHInput = document.getElementById('size-h-input');
   
-  if (!posXInput || !posYInput || !sizeWInput || !sizeHInput) return;
-  
   if (box) {
     posXInput.value = parseInt(box.style.left) || 0;
     posYInput.value = parseInt(box.style.top) || 0;
@@ -497,8 +471,6 @@ function setupCoordinateInputs() {
   const posYInput = document.getElementById('pos-y-input');
   const sizeWInput = document.getElementById('size-w-input');
   const sizeHInput = document.getElementById('size-h-input');
-  
-  if (!posXInput || !posYInput || !sizeWInput || !sizeHInput) return;
   
   [posXInput, posYInput, sizeWInput, sizeHInput].forEach(input => {
     input.addEventListener('change', function() {
@@ -528,14 +500,9 @@ function updateLabelForm(labelName) {
       item.classList.add('active');
       
       // 更新表單
-      const nameInput = document.getElementById('label-name-input');
-      if (nameInput) nameInput.value = labelName;
-      
-      const colorInput = document.getElementById('label-color-input');
-      if (colorInput) {
-        const labelColor = item.querySelector('.label-color').style.backgroundColor;
-        colorInput.value = rgbToHex(labelColor);
-      }
+      document.getElementById('label-name-input').value = labelName;
+      const labelColor = item.querySelector('.label-color').style.backgroundColor;
+      document.getElementById('label-color-input').value = rgbToHex(labelColor);
       
       // 更新活動標籤
       activeLabel = labelName;
@@ -565,7 +532,7 @@ function setupModals() {
   document.querySelectorAll('.close-modal-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const modal = this.closest('.modal');
-      if (modal) modal.classList.remove('active');
+      modal.classList.remove('active');
     });
   });
   
@@ -582,46 +549,32 @@ function setupModals() {
   const confidenceSlider = document.getElementById('ai-confidence');
   if (confidenceSlider) {
     const confidenceValue = document.getElementById('confidence-value');
-    if (confidenceValue) {
-      confidenceSlider.addEventListener('input', function() {
-        confidenceValue.textContent = `${this.value}%`;
-      });
-    }
+    confidenceSlider.addEventListener('input', function() {
+      confidenceValue.textContent = `${this.value}%`;
+    });
   }
   
   // 取消AI標註按鈕
-  const cancelAIBtn = document.getElementById('cancel-ai-label-btn');
-  if (cancelAIBtn) {
-    cancelAIBtn.addEventListener('click', function() {
-      const modal = document.getElementById('ai-label-modal');
-      if (modal) modal.classList.remove('active');
-    });
-  }
+  document.getElementById('cancel-ai-label-btn').addEventListener('click', function() {
+    document.getElementById('ai-label-modal').classList.remove('active');
+  });
   
   // 確認AI標註按鈕
-  const confirmAIBtn = document.getElementById('confirm-ai-label-btn');
-  if (confirmAIBtn) {
-    confirmAIBtn.addEventListener('click', function() {
-      const modal = document.getElementById('ai-label-modal');
-      if (modal) modal.classList.remove('active');
-      
-      // 顯示加載中訊息
-      if (typeof showComingSoonMessage === 'function') {
-        showComingSoonMessage();
-      } else {
-        alert("AI標註功能開發中，敬請期待！");
-      }
-    });
-  }
+  document.getElementById('confirm-ai-label-btn').addEventListener('click', function() {
+    document.getElementById('ai-label-modal').classList.remove('active');
+    
+    // 顯示加載中訊息
+    if (typeof showComingSoonMessage === 'function') {
+      showComingSoonMessage();
+    } else {
+      alert("AI標註功能開發中，敬請期待！");
+    }
+  });
   
   // 取消添加標籤按鈕
-  const cancelAddLabelBtn = document.getElementById('cancel-add-label-btn');
-  if (cancelAddLabelBtn) {
-    cancelAddLabelBtn.addEventListener('click', function() {
-      const modal = document.getElementById('add-label-modal');
-      if (modal) modal.classList.remove('active');
-    });
-  }
+  document.getElementById('cancel-add-label-btn').addEventListener('click', function() {
+    document.getElementById('add-label-modal').classList.remove('active');
+  });
 }
 
 /**
@@ -640,8 +593,7 @@ function setupImageSelection() {
       
       // 更新主圖片
       const imageSrc = this.querySelector('img').src;
-      const editorImage = document.getElementById('editor-image');
-      if (editorImage) editorImage.src = imageSrc;
+      document.getElementById('editor-image').src = imageSrc;
       
       // 重置編輯器狀態
       resetEditor();
@@ -655,8 +607,6 @@ function setupImageSelection() {
 function resetEditor() {
   // 清除所有標註框
   const canvasContainer = document.querySelector('.canvas-container');
-  if (!canvasContainer) return;
-  
   const annotationBoxes = canvasContainer.querySelectorAll('.annotation-box');
   
   annotationBoxes.forEach(box => {
@@ -677,91 +627,73 @@ function resetEditor() {
  */
 function setupLabelAddition() {
   // 添加標籤按鈕
-  const addLabelBtn = document.getElementById('add-label-btn');
-  if (addLabelBtn) {
-    addLabelBtn.addEventListener('click', function() {
-      const modal = document.getElementById('add-label-modal');
-      if (modal) modal.classList.add('active');
-    });
-  }
+  document.getElementById('add-label-btn').addEventListener('click', function() {
+    document.getElementById('add-label-modal').classList.add('active');
+  });
   
   // 確認添加標籤按鈕
-  const confirmAddLabelBtn = document.getElementById('confirm-add-label-btn');
-  if (confirmAddLabelBtn) {
-    confirmAddLabelBtn.addEventListener('click', function() {
-      const newLabelName = document.getElementById('new-label-name').value.trim();
-      const newLabelColor = document.getElementById('new-label-color').value;
-      
-      if (newLabelName === '') {
-        alert('請輸入標籤名稱！');
-        return;
+  document.getElementById('confirm-add-label-btn').addEventListener('click', function() {
+    const newLabelName = document.getElementById('new-label-name').value.trim();
+    const newLabelColor = document.getElementById('new-label-color').value;
+    
+    if (newLabelName === '') {
+      alert('請輸入標籤名稱！');
+      return;
+    }
+    
+    // 檢查是否已存在
+    const labelItems = document.querySelectorAll('.label-item');
+    let isExist = false;
+    
+    labelItems.forEach(item => {
+      if (item.querySelector('.label-name').textContent === newLabelName) {
+        isExist = true;
       }
-      
-      // 檢查是否已存在
-      const labelItems = document.querySelectorAll('.label-item');
-      let isExist = false;
-      
-      labelItems.forEach(item => {
-        if (item.querySelector('.label-name').textContent === newLabelName) {
-          isExist = true;
-        }
-      });
-      
-      if (isExist) {
-        alert('標籤名稱已存在！');
-        return;
-      }
-      
-      // 創建新標籤項目
-      const labelList = document.querySelector('.label-list');
-      if (labelList) {
-        const newLabelItem = document.createElement('div');
-        newLabelItem.className = 'label-item';
-        newLabelItem.innerHTML = `
-          <div class="label-color" style="background-color: ${newLabelColor};"></div>
-          <div class="label-name">${newLabelName}</div>
-          <div class="label-count">0</div>
-        `;
-        
-        labelList.appendChild(newLabelItem);
-        
-        // 綁定點擊事件
-        newLabelItem.addEventListener('click', function() {
-          // 移除所有項目的active類
-          document.querySelectorAll('.label-item').forEach(li => li.classList.remove('active'));
-          
-          // 添加當前項目的active類
-          this.classList.add('active');
-          
-          // 更新活動標籤
-          activeLabel = this.querySelector('.label-name').textContent;
-          
-          // 更新表單
-          const nameInput = document.getElementById('label-name-input');
-          if (nameInput) nameInput.value = activeLabel;
-          
-          const colorInput = document.getElementById('label-color-input');
-          if (colorInput) {
-            const labelColor = this.querySelector('.label-color').style.backgroundColor;
-            colorInput.value = rgbToHex(labelColor);
-          }
-          
-          // 如果有活動的標註框，更新其標籤
-          if (activeBox) {
-            const labelEl = activeBox.querySelector('.annotation-label');
-            if (labelEl) labelEl.textContent = activeLabel;
-          }
-        });
-      }
-      
-      // 清空輸入並關閉彈窗
-      const nameInput = document.getElementById('new-label-name');
-      if (nameInput) nameInput.value = '';
-      
-      const modal = document.getElementById('add-label-modal');
-      if (modal) modal.classList.remove('active');
     });
-  }
+    
+    if (isExist) {
+      alert('標籤名稱已存在！');
+      return;
+    }
+    
+    // 創建新標籤項目
+    const labelList = document.querySelector('.label-list');
+    const newLabelItem = document.createElement('div');
+    newLabelItem.className = 'label-item';
+    newLabelItem.innerHTML = `
+      <div class="label-color" style="background-color: ${newLabelColor};"></div>
+      <div class="label-name">${newLabelName}</div>
+      <div class="label-count">0</div>
+    `;
+    
+    labelList.appendChild(newLabelItem);
+    
+    // 綁定點擊事件
+    newLabelItem.addEventListener('click', function() {
+      // 移除所有項目的active類
+      document.querySelectorAll('.label-item').forEach(li => li.classList.remove('active'));
+      
+      // 添加當前項目的active類
+      this.classList.add('active');
+      
+      // 更新活動標籤
+      activeLabel = this.querySelector('.label-name').textContent;
+      
+      // 更新表單
+      document.getElementById('label-name-input').value = activeLabel;
+      const labelColor = this.querySelector('.label-color').style.backgroundColor;
+      document.getElementById('label-color-input').value = rgbToHex(labelColor);
+      
+      // 如果有活動的標註框，更新其標籤
+      if (activeBox) {
+        activeBox.querySelector('.annotation-label').textContent = activeLabel;
+      }
+    });
+    
+    // 清空輸入並關閉彈窗
+    document.getElementById('new-label-name').value = '';
+    document.getElementById('add-label-modal').classList.remove('active');
+  });
 }
 
 /**
@@ -769,17 +701,13 @@ function setupLabelAddition() {
  */
 function setupImageFilter() {
   const filterSelect = document.getElementById('image-filter-select');
-  if (!filterSelect) return;
   
   filterSelect.addEventListener('change', function() {
     const filter = this.value;
     const imageItems = document.querySelectorAll('.image-item');
     
     imageItems.forEach(item => {
-      const statusBadge = item.querySelector('.status-badge');
-      if (!statusBadge) return;
-      
-      const isLabeled = statusBadge.classList.contains('labeled');
+      const isLabeled = item.querySelector('.status-badge').classList.contains('labeled');
       
       if (filter === 'all') {
         item.style.display = '';
@@ -798,8 +726,7 @@ function setupImageFilter() {
  * 顯示AI標註彈窗
  */
 function showAILabelModal() {
-  const modal = document.getElementById('ai-label-modal');
-  if (modal) modal.classList.add('active');
+  document.getElementById('ai-label-modal').classList.add('active');
 }
 
 /**
@@ -822,11 +749,8 @@ function saveLabels() {
   const annotations = [];
   
   annotationBoxes.forEach(box => {
-    const labelEl = box.querySelector('.annotation-label');
-    if (!labelEl) return;
-    
     annotations.push({
-      label: labelEl.textContent,
+      label: box.querySelector('.annotation-label').textContent,
       x: parseInt(box.style.left) || 0,
       y: parseInt(box.style.top) || 0,
       width: parseInt(box.style.width) || box.offsetWidth,

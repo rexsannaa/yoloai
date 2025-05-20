@@ -1,83 +1,120 @@
-// core.js - 核心功能集合
+// app.js - 核心應用邏輯
 
 /**
- * EasyYOLO - 視覺化機器學習教學平台 
- * 核心功能模組
+ * 南臺科技大學AI視覺訓練平台 - 核心功能模組
+ * 提供統一的側邊欄、用戶資訊和彈出視窗功能
  */
 
-// 全域變數和狀態
+// 用於跟踪彈窗狀態的變量
 let isMessageShowing = false;
-let currentUser = {
-  name: "",
-  email: "",
-  avatar: ""
-};
 
 // 當DOM載入後初始化應用
 document.addEventListener('DOMContentLoaded', function() {
+  // 初始化應用程式
   initApp();
 });
 
 // 初始化應用程式
 function initApp() {
+  // 檢查登入狀態
   checkLoginStatus();
-  loadUserInfo();
-  setupSidebarMenu();
-  setupPopups();
-  setupComingSoonHandlers();
   
-  // 檢查是否在主頁面
+  // 載入用戶信息
+  loadUserInfo();
+  
+  // 設置側邊欄選單事件
+  setupSidebarMenu();
+  
+  // 設置彈出窗口事件
+  setupPopups();
+  
+  // 設置來自URL參數的視圖顯示
+  const urlParams = new URLSearchParams(window.location.search);
+  const viewParam = urlParams.get('view');
+  
+  // 檢查是否有主內容區域
   const mainContentArea = document.getElementById('mainContentArea');
   if (mainContentArea) {
-    // 檢查URL參數
-    const urlParams = new URLSearchParams(window.location.search);
-    const viewParam = urlParams.get('view');
-    
+    // 根據URL參數顯示視圖
     if (viewParam === 'workflows') {
-      window.location.href = 'pages/workflow.html';
+      // 改為直接導航到workflow.html而不是顯示內嵌視圖
+      window.location.href = 'workflow.html';
     } else {
+      // 默認顯示專案視圖
       showView('projects', document.getElementById('projects-link'));
     }
   } else {
+    // 在非主頁設置當前頁面標記
     markCurrentPage();
   }
 
-  // 監聽文檔點擊關閉彈出窗口
+  // 設置 coming-soon 視圖觸發器
+  setupComingSoonHandlers();
+
+  // 點擊文檔關閉彈出窗口
   document.addEventListener('click', closePopups);
+}
+
+// 設置即將推出功能的處理程序
+function setupComingSoonHandlers() {
+  // 清除所有已有的事件監聽器
+  document.querySelectorAll('.show-coming-soon').forEach(el => {
+    const clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+  });
+  
+  // 為具有 data-view="coming-soon" 屬性的元素添加事件
+  document.querySelectorAll('[data-view="coming-soon"]').forEach(el => {
+    el.classList.add('show-coming-soon');
+    el.removeAttribute('data-view');
+  });
+  
+  // 為所有帶有 show-coming-soon 類的元素添加事件
+  document.querySelectorAll('.show-coming-soon').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showComingSoonMessage();
+    });
+  });
 }
 
 // 檢查登入狀態
 function checkLoginStatus() {
+  // 如果不是登入頁面，且沒有用戶信息，則重定向到登入頁面
   const isLoginPage = window.location.pathname.includes('login.html');
   const hasUserInfo = localStorage.getItem("username");
   
   if (!isLoginPage && !hasUserInfo) {
     window.location.href = "login.html";
-    return false;
   }
-  return true;
 }
 
 // 載入用戶信息
 function loadUserInfo() {
-  currentUser.name = localStorage.getItem("username") || "測試帳戶";
-  currentUser.email = localStorage.getItem("email") || "test@demo.com";
-  currentUser.avatar = currentUser.name.charAt(0) || "測";
+  const name = localStorage.getItem("username") || "測試帳戶";
+  const email = localStorage.getItem("email") || "test@demo.com";
   
-  document.querySelectorAll("#user-name, #menu-username").forEach(el => {
+  const userNameElements = document.querySelectorAll("#user-name, #menu-username");
+  const userEmailElements = document.querySelectorAll("#user-email, #menu-email");
+  const userAvatarElements = document.querySelectorAll("#user-avatar");
+  
+  userNameElements.forEach(el => {
     if (el.id === "user-name") {
-      el.innerHTML = `<strong>${currentUser.name}</strong>`;
+      el.innerHTML = `<strong>${name}</strong>`;
     } else {
-      el.textContent = currentUser.name;
+      el.textContent = name;
     }
   });
   
-  document.querySelectorAll("#user-email, #menu-email").forEach(el => {
-    el.textContent = currentUser.email;
+  userEmailElements.forEach(el => {
+    el.textContent = email;
   });
   
-  document.querySelectorAll("#user-avatar").forEach(el => {
-    el.textContent = currentUser.avatar;
+  // 設置用戶頭像
+  const firstChar = name.charAt(0) || "測";
+  userAvatarElements.forEach(el => {
+    el.textContent = firstChar;
   });
 }
 
@@ -88,6 +125,7 @@ function setupSidebarMenu() {
       const viewName = li.getAttribute('data-view');
       
       if (viewName === 'coming-soon') {
+        // 防止事件冒泡，避免多次觸發
         event.stopPropagation();
         showComingSoonMessage();
         return;
@@ -95,17 +133,21 @@ function setupSidebarMenu() {
       
       // 工作流和專案的特殊處理
       if (viewName === 'workflows') {
-        navigateTo('pages/workflow.html');
+        // 直接導航到工作流頁面，無需考慮當前頁面
+        window.location.href = 'workflow.html';
         return;
       }
       
       if (viewName === 'projects') {
+        // 檢查當前頁面
         const currentPath = window.location.pathname;
         
         if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
+          // 如果已經在index.html，則只顯示視圖
           showView('projects', li);
         } else {
-          navigateTo('index.html');
+          // 導航到index.html
+          window.location.href = 'index.html';
         }
         return;
       }
@@ -118,26 +160,48 @@ function setupSidebarMenu() {
   });
 }
 
-// 設置即將推出功能的處理程序
-function setupComingSoonHandlers() {
-  // 清除事件監聽器並重新綁定
-  document.querySelectorAll('.show-coming-soon').forEach(el => {
-    const clone = el.cloneNode(true);
-    el.parentNode.replaceChild(clone, el);
+// 設置顯示當前頁面
+function markCurrentPage() {
+  // 獲取當前頁面路徑
+  const currentPath = window.location.pathname;
+  
+  // 移除所有活動標記
+  document.querySelectorAll('.sidebar-menu li').forEach(li => {
+    li.classList.remove('active');
   });
   
-  document.querySelectorAll('[data-view="coming-soon"]').forEach(el => {
-    el.classList.add('show-coming-soon');
-    el.removeAttribute('data-view');
-  });
-  
-  document.querySelectorAll('.show-coming-soon').forEach(el => {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      showComingSoonMessage();
-    });
-  });
+  // 根據當前頁面設置活動標記
+  if (currentPath.includes('create-project.html')) {
+    const projectsLink = document.getElementById('projects-link');
+    if (projectsLink) projectsLink.classList.add('active');
+  } else if (currentPath.includes('upload.html')) {
+    const projectsLink = document.getElementById('projects-link');
+    if (projectsLink) projectsLink.classList.add('active');
+  } else if (currentPath.includes('tutorial.html') || currentPath.includes('tutorial-detail.html')) {
+    const workflowsLink = document.getElementById('workflows-link');
+    if (workflowsLink) workflowsLink.classList.add('active');
+  } else if (currentPath.includes('workflow.html')) {
+    const workflowsLink = document.getElementById('workflows-link');
+    if (workflowsLink) workflowsLink.classList.add('active');
+  } else if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
+    // 檢查URL參數，確定要顯示的視圖
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+    
+    if (viewParam === 'workflows') {
+      const workflowsLink = document.getElementById('workflows-link');
+      if (workflowsLink) workflowsLink.classList.add('active');
+    } else {
+      const projectsLink = document.getElementById('projects-link');
+      if (projectsLink) projectsLink.classList.add('active');
+    }
+  }
+}
+
+// 設置活動連結
+function setActiveLink(element) {
+  document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+  if (element) element.classList.add('active');
 }
 
 // 設置彈出窗口事件
@@ -181,22 +245,17 @@ function togglePopup(id, anchor) {
     popup.style.visibility = 'visible';
     
     // 初始化彈窗中的即將推出功能處理程序
-    setupComingSoonInPopup(popup);
-  }
-}
-
-// 彈窗中設置即將推出功能處理程序
-function setupComingSoonInPopup(popup) {
-  const comingSoonItems = popup.querySelectorAll('[data-view="coming-soon"]');
-  comingSoonItems.forEach(item => {
-    item.classList.add('show-coming-soon');
-    item.removeAttribute('data-view');
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      showComingSoonMessage();
+    const comingSoonItems = popup.querySelectorAll('[data-view="coming-soon"]');
+    comingSoonItems.forEach(item => {
+      item.classList.add('show-coming-soon');
+      item.removeAttribute('data-view');
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showComingSoonMessage();
+      });
     });
-  });
+  }
 }
 
 // 關閉彈出窗口
@@ -213,50 +272,7 @@ function closePopups(e) {
   if (settingsPopup && !isClickInsideSettings) settingsPopup.style.display = 'none';
 }
 
-// 設置顯示當前頁面
-function markCurrentPage() {
-  const currentPath = window.location.pathname;
-  
-  // 移除所有活動標記
-  document.querySelectorAll('.sidebar-menu li').forEach(li => {
-    li.classList.remove('active');
-  });
-  
-  // 根據當前頁面設置活動標記
-  const pathMap = {
-    'create-project.html': 'projects-link',
-    'upload.html': 'projects-link',
-    'tutorial.html': 'workflows-link',
-    'tutorial-detail.html': 'workflows-link',
-    'workflow.html': 'workflows-link'
-  };
-  
-  // 檢查當前路徑是否在映射表中
-  for (const path in pathMap) {
-    if (currentPath.includes(path)) {
-      const linkId = pathMap[path];
-      const element = document.getElementById(linkId);
-      if (element) element.classList.add('active');
-      return;
-    }
-  }
-  
-  // 如果是主頁
-  if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const viewParam = urlParams.get('view');
-    
-    if (viewParam === 'workflows') {
-      const workflowsLink = document.getElementById('workflows-link');
-      if (workflowsLink) workflowsLink.classList.add('active');
-    } else {
-      const projectsLink = document.getElementById('projects-link');
-      if (projectsLink) projectsLink.classList.add('active');
-    }
-  }
-}
-
-// 視圖模板
+// 視圖模板 - 只保留專案視圖，工作流已移至專門頁面
 const viewTemplates = {
   projects: `
     <section class="workspace-container card animated fade-slide">
@@ -264,7 +280,7 @@ const viewTemplates = {
       <h2>此工作區中沒有專案。</h2>
       <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
       <div>
-        <a href="pages/create-project.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
+        <a href="create-project.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
         <a href="#" class="btn btn-secondary show-coming-soon"><i class="fas fa-book-open"></i> 檢視教學</a>
       </div>
     </section>
@@ -282,7 +298,7 @@ function showView(viewName, element) {
   
   // 如果是workflows視圖，導航到workflow.html
   if (viewName === 'workflows') {
-    navigateTo('pages/workflow.html');
+    window.location.href = 'workflow.html';
     return;
   }
   
@@ -301,12 +317,6 @@ function showView(viewName, element) {
     // 設置新視圖中的 coming-soon 元素事件
     setupComingSoonHandlers();
   }
-}
-
-// 設置活動連結
-function setActiveLink(element) {
-  document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-  if (element) element.classList.add('active');
 }
 
 // 顯示即將推出訊息
@@ -364,17 +374,9 @@ function createProject() {
     localStorage.setItem('currentProject', JSON.stringify(projectInfo));
     
     // 跳轉到上傳頁面
-    navigateTo('pages/upload.html');
+    navigateTo('upload.html');
   } else {
     // 對於其他專案類型，顯示彈窗
     showComingSoonMessage();
   }
 }
-
-// 導出公共函數
-window.checkLoginStatus = checkLoginStatus;
-window.loadUserInfo = loadUserInfo;
-window.showComingSoonMessage = showComingSoonMessage;
-window.navigateTo = navigateTo;
-window.logout = logout;
-window.createProject = createProject;
