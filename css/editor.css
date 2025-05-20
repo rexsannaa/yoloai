@@ -1,0 +1,429 @@
+/* editor.css - 視覺編輯器頁面樣式 */
+
+/* === 編輯器容器 === */
+.editor-container {
+  width: 100%;
+  min-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* === 編輯器頁頭 === */
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.editor-header h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-dark);
+}
+
+.editor-header h1 i {
+  margin-right: 10px;
+  color: var(--primary);
+}
+
+.editor-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* === 編輯器主體 === */
+.editor-main {
+  display: flex;
+  flex: 1;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* === 圖片列表側邊欄 === */
+.image-list-sidebar {
+  width: 220px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+}
+
+.image-list-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-list-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.image-filter select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+
+.image-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.image-item {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.image-item:hover {
+  background-color: #f8fafc;
+}
+
+.image-item.active {
+  background-color: var(--primary-light);
+}
+
+.image-thumbnail {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.image-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.image-name {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+  color: var(--text-dark);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.status-badge.labeled {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.unlabeled {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* === 編輯器工作區 === */
+.editor-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.annotation-box {
+  position: absolute;
+  border: 2px solid var(--primary);
+  background-color: rgba(59, 130, 246, 0.1);
+  cursor: move;
+}
+
+.annotation-label {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  background-color: var(--primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border: 1px solid var(--primary);
+  border-radius: 50%;
+}
+
+.resize-handle.top-left {
+  top: -4px;
+  left: -4px;
+  cursor: nwse-resize;
+}
+
+.resize-handle.top-right {
+  top: -4px;
+  right: -4px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-left {
+  bottom: -4px;
+  left: -4px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-right {
+  bottom: -4px;
+  right: -4px;
+  cursor: nwse-resize;
+}
+
+.canvas-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
+}
+
+.canvas-tools {
+  display: flex;
+  gap: 10px;
+}
+
+.tool-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.tool-btn:hover {
+  background-color: #f1f5f9;
+  color: var(--text-dark);
+}
+
+.tool-btn.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.canvas-zoom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.zoom-btn:hover {
+  background-color: #f1f5f9;
+  color: var(--text-dark);
+}
+
+.zoom-level {
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* === 標籤側邊欄 === */
+.labels-sidebar {
+  width: 280px;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.labels-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.labels-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.add-label-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.add-label-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.label-list {
+  padding: 10px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.label-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.label-item:hover {
+  background-color: #f8fafc;
+}
+
+.label-item.active {
+  background-color: var(--primary-light);
+}
+
+.label-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.label-name {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-dark);
+}
+
+.label-count {
+  background-color: #e5e7eb;
+  color: var(--text-medium);
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* === 響應式調整 === */
+@media (max-width: 1200px) {
+  .labels-sidebar {
+    width: 240px;
+  }
+}
+
+@media (max-width: 992px) {
+  .editor-main {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .image-list-sidebar, .labels-sidebar {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .image-list, .label-list {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .editor-actions {
+    width: 100%;
+  }
+  
+  .editor-actions .btn {
+    flex: 1;
+  }
+}

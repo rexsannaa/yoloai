@@ -1,9 +1,12 @@
 // tutorial.js - 教學功能相關邏輯
 
 /**
- * 南臺科技大學AI視覺訓練平台 - 教學模組功能
- * 提供教學相關的通用功能
+ * EasyYOLO - 視覺化機器學習教學平台 
+ * 教學功能模組
  */
+
+let completedTutorials = [];
+let tutorialProgress = {};
 
 document.addEventListener('DOMContentLoaded', function() {
   // 初始化教學模組
@@ -19,13 +22,11 @@ function initTutorials() {
     checkLoginStatus();
   }
   
+  // 從本地存儲加載進度
+  loadTutorialProgress();
+  
   // 設置教學卡片事件
   setupTutorialCards();
-  
-  // 如果目前在工作流頁面，初始化工作流教學功能
-  if (document.querySelector('.workflow-grid')) {
-    setupWorkflowTutorials();
-  }
   
   // 設置教學分類過濾功能
   setupTutorialFilters();
@@ -35,6 +36,20 @@ function initTutorials() {
   
   // 更新教學完成狀態UI
   updateTutorialCompletionUI();
+  
+  // 檢查如果在工作流頁面，初始化工作流教學功能
+  const workflowGrid = document.querySelector('.workflow-grid');
+  if (workflowGrid) {
+    setupWorkflowTutorials();
+  }
+}
+
+/**
+ * 從本地存儲加載教學進度
+ */
+function loadTutorialProgress() {
+  completedTutorials = JSON.parse(localStorage.getItem('completedTutorials') || '[]');
+  tutorialProgress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
 }
 
 /**
@@ -44,8 +59,8 @@ function setupTutorialCards() {
   const tutorialCards = document.querySelectorAll('.tutorial-card');
   
   tutorialCards.forEach(card => {
+    // 對於沒有自訂操作按鈕的卡片添加點擊事件
     if (!card.querySelector('.tutorial-actions')) {
-      // 只為沒有自訂操作按鈕的卡片添加點擊事件
       card.addEventListener('click', function() {
         // 獲取卡片標題作為教學名稱
         const tutorialTitle = this.querySelector('.tutorial-card-title')?.innerText;
@@ -53,6 +68,18 @@ function setupTutorialCards() {
           startTutorial(tutorialTitle);
         }
       });
+    } else {
+      // 為操作按鈕添加事件
+      const actionBtn = card.querySelector('.tutorial-btn');
+      if (actionBtn) {
+        actionBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const tutorialTitle = card.querySelector('.tutorial-card-title')?.innerText;
+          if (tutorialTitle) {
+            startTutorial(tutorialTitle);
+          }
+        });
+      }
     }
   });
 }
@@ -64,6 +91,9 @@ function setupWorkflowTutorials() {
   const tutorialOptions = document.querySelectorAll('.tutorial-option');
   
   tutorialOptions.forEach(option => {
+    // 跳過已經有show-coming-soon類的項目
+    if (option.classList.contains('show-coming-soon')) return;
+    
     option.addEventListener('click', function() {
       // 獲取教學標籤作為教學名稱
       const tutorialLabel = this.querySelector('.tutorial-label')?.innerText;
@@ -124,9 +154,9 @@ function startTutorial(tutorialName) {
   // 確認教學ID
   const tutorialId = getTutorialId(tutorialName);
   
-  // 如果是物件偵測基礎教學，跳轉到教學詳情頁
+  // 根據教學ID導航
   if (tutorialId === 'object-detection-basic') {
-    window.location.href = 'tutorial-detail.html';
+    navigateTo('pages/tutorial-detail.html');
   } else {
     // 其他教學顯示提示
     showTutorialComingSoonMessage();
@@ -158,7 +188,7 @@ function getTutorialId(tutorialName) {
 }
 
 /**
- * 根據搜尋詞過濾工作流
+ * 根據搜尋詞過濾教學卡片
  * @param {string} category - 類別名稱
  */
 function filterTutorialsByCategory(category) {
@@ -179,8 +209,6 @@ function filterTutorialsByCategory(category) {
  * 更新教學完成狀態UI顯示
  */
 function updateTutorialCompletionUI() {
-  const completedTutorials = JSON.parse(localStorage.getItem('completedTutorials') || '[]');
-  
   // 更新卡片狀態
   document.querySelectorAll('.tutorial-card').forEach(card => {
     // 使用自定義屬性 data-tutorial-id 來標識每個教學
@@ -194,7 +222,7 @@ function updateTutorialCompletionUI() {
         const badge = document.createElement('div');
         badge.className = 'completion-badge';
         badge.innerHTML = '<i class="fas fa-check-circle"></i> 已完成';
-        card.querySelector('.tutorial-card-header')?.appendChild(badge);
+        card.appendChild(badge);
       }
     }
   });
@@ -215,7 +243,6 @@ function updateTutorialProgress() {
   const totalTutorials = document.querySelectorAll('[data-tutorial-id]').length;
   if (totalTutorials === 0) return;
   
-  const completedTutorials = JSON.parse(localStorage.getItem('completedTutorials') || '[]');
   const completedCount = completedTutorials.length;
   
   // 計算完成百分比
@@ -236,8 +263,6 @@ function updateTutorialProgress() {
  */
 function markTutorialComplete(tutorialId) {
   // 將完成狀態保存到本地存儲
-  const completedTutorials = JSON.parse(localStorage.getItem('completedTutorials') || '[]');
-  
   if (!completedTutorials.includes(tutorialId)) {
     completedTutorials.push(tutorialId);
     localStorage.setItem('completedTutorials', JSON.stringify(completedTutorials));
@@ -253,14 +278,11 @@ function markTutorialComplete(tutorialId) {
  * @param {number} progress - 進度百分比 (0-100)
  */
 function saveTutorialProgress(tutorialId, progress) {
-  // 取得之前的進度資料
-  const progressData = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
-  
   // 更新進度
-  progressData[tutorialId] = progress;
+  tutorialProgress[tutorialId] = progress;
   
   // 儲存回本地存儲
-  localStorage.setItem('tutorialProgress', JSON.stringify(progressData));
+  localStorage.setItem('tutorialProgress', JSON.stringify(tutorialProgress));
   
   // 如果進度達到100%，標記為已完成
   if (progress >= 100) {
@@ -272,10 +294,15 @@ function saveTutorialProgress(tutorialId, progress) {
  * 顯示功能尚未開放訊息
  */
 function showTutorialComingSoonMessage() {
-  // 檢查是否有全域的showComingSoonMessage函數
   if (typeof showComingSoonMessage === 'function') {
     showComingSoonMessage();
   } else {
     alert("🚧 教學功能尚未開放\n此教學功能目前仍在開發中，敬請期待！\n若您認同本平台推廣 AI 教育的理念，歡迎小額贊助支持我們持續優化系統功能。❤️");
   }
 }
+
+// 導出公共函數
+window.startTutorial = startTutorial;
+window.markTutorialComplete = markTutorialComplete;
+window.saveTutorialProgress = saveTutorialProgress;
+window.showTutorialComingSoonMessage = showTutorialComingSoonMessage;
