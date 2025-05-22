@@ -255,28 +255,32 @@ function loadProjectInfo() {
     'gesture-recognition': {
       name: '手勢識別工作流',
       subtitle: '動作偵測 • Edge Impulse 模式',
-      icon: './icon/06.gif', // 使用現有的關鍵點圖標
+      iconClass: 'fas fa-hand-paper',
+      iconColor: '#818cf8',
       headerTitle: '手勢識別工作流',
       headerIcon: 'fas fa-hand-paper'
     },
     'object-detection': {
       name: '物件偵測工作流',
       subtitle: '物件偵測 • Edge Impulse 模式',
-      icon: './icon/03.gif',
+      iconClass: 'fas fa-vector-square',
+      iconColor: '#3b82f6',
       headerTitle: '物件偵測工作流',
       headerIcon: 'fas fa-vector-square'
     },
     'audio-classification': {
       name: '音頻分類工作流',
       subtitle: '音頻分類 • Edge Impulse 模式',
-      icon: './icon/04.png', // 使用現有的分類圖標
+      iconClass: 'fas fa-volume-up',
+      iconColor: '#f43f5e',
       headerTitle: '音頻分類工作流',
       headerIcon: 'fas fa-volume-up'
     },
     'custom': {
       name: '自訂工作流程',
       subtitle: '自訂專案 • 高級模式',
-      icon: './icon/02.png',
+      iconClass: 'fas fa-cogs',
+      iconColor: '#6b7280',
       headerTitle: '自訂工作流程',
       headerIcon: 'fas fa-cogs'
     }
@@ -300,7 +304,7 @@ function updateProjectDisplay(config) {
   // 更新專案側邊欄
   const projectNameDisplay = document.getElementById('project-name-display');
   const projectSubtitle = document.querySelector('.project-title p');
-  const projectIcon = document.getElementById('project-icon-img');
+  const projectIconDisplay = document.getElementById('project-icon-display');
   
   if (projectNameDisplay) {
     projectNameDisplay.textContent = config.name;
@@ -310,9 +314,10 @@ function updateProjectDisplay(config) {
     projectSubtitle.textContent = config.subtitle;
   }
   
-  if (projectIcon) {
-    projectIcon.src = config.icon;
-    projectIcon.alt = `${config.name}圖示`;
+  // 更新專案圖標為 Font Awesome 圖標
+  if (projectIconDisplay) {
+    projectIconDisplay.className = config.iconClass;
+    projectIconDisplay.style.color = config.iconColor;
   }
   
   // 更新主標題
