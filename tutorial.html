@@ -1,4 +1,4 @@
-<!-- tutorial.html - 教學平台頁面 -->
+<!-- tutorial.html - 教學平台入口頁 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -26,16 +26,16 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email">test@demo.com</div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
         </div>
       </div>
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
-        <div id="menu-email">test@demo.com</div>
-        <hr>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
         <div class="show-coming-soon">⚙ 我的帳戶</div>
         <div class="show-coming-soon">🗂 工作區管理</div>
         <div class="show-coming-soon">💳 訂閱方案</div>
@@ -84,6 +84,7 @@
 
       <!-- 教學卡片網格 -->
       <div class="tutorial-grid">
+        <!-- 物件偵測教學 -->
         <div class="tutorial-card" data-tutorial-id="object-detection-basic" data-category="object-detection">
           <div class="completion-badge"><i class="fas fa-check-circle"></i> 已完成</div>
           <div class="tutorial-card-image">
@@ -98,12 +99,15 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 20分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">繼續學習</button>
+                <button class="tutorial-btn">
+                  繼續學習
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 分類教學 -->
         <div class="tutorial-card" data-tutorial-id="classification-basic" data-category="classification">
           <div class="completion-badge"><i class="fas fa-check-circle"></i> 已完成</div>
           <div class="tutorial-card-image">
@@ -118,12 +122,15 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 15分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">繼續學習</button>
+                <button class="tutorial-btn">
+                  繼續學習
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 分割教學 -->
         <div class="tutorial-card" data-tutorial-id="segmentation-basic" data-category="segmentation">
           <div class="tutorial-card-image">
             <img src="./icon/05.png" alt="實例分割基礎教學">
@@ -137,12 +144,15 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 30分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">開始學習</button>
+                <button class="tutorial-btn">
+                  開始學習
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 關鍵點教學 -->
         <div class="tutorial-card" data-tutorial-id="keypoint-basic" data-category="keypoint">
           <div class="tutorial-card-image">
             <img src="./icon/06.gif" alt="關鍵點偵測基礎教學">
@@ -156,12 +166,15 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 25分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">開始學習</button>
+                <button class="tutorial-btn">
+                  開始學習
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 進階物件偵測教學 -->
         <div class="tutorial-card" data-tutorial-id="object-detection-advanced" data-category="object-detection">
           <div class="tutorial-card-image">
             <img src="./icon/03.gif" alt="進階物件偵測教學">
@@ -175,12 +188,15 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 40分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">開始學習</button>
+                <button class="tutorial-btn">
+                  開始學習
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 多模態教學 -->
         <div class="tutorial-card" data-tutorial-id="multimodal-basic" data-category="classification">
           <div class="tutorial-card-image">
             <img src="./icon/01.png" alt="多模態AI基礎教學">
@@ -194,7 +210,9 @@
                 <span class="tutorial-time"><i class="far fa-clock"></i> 35分鐘</span>
               </div>
               <div class="tutorial-actions">
-                <button class="tutorial-btn">開始學習</button>
+                <button class="tutorial-btn">
+                  開始學習
+                </button>
               </div>
             </div>
           </div>

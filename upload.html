@@ -8,10 +8,261 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/forms.css">
-  <link rel="stylesheet" href="css/upload.css">
+  <style>
+    /* 專案側邊欄樣式 */
+    .project-sidebar {
+      width: 240px;
+      background: white;
+      border-right: 1px solid #e5e7eb;
+      height: 100vh;
+      position: fixed;
+      left: var(--sidebar-width);
+      top: 0;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .project-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .project-title h3 {
+      font-size: 1rem;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #111827;
+    }
+
+    .project-title p {
+      font-size: 0.75rem;
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .project-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .project-menu li {
+      padding: 0;
+      border-left: 3px solid transparent;
+    }
+
+    .project-menu a {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      color: #374151;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .project-menu li.active {
+      border-left-color: #3b82f6;
+      background-color: #EBF3FF;
+    }
+
+    .project-menu li.active a {
+      color: #1e40af;
+      font-weight: 500;
+    }
+
+    .project-menu li:hover a {
+      background-color: #f9fafb;
+    }
+
+    .project-menu .menu-icon {
+      width: 20px;
+      margin-right: 10px;
+      text-align: center;
+      color: #3b82f6;
+    }
+
+    .project-menu .menu-badge {
+      margin-left: auto;
+      font-size: 0.75rem;
+      background-color: #e5e7eb;
+      padding: 2px 8px;
+      border-radius: 10px;
+      color: #4b5563;
+    }
+
+    .project-menu li.active .menu-badge {
+      background-color: #d6e5ff;
+      color: #3b82f6;
+    }
+    
+    /* 主內容區域調整 */
+    .main-content {
+      margin-left: 500px; /* sidebar-width + project-sidebar-width */
+    }
+    
+    /* 頁頭樣式 */
+    .upload-header {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .upload-header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .upload-header h1 i {
+      margin-right: 10px;
+      color: #3b82f6;
+    }
+    
+    /* 移動設備樣式 */
+    .mobile-header {
+      display: none;
+      padding: 15px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      background-color: white;
+    }
+
+    .mobile-header button {
+      background: none;
+      border: none;
+      color: #374151;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 5px;
+    }
+    
+    /* 底部操作按鈕 */
+    .upload-actions {
+      display: flex;
+      justify-content: space-between;
+      margin: 30px 0 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    /* 支援格式區域樣式 */
+    .format-section {
+      margin-top: 20px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 20px;
+    }
+
+    .format-title {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 15px;
+    }
+
+    .format-grid {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .format-box {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 15px;
+      width: 220px;
+      text-align: center;
+    }
+
+    .format-box i {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #3b82f6;
+    }
+
+    .format-box h4 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .format-box p {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 0;
+    }
+
+    .format-note {
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+    
+    /* 響應式調整 */
+    @media (max-width: 1200px) {
+      .project-sidebar {
+        left: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 15;
+      }
+      
+      .project-sidebar.show {
+        transform: translateX(0);
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .mobile-header {
+        display: flex;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- 側邊欄 -->
+  <!-- 縮小版側邊欄 -->
   <div class="sidebar">
     <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
@@ -27,16 +278,16 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email">test@demo.com</div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
         </div>
       </div>
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
-        <div id="menu-email">test@demo.com</div>
-        <hr>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
         <div class="show-coming-soon">⚙ 我的帳戶</div>
         <div class="show-coming-soon">🗂 工作區管理</div>
         <div class="show-coming-soon">💳 訂閱方案</div>
@@ -64,7 +315,7 @@
         <h3 id="project-name-display">我的第一個專案</h3>
         <p>物件偵測</p>
       </div>
-      <div class="project-menu-toggle">
+      <div style="cursor: pointer;">
         <i class="fas fa-ellipsis-v"></i>
       </div>
     </div>
@@ -121,7 +372,7 @@
     <button id="toggle-project-sidebar">
       <i class="fas fa-bars"></i>
     </button>
-    <div>上傳檔案</div>
+    <div style="font-weight: 500;">上傳檔案</div>
     <button>
       <i class="fas fa-ellipsis-v"></i>
     </button>
@@ -211,8 +462,10 @@
     </div>
   </main>
 
-  <!-- 引入腳本 -->
+  <!-- 引入核心應用邏輯 -->
   <script src="js/app.js"></script>
+  <!-- 引入上傳功能邏輯 -->
   <script src="js/upload.js"></script>
+
 </body>
 </html>

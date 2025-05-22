@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/forms.css">
 </head>
 <body>
+
   <!-- 側邊欄 -->
   <div class="sidebar">
     <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
@@ -26,16 +27,16 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email">test@demo.com</div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
         </div>
       </div>
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
-        <div id="menu-email">test@demo.com</div>
-        <hr>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
         <div class="show-coming-soon">⚙ 我的帳戶</div>
         <div class="show-coming-soon">🗂 工作區管理</div>
         <div class="show-coming-soon">💳 訂閱方案</div>
@@ -91,7 +92,7 @@
           </div>
         </div>
 
-        <!-- 專案類型選項和預覽 -->
+        <!-- 使用新的布局將專案類型選項和預覽分成左右兩列 -->
         <div class="project-layout">
           <div class="project-options">
             <div class="form-section">
@@ -166,7 +167,7 @@
             </div>
           </div>
           
-          <!-- 預覽區域 -->
+          <!-- 預覽區域移到右側 -->
           <div class="project-preview" id="project-preview">
             <div class="annotation-preview">
               <img src="./icon/03.gif" alt="標註預覽" id="preview-image">
@@ -188,6 +189,7 @@
   <!-- 專案類型選擇和顯示更多按鈕的附加腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // 初始化預覽區域可見性
       const projectPreview = document.getElementById('project-preview');
       if (projectPreview) {
         projectPreview.style.display = 'block';
@@ -201,6 +203,7 @@
           });
           this.classList.add('selected');
           
+          // 根據選擇的專案類型更新預覽圖
           const type = this.getAttribute('data-type');
           updatePreviewImage(type);
         });
@@ -213,13 +216,16 @@
           '顯示更多 <i class="fas fa-chevron-down"></i>';
       });
       
+      // 初始化預覽，顯示物件偵測的預覽圖
       updatePreviewImage('object-detection');
     });
 
+    // 更新預覽圖
     function updatePreviewImage(type) {
       const previewImage = document.getElementById('preview-image');
       const projectPreview = document.getElementById('project-preview');
       
+      // 只有多模態不顯示預覽
       if (type === 'multimodal') {
         projectPreview.style.display = 'none';
         return;
@@ -227,6 +233,7 @@
         projectPreview.style.display = 'block';
       }
       
+      // 更新預覽圖片
       switch(type) {
         case 'object-detection':
           previewImage.src = './icon/03.gif';
@@ -245,5 +252,6 @@
       }
     }
   </script>
+
 </body>
 </html>

@@ -1,0 +1,449 @@
+<!-- model-visualization.html - 模型視覺化頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>神經網路視覺化 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/visualization.css">
+</head>
+<body>
+  <!-- 側邊欄 -->
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
+      <li id="projects-link" class="active" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" data-popup="account-menu">
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+        </div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
+  </div>
+
+  <!-- 專案側邊欄 -->
+  <div class="project-sidebar">
+    <div class="project-header">
+      <div class="project-icon">
+        <img src="./icon/01.png" alt="專案圖示" id="project-icon-img">
+      </div>
+      <div class="project-title">
+        <h3 id="project-name-display">我的第一個專案</h3>
+        <p>物件偵測</p>
+      </div>
+      <div style="cursor: pointer;">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
+    </div>
+    
+    <ul class="project-menu">
+      <li>
+        <a href="dashboard.html">
+          <span class="menu-icon"><i class="fas fa-home"></i></span>
+          <span>專案概述</span>
+        </a>
+      </li>
+      <li>
+        <a href="upload.html">
+          <span class="menu-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+          <span>上傳檔案</span>
+          <span class="menu-badge" id="file-count-badge">10</span>
+        </a>
+      </li>
+      <li>
+        <a href="visual-editor.html">
+          <span class="menu-icon"><i class="fas fa-tags"></i></span>
+          <span>視覺化編輯</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="show-coming-soon">
+          <span class="menu-icon"><i class="fas fa-cube"></i></span>
+          <span>訓練模型</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="show-coming-soon">
+          <span class="menu-icon"><i class="fas fa-play-circle"></i></span>
+          <span>運行測試</span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="model-visualization.html">
+          <span class="menu-icon"><i class="fas fa-brain"></i></span>
+          <span>視覺化展示</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="show-coming-soon">
+          <span class="menu-icon"><i class="fas fa-cog"></i></span>
+          <span>專案設定</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 移動設備標題欄 -->
+  <div class="mobile-header">
+    <button id="toggle-project-sidebar">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div style="font-weight: 500;">視覺化展示</div>
+    <button>
+      <i class="fas fa-ellipsis-v"></i>
+    </button>
+  </div>
+
+  <!-- 主內容 -->
+  <main class="main-content">
+    <div class="viz-container animated fadeSlideUp">
+      <!-- 頁面標題 -->
+      <div class="viz-header">
+        <h1><i class="fas fa-brain"></i> 神經網路視覺化</h1>
+        <div class="viz-actions">
+          <select id="viz-type-selector" class="viz-selector">
+            <option value="feature-maps">特徵圖</option>
+            <option value="activation">激活函數</option>
+            <option value="attention">注意力機制</option>
+            <option value="network-architecture">網路架構</option>
+          </select>
+          <button class="btn btn-primary" id="run-viz-btn">
+            <i class="fas fa-play"></i> 運行視覺化
+          </button>
+        </div>
+      </div>
+
+      <!-- 視覺化主內容 -->
+      <div class="viz-main">
+        <!-- 左側面板 -->
+        <div class="viz-left-panel">
+          <div class="viz-section">
+            <h3 class="viz-section-title">輸入圖像</h3>
+            <div class="input-image-container">
+              <img src="./icon/sample1.jpg" alt="輸入圖像" id="input-image">
+              <div class="image-overlay">
+                <button class="btn btn-outline" id="change-image-btn">
+                  <i class="fas fa-exchange-alt"></i> 更換圖像
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="viz-section">
+            <h3 class="viz-section-title">網路層級選擇</h3>
+            <div class="layer-selection">
+              <div class="layer-tree">
+                <div class="layer-item expanded">
+                  <div class="layer-header">
+                    <i class="fas fa-caret-down"></i>
+                    <span class="layer-name">輸入層</span>
+                  </div>
+                </div>
+                
+                <div class="layer-item expanded">
+                  <div class="layer-header">
+                    <i class="fas fa-caret-down"></i>
+                    <span class="layer-name">卷積層 1</span>
+                  </div>
+                  <div class="layer-children">
+                    <div class="layer-item active">
+                      <div class="layer-header">
+                        <span class="layer-name">卷積 (3x3)</span>
+                      </div>
+                    </div>
+                    <div class="layer-item">
+                      <div class="layer-header">
+                        <span class="layer-name">ReLU</span>
+                      </div>
+                    </div>
+                    <div class="layer-item">
+                      <div class="layer-header">
+                        <span class="layer-name">池化 (2x2)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="layer-item">
+                  <div class="layer-header">
+                    <i class="fas fa-caret-right"></i>
+                    <span class="layer-name">卷積層 2</span>
+                  </div>
+                </div>
+                
+                <div class="layer-item">
+                  <div class="layer-header">
+                    <i class="fas fa-caret-right"></i>
+                    <span class="layer-name">全連接層</span>
+                  </div>
+                </div>
+                
+                <div class="layer-item">
+                  <div class="layer-header">
+                    <i class="fas fa-caret-right"></i>
+                    <span class="layer-name">輸出層</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="viz-section">
+            <h3 class="viz-section-title">視覺化設定</h3>
+            <div class="viz-settings">
+              <div class="setting-item">
+                <label for="viz-zoom">縮放級別:</label>
+                <div class="slider-container">
+                  <input type="range" min="50" max="200" value="100" id="viz-zoom">
+                  <span id="zoom-value">100%</span>
+                </div>
+              </div>
+              
+              <div class="setting-item">
+                <label for="viz-channels">顯示通道數:</label>
+                <div class="slider-container">
+                  <input type="range" min="1" max="64" value="16" id="viz-channels">
+                  <span id="channels-value">16</span>
+                </div>
+              </div>
+              
+              <div class="setting-item">
+                <label for="viz-colormap">顏色映射:</label>
+                <select id="viz-colormap">
+                  <option value="viridis">Viridis</option>
+                  <option value="plasma">Plasma</option>
+                  <option value="inferno">Inferno</option>
+                  <option value="magma">Magma</option>
+                  <option value="cividis">Cividis</option>
+                </select>
+              </div>
+              
+              <div class="setting-item checkbox-item">
+                <input type="checkbox" id="normalize-checkbox" checked>
+                <label for="normalize-checkbox">標準化顯示</label>
+              </div>
+              
+              <div class="setting-item checkbox-item">
+                <input type="checkbox" id="grid-checkbox" checked>
+                <label for="grid-checkbox">顯示網格</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 主視覺化區域 -->
+        <div class="viz-main-display">
+          <div class="viz-info-bar">
+            <div class="viz-info-item">
+              <span class="info-label">當前層:</span>
+              <span class="info-value">卷積層 1 - 卷積 (3x3)</span>
+            </div>
+            <div class="viz-info-item">
+              <span class="info-label">特徵數量:</span>
+              <span class="info-value">64</span>
+            </div>
+            <div class="viz-info-item">
+              <span class="info-label">圖像尺寸:</span>
+              <span class="info-value">224 × 224 px</span>
+            </div>
+          </div>
+          
+          <div class="viz-display-area">
+            <div class="feature-map-grid">
+              <!-- 特徵圖將通過JavaScript動態添加 -->
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 1</div>
+                <img src="./icon/feature_map1.png" alt="特徵圖 1">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 2</div>
+                <img src="./icon/feature_map2.png" alt="特徵圖 2">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 3</div>
+                <img src="./icon/feature_map3.png" alt="特徵圖 3">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 4</div>
+                <img src="./icon/feature_map4.png" alt="特徵圖 4">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 5</div>
+                <img src="./icon/feature_map5.png" alt="特徵圖 5">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 6</div>
+                <img src="./icon/feature_map6.png" alt="特徵圖 6">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 7</div>
+                <img src="./icon/feature_map7.png" alt="特徵圖 7">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 8</div>
+                <img src="./icon/feature_map8.png" alt="特徵圖 8">
+              </div>
+              <div class="feature-map">
+                <div class="feature-map-info">特徵 9</div>
+                <img src="./icon/feature_map9.png" alt="特徵圖 9">
+              </div>
+              <!-- 更多特徵圖... -->
+            </div>
+          </div>
+          
+          <div class="viz-display-controls">
+            <button class="btn btn-outline" id="prev-page-btn">
+              <i class="fas fa-arrow-left"></i> 上一頁
+            </button>
+            <div class="page-indicator">第 1 頁，共 4 頁</div>
+            <button class="btn btn-outline" id="next-page-btn">
+              下一頁 <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 右側詳情面板 -->
+        <div class="viz-right-panel">
+          <div class="viz-section">
+            <h3 class="viz-section-title">特徵詳情</h3>
+            <div class="feature-details">
+              <div class="feature-detail-header">
+                <h4>特徵 1</h4>
+                <span class="detail-subtitle">卷積層 1 - 卷積 (3x3)</span>
+              </div>
+              
+              <div class="detail-image-container">
+                <img src="./icon/feature_map1.png" alt="特徵 1 詳情" class="detail-image">
+              </div>
+              
+              <div class="detail-stats">
+                <div class="stat-item">
+                  <span class="stat-label">最小值:</span>
+                  <span class="stat-value">-0.2345</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">最大值:</span>
+                  <span class="stat-value">0.8765</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">平均值:</span>
+                  <span class="stat-value">0.3456</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">標準差:</span>
+                  <span class="stat-value">0.1234</span>
+                </div>
+              </div>
+              
+              <div class="detail-histogram">
+                <h5>激活分佈</h5>
+                <div class="histogram-plot">
+                  <!-- 直方圖將通過JavaScript動態添加 -->
+                  <div class="histogram-placeholder">
+                    <img src="./icon/histogram.png" alt="激活分佈">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="detail-description">
+                <h5>特徵解釋</h5>
+                <p>這個特徵主要檢測圖像中的邊緣和紋理特徵。高亮區域表示特徵在該位置被強烈激活，可能對應於圖像中的重要邊緣或紋理模式。</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="viz-section">
+            <h3 class="viz-section-title">學習資源</h3>
+            <div class="learning-resources">
+              <div class="resource-item">
+                <i class="fas fa-book"></i>
+                <div class="resource-content">
+                  <h4>卷積神經網路基礎</h4>
+                  <p>了解CNN如何通過多層卷積提取圖像特徵</p>
+                  <a href="#" class="resource-link show-coming-soon">查看教學</a>
+                </div>
+              </div>
+              
+              <div class="resource-item">
+                <i class="fas fa-video"></i>
+                <div class="resource-content">
+                  <h4>特徵圖視覺化技術</h4>
+                  <p>學習如何解讀不同層的特徵圖</p>
+                  <a href="#" class="resource-link show-coming-soon">觀看視頻</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 選擇圖像彈窗 -->
+  <div class="modal" id="image-select-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>選擇輸入圖像</h3>
+        <button class="close-modal-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="image-grid">
+          <div class="image-select-item active">
+            <img src="./icon/sample1.jpg" alt="圖像 1">
+          </div>
+          <div class="image-select-item">
+            <img src="./icon/sample2.jpg" alt="圖像 2">
+          </div>
+          <div class="image-select-item">
+            <img src="./icon/sample3.jpg" alt="圖像 3">
+          </div>
+          <div class="image-select-item">
+            <img src="./icon/sample4.jpg" alt="圖像 4">
+          </div>
+          <!-- 更多圖像... -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-image-select-btn">取消</button>
+        <button class="btn btn-primary" id="confirm-image-select-btn">確認選擇</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入腳本 -->
+  <script src="js/app.js"></script>
+  <script src="js/visualization.js"></script>
+</body>
+</html>

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+
   <div class="login-box animated fadeSlideUp">
     <h1>南臺科技大學AI視覺訓練平台</h1>
     <p>請輸入帳號密碼</p>
@@ -28,6 +29,7 @@
   </div>
 
   <script>
+    // 獲取DOM元素
     const elements = {
       username: document.getElementById('username'),
       password: document.getElementById('password'),
@@ -36,8 +38,10 @@
       loginBtn: document.getElementById('login-btn')
     };
 
+    // 表單輸入事件 - 按Enter鍵登入
     function setupFormEvents() {
-      [elements.username, elements.password].forEach(input => {
+      const form = [elements.username, elements.password];
+      form.forEach(input => {
         input.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') handleLogin();
         });
@@ -45,6 +49,7 @@
       
       elements.loginBtn.addEventListener('click', handleLogin);
       
+      // 添加彈窗事件处理
       document.querySelectorAll('.show-coming-soon').forEach(el => {
         el.addEventListener('click', function(e) {
           e.preventDefault();
@@ -53,13 +58,16 @@
       });
     }
 
+    // 登入處理
     function handleLogin() {
       const user = elements.username.value.trim();
       const pass = elements.password.value.trim();
       
+      // 隱藏錯誤訊息並顯示載入動畫
       elements.error.style.display = "none";
       elements.spinner.style.display = "block";
 
+      // 驗證登入資訊
       setTimeout(() => {
         if (isValidLogin(user, pass)) {
           saveUserInfo(user);
@@ -71,10 +79,12 @@
       }, 600);
     }
 
+    // 驗證登入
     function isValidLogin(user, pass) {
       return user === "" || (user === "admin" && pass === "stustai");
     }
 
+    // 儲存使用者資訊
     function saveUserInfo(user) {
       const username = user || "測試帳戶";
       const email = user ? `${user}@demo.com` : "test@demo.com";
@@ -82,7 +92,9 @@
       localStorage.setItem("email", email);
     }
 
+    // 頁面載入時初始化
     document.addEventListener('DOMContentLoaded', setupFormEvents);
   </script>
+
 </body>
 </html>

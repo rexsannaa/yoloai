@@ -1,0 +1,218 @@
+<!-- dashboard.html - 主儀表板頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>儀表板 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <!-- 側邊欄 -->
+  <div class="sidebar">
+    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <ul class="sidebar-menu">
+      <li data-view="1120"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
+      <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
+      <li id="projects-link" class="active" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
+      <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info" data-popup="account-menu">
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div>
+          <div id="user-name"><strong>測試帳戶</strong></div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+        </div>
+      </div>
+      <div id="account-menu">
+        <div><strong id="menu-username">測試帳戶</strong></div>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
+        <div class="show-coming-soon">⚙ 我的帳戶</div>
+        <div class="show-coming-soon">🗂 工作區管理</div>
+        <div class="show-coming-soon">💳 訂閱方案</div>
+        <div class="show-coming-soon">📊 使用紀錄</div>
+        <div onclick="logout()">⇦ 登出</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-popup" class="settings-popup">
+    <div class="popup-title">工作區設定</div>
+    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
+    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">👥 使用者管理</div>
+    <div class="show-coming-soon">🔑 API 金鑰</div>
+  </div>
+
+  <!-- 主內容 -->
+  <main class="main-content">
+    <div class="dashboard-container animated fadeSlideUp">
+      <!-- 頁面標題 -->
+      <header class="dashboard-header">
+        <h1>儀表板</h1>
+        <div class="dashboard-actions">
+          <button class="btn btn-primary" onclick="location.href='create-project.html'">
+            <i class="fas fa-plus"></i> 新建專案
+          </button>
+        </div>
+      </header>
+
+      <!-- 入門指南區塊 -->
+      <section class="getting-started-section">
+        <div class="section-header collapsible">
+          <h2><i class="fas fa-rocket"></i> 入門指南</h2>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        <div class="section-content">
+          <p class="section-description">開始建立您的資料集或驗證您模型的設備效能：</p>
+          
+          <div class="options-grid">
+            <div class="option-card" onclick="location.href='upload.html'">
+              <div class="option-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="option-label">新增現有資料</div>
+            </div>
+            
+            <div class="option-card show-coming-soon">
+              <div class="option-icon">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="option-label">收集新數據</div>
+            </div>
+            
+            <div class="option-card show-coming-soon">
+              <div class="option-icon">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="option-label">上傳您的模型</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 我的專案區塊 -->
+      <section class="my-projects-section">
+        <div class="section-header">
+          <h2><i class="fas fa-project-diagram"></i> 我的專案</h2>
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="搜尋專案...">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+        <div class="section-content">
+          <div class="project-grid">
+            <!-- 專案卡片 -->
+            <div class="project-card" onclick="location.href='upload.html'">
+              <div class="project-icon">
+                <img src="./icon/01.png" alt="專案圖示">
+              </div>
+              <div class="project-info">
+                <h3>我的第一個專案</h3>
+                <p>物件偵測 • 建立於 2025/05/18</p>
+                <div class="project-stats">
+                  <span><i class="fas fa-image"></i> 0 張圖片</span>
+                  <span><i class="fas fa-tag"></i> 0 個標籤</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 新增專案卡片 -->
+            <div class="project-card add-project" onclick="location.href='create-project.html'">
+              <div class="add-project-content">
+                <i class="fas fa-plus-circle"></i>
+                <p>新增專案</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 最近活動區塊 -->
+      <section class="recent-activity-section">
+        <div class="section-header collapsible">
+          <h2><i class="fas fa-history"></i> 最近活動</h2>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        <div class="section-content">
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas fa-plus-circle"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-description">建立了新專案「我的第一個專案」</p>
+                <p class="activity-time">5 分鐘前</p>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas fa-sign-in-alt"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-description">登入平台</p>
+                <p class="activity-time">10 分鐘前</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 學習資源區塊 -->
+      <section class="learning-resources-section">
+        <div class="section-header collapsible">
+          <h2><i class="fas fa-book"></i> 學習資源</h2>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        <div class="section-content">
+          <div class="resources-grid">
+            <div class="resource-card" onclick="location.href='tutorial.html'">
+              <div class="resource-icon">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="resource-info">
+                <h3>平台教學</h3>
+                <p>學習如何使用平台功能和訓練模型</p>
+              </div>
+            </div>
+            
+            <div class="resource-card show-coming-soon">
+              <div class="resource-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <div class="resource-info">
+                <h3>API 文檔</h3>
+                <p>整合模型到您的應用程式</p>
+              </div>
+            </div>
+            
+            <div class="resource-card show-coming-soon">
+              <div class="resource-icon">
+                <i class="fas fa-video"></i>
+              </div>
+              <div class="resource-info">
+                <h3>視頻教學</h3>
+                <p>觀看教學視頻學習平台功能</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- 引入腳本 -->
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

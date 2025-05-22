@@ -7,9 +7,82 @@
   <title>工作流 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/workflow.css">
+  <style>
+    /* 工作流頁面專用樣式 */
+    .tutorial-badge {
+      background-color: #e1effe;
+      color: #1e40af;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tutorial-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .tutorial-option {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+    }
+
+    .tutorial-option:hover {
+      background-color: #f3f4f6;
+      transform: translateX(3px);
+    }
+
+    .tutorial-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .tutorial-icon i {
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .gesture-icon {
+      background: linear-gradient(135deg, #818cf8, #4f46e5);
+    }
+
+    .object-icon {
+      background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+    }
+
+    .audio-icon {
+      background: linear-gradient(135deg, #fda4af, #f43f5e);
+    }
+
+    .tutorial-label {
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .tutorial-description {
+      font-size: 0.85em;
+      color: #6b7280;
+      margin: 10px 0 0 0;
+    }
+  </style>
 </head>
 <body>
+
   <!-- 側邊欄 -->
   <div class="sidebar">
     <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
@@ -26,16 +99,16 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email">test@demo.com</div>
+          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
         </div>
       </div>
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
-        <div id="menu-email">test@demo.com</div>
-        <hr>
+        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
+        <hr style="margin: 10px 0;">
         <div class="show-coming-soon">⚙ 我的帳戶</div>
         <div class="show-coming-soon">🗂 工作區管理</div>
         <div class="show-coming-soon">💳 訂閱方案</div>
@@ -57,7 +130,7 @@
   <main class="main-content">
     <div class="workflow-page-container animated fadeSlideUp">
       <div class="workflow-header">
-        <h2><i class="fas fa-cogs"></i>Workflows 工作流程</h2>
+        <h2><i class="fas fa-cogs" style="margin-right: 10px;"></i>Workflows 工作流程</h2>
         <div class="workflow-actions">
           <input type="text" class="search-bar" placeholder="&#xF002; Search workflows...">
           <a href="#" class="btn btn-outline show-coming-soon"><i class="fas fa-layer-group"></i> Explore templates</a>
@@ -69,37 +142,37 @@
       <div class="workflow-content">
         <div class="workflow-grid">
           <!-- 自訂工作流 -->
-          <div class="workflow-card" onclick="window.location.href='create-project.html'">
+          <div class="workflow-card" onclick="window.location.href='workflow-studio.html?type=custom'">
             <div class="workflow-card-header">
               <h3>Custom Workflow 自訂工作流程</h3>
               <i class="fas fa-ellipsis-h show-coming-soon"></i>
             </div>
-            <div class="workflow-card-image-placeholder">
-              <img src="./icon/02.png" alt="Custom Workflow Icon">
+            <div class="workflow-card-image-placeholder" style="padding: 10px;">
+              <img src="./icon/02.png" alt="Custom Workflow Icon" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <p>點擊以編輯或查看此自訂工作流程的詳細資訊。</p>
           </div>
           
-          <!-- 教學工作流 -->
+          <!-- 教學工作流 - 新增區塊 -->
           <div class="workflow-card">
             <div class="workflow-card-header">
               <h3>Start with a tutorial</h3>
               <span class="tutorial-badge">教學</span>
             </div>
             <div class="tutorial-options">
-              <div class="tutorial-option show-coming-soon">
+              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=gesture-recognition'">
                 <div class="tutorial-icon gesture-icon">
                   <i class="fas fa-hand-paper"></i>
                 </div>
                 <div class="tutorial-label">Motion: Gesture recognition</div>
               </div>
-              <div class="tutorial-option" onclick="window.location.href='create-project.html'">
+              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=object-detection'">
                 <div class="tutorial-icon object-icon">
                   <i class="fas fa-vector-square"></i>
                 </div>
                 <div class="tutorial-label">Images: Object detection</div>
               </div>
-              <div class="tutorial-option show-coming-soon">
+              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=audio-classification'">
                 <div class="tutorial-icon audio-icon">
                   <i class="fas fa-volume-up"></i>
                 </div>
