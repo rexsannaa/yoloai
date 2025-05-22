@@ -251,33 +251,87 @@ function loadProjectInfo() {
   const projectType = urlParams.get('type') || 'object-detection';
   
   // 根據專案類型設置不同的配置
-  switch (projectType) {
-    case 'object-detection':
-      projectData.name = '物件偵測工作流';
-      break;
-    case 'classification':
-      projectData.name = '圖像分類工作流';
-      break;
-    case 'segmentation':
-      projectData.name = '實例分割工作流';
-      break;
-    default:
-      projectData.name = 'AI工作流';
-  }
+  const projectConfigs = {
+    'gesture-recognition': {
+      name: '手勢識別工作流',
+      subtitle: '動作偵測 • Edge Impulse 模式',
+      icon: './icon/gesture.gif',
+      headerTitle: '手勢識別工作流',
+      headerIcon: 'fas fa-hand-paper'
+    },
+    'object-detection': {
+      name: '物件偵測工作流',
+      subtitle: '物件偵測 • Edge Impulse 模式',
+      icon: './icon/03.gif',
+      headerTitle: '物件偵測工作流',
+      headerIcon: 'fas fa-vector-square'
+    },
+    'audio-classification': {
+      name: '音頻分類工作流',
+      subtitle: '音頻分類 • Edge Impulse 模式',
+      icon: './icon/audio.gif',
+      headerTitle: '音頻分類工作流',
+      headerIcon: 'fas fa-volume-up'
+    },
+    'custom': {
+      name: '自訂工作流程',
+      subtitle: '自訂專案 • 高級模式',
+      icon: './icon/02.png',
+      headerTitle: '自訂工作流程',
+      headerIcon: 'fas fa-cogs'
+    }
+  };
+  
+  const config = projectConfigs[projectType] || projectConfigs['object-detection'];
+  
+  // 更新專案資料
+  projectData.name = config.name;
+  projectData.type = projectType;
   
   // 更新頁面顯示
-  updateProjectDisplay();
+  updateProjectDisplay(config);
   updateProjectProgress();
 }
 
 /**
  * 更新專案顯示
  */
-function updateProjectDisplay() {
+function updateProjectDisplay(config) {
+  // 更新專案側邊欄
   const projectNameDisplay = document.getElementById('project-name-display');
+  const projectSubtitle = document.querySelector('.project-title p');
+  const projectIcon = document.getElementById('project-icon-img');
+  
   if (projectNameDisplay) {
-    projectNameDisplay.textContent = projectData.name;
+    projectNameDisplay.textContent = config.name;
   }
+  
+  if (projectSubtitle) {
+    projectSubtitle.textContent = config.subtitle;
+  }
+  
+  if (projectIcon) {
+    projectIcon.src = config.icon;
+    projectIcon.alt = `${config.name}圖示`;
+  }
+  
+  // 更新主標題
+  const mainHeaders = document.querySelectorAll('.studio-header h1');
+  mainHeaders.forEach(header => {
+    const iconElement = header.querySelector('i');
+    if (iconElement) {
+      iconElement.className = config.headerIcon;
+    }
+    
+    // 更新標題文字（保留圖標）
+    const textNode = Array.from(header.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+    if (textNode) {
+      textNode.textContent = ` ${config.headerTitle}`;
+    } else {
+      // 如果沒有文字節點，創建一個
+      header.appendChild(document.createTextNode(` ${config.headerTitle}`));
+    }
+  });
   
   // 更新狀態統計
   updateStatusStats();
@@ -470,20 +524,29 @@ function handleFileUpload(files) {
  */
 function initializeTemplate(templateType) {
   const templates = {
+    'gesture-recognition': {
+      name: '手勢識別工作流',
+      steps: ['data-acquisition', 'impulse-design', 'feature-generation', 'classifier', 'model-testing', 'deployment'],
+      estimatedTime: '2-3 小時',
+      description: '使用動作感測器和機器學習來識別手勢動作'
+    },
     'object-detection': {
       name: '物件偵測工作流',
       steps: ['data-acquisition', 'impulse-design', 'feature-generation', 'classifier', 'model-testing', 'deployment'],
-      estimatedTime: '2-4 小時'
-    },
-    'classification': {
-      name: '圖像分類工作流', 
-      steps: ['data-acquisition', 'feature-generation', 'classifier', 'model-testing', 'deployment'],
-      estimatedTime: '1-2 小時'
+      estimatedTime: '2-4 小時',
+      description: '訓練模型來檢測和定位圖像中的物體'
     },
     'audio-classification': {
       name: '音頻分類工作流',
       steps: ['data-acquisition', 'impulse-design', 'feature-generation', 'classifier', 'model-testing', 'deployment'],
-      estimatedTime: '1-3 小時'
+      estimatedTime: '1-3 小時',
+      description: '分析音頻信號並將其分類到不同類別'
+    },
+    'custom': {
+      name: '自訂工作流程',
+      steps: ['data-acquisition', 'impulse-design', 'feature-generation', 'classifier', 'model-testing', 'deployment'],
+      estimatedTime: '依專案而定',
+      description: '自由配置的機器學習工作流程'
     }
   };
   
@@ -492,7 +555,9 @@ function initializeTemplate(templateType) {
     projectData.name = template.name;
     projectData.type = templateType;
     
-    updateProjectDisplay();
+    // 重新載入專案資訊以更新顯示
+    loadProjectInfo();
     console.log(`初始化範本: ${template.name}，預估時間: ${template.estimatedTime}`);
+    console.log(`描述: ${template.description}`);
   }
 }
