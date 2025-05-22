@@ -142,7 +142,7 @@
       <div class="workflow-content">
         <div class="workflow-grid">
           <!-- 自訂工作流 -->
-          <div class="workflow-card" onclick="window.location.href='workflow-studio.html?type=custom'">
+          <div class="workflow-card" onclick="navigateToWorkflow('custom')">
             <div class="workflow-card-header">
               <h3>Custom Workflow 自訂工作流程</h3>
               <i class="fas fa-ellipsis-h show-coming-soon"></i>
@@ -160,19 +160,19 @@
               <span class="tutorial-badge">教學</span>
             </div>
             <div class="tutorial-options">
-              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=gesture-recognition'">
+              <div class="tutorial-option" onclick="navigateToWorkflow('gesture-recognition')">
                 <div class="tutorial-icon gesture-icon">
                   <i class="fas fa-hand-paper"></i>
                 </div>
                 <div class="tutorial-label">Motion: Gesture recognition</div>
               </div>
-              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=object-detection'">
+              <div class="tutorial-option" onclick="navigateToWorkflow('object-detection')">
                 <div class="tutorial-icon object-icon">
                   <i class="fas fa-vector-square"></i>
                 </div>
                 <div class="tutorial-label">Images: Object detection</div>
               </div>
-              <div class="tutorial-option" onclick="window.location.href='workflow-studio.html?type=audio-classification'">
+              <div class="tutorial-option" onclick="navigateToWorkflow('audio-classification')">
                 <div class="tutorial-icon audio-icon">
                   <i class="fas fa-volume-up"></i>
                 </div>
@@ -188,5 +188,26 @@
 
   <!-- 引入核心應用邏輯 -->
   <script src="js/app.js"></script>
+  
+  <!-- 工作流頁面專用腳本 -->
+  <script>
+    /**
+     * 導航到工作流工作室
+     * @param {string} workflowType - 工作流類型
+     */
+    function navigateToWorkflow(workflowType) {
+      // 檢查工作流類型並導航到對應頁面
+      if (workflowType && ['custom', 'gesture-recognition', 'object-detection', 'audio-classification'].includes(workflowType)) {
+        window.location.href = `workflow-studio.html?type=${workflowType}`;
+      } else {
+        console.error('不支援的工作流類型:', workflowType);
+      }
+    }
+    
+    // 確保頁面載入後執行
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('工作流頁面已載入');
+    });
+  </script>
 </body>
 </html>

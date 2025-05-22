@@ -255,7 +255,7 @@ function loadProjectInfo() {
     'gesture-recognition': {
       name: '手勢識別工作流',
       subtitle: '動作偵測 • Edge Impulse 模式',
-      icon: './icon/gesture.gif',
+      icon: './icon/06.gif', // 使用現有的關鍵點圖標
       headerTitle: '手勢識別工作流',
       headerIcon: 'fas fa-hand-paper'
     },
@@ -269,7 +269,7 @@ function loadProjectInfo() {
     'audio-classification': {
       name: '音頻分類工作流',
       subtitle: '音頻分類 • Edge Impulse 模式',
-      icon: './icon/audio.gif',
+      icon: './icon/04.png', // 使用現有的分類圖標
       headerTitle: '音頻分類工作流',
       headerIcon: 'fas fa-volume-up'
     },
