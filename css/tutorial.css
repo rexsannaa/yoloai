@@ -1,6 +1,5 @@
-/* tutorial.css - 教學模組樣式 */
+/* css/tutorial.css - 教學模組樣式 */
 
-/* === 全域設定 === */
 :root {
   --primary: #2563eb;
   --primary-light: rgba(37, 99, 235, 0.1);
@@ -19,7 +18,7 @@
   --transition: all 0.2s ease;
 }
 
-/* === 教學卡片基本樣式 === */
+/* === 教學容器 === */
 .tutorial-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -33,6 +32,7 @@
   margin-top: 20px;
 }
 
+/* === 教學卡片 === */
 .tutorial-card {
   background-color: white;
   border-radius: var(--border-radius);
@@ -96,6 +96,7 @@
   margin-top: 8px;
 }
 
+/* === 教學標籤 === */
 .tutorial-badge {
   display: inline-block;
   padding: 3px 8px;
@@ -151,7 +152,7 @@
   background-color: var(--primary-dark);
 }
 
-/* 已完成教學樣式 */
+/* === 完成狀態 === */
 .tutorial-card.completed {
   border-color: var(--secondary);
 }
@@ -170,7 +171,7 @@
   gap: 4px;
 }
 
-/* === 教學分類與過濾 === */
+/* === 教學分類過濾 === */
 .tutorial-filters {
   margin-bottom: 20px;
   display: flex;
@@ -241,79 +242,7 @@
   transition: width 0.5s ease;
 }
 
-/* === 教學步驟導航 === */
-.tutorial-steps {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.tutorial-step {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.tutorial-step-number {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: var(--border-color);
-  color: var(--text-medium);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  margin-right: 8px;
-}
-
-.tutorial-step.active .tutorial-step-number {
-  background-color: var(--primary);
-  color: white;
-}
-
-.tutorial-step.completed .tutorial-step-number {
-  background-color: var(--secondary);
-  color: white;
-}
-
-.tutorial-step-label {
-  font-size: 0.9rem;
-  color: var(--text-medium);
-  margin-right: 12px;
-}
-
-.tutorial-step.active .tutorial-step-label {
-  color: var(--primary);
-  font-weight: 500;
-}
-
-.tutorial-step.completed .tutorial-step-label {
-  color: var(--secondary);
-}
-
-.tutorial-step-connector {
-  height: 2px;
-  width: 40px;
-  background-color: var(--border-color);
-  margin: 0 8px;
-}
-
-.tutorial-step.completed + .tutorial-step-connector {
-  background-color: var(--secondary);
-}
-
-/* === 教學內容區塊 === */
-.tutorial-content-container {
-  background-color: white;
-  border-radius: var(--border-radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--card-shadow);
-}
-
+/* === 教學內容頁頭 === */
 .tutorial-content-header {
   margin-bottom: 20px;
   padding-bottom: 15px;
@@ -349,7 +278,7 @@
   line-height: 1.6;
 }
 
-/* === 教學資源區塊 === */
+/* === 教學資源 === */
 .tutorial-resources {
   margin-top: 30px;
 }
@@ -405,137 +334,10 @@
   background-color: rgba(37, 99, 235, 0.1);
 }
 
-/* === 教學影片區塊 === */
-.tutorial-video {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  background-color: #000;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.tutorial-video-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #1f2937;
-  color: white;
-  cursor: pointer;
-}
-
-.tutorial-video-placeholder i {
-  font-size: 3rem;
-  margin-bottom: 10px;
-  opacity: 0.8;
-}
-
-.tutorial-video-placeholder p {
-  font-size: 0.95rem;
-  opacity: 0.7;
-  margin: 0;
-}
-
-/* === 工作流教學樣式 === */
-.tutorial-options {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.tutorial-option {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-}
-
-.tutorial-option:hover {
-  background-color: #f3f4f6;
-  transform: translateX(3px);
-}
-
-.tutorial-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-.tutorial-icon i {
-  font-size: 1.2rem;
-  color: white;
-}
-
-.gesture-icon {
-  background: linear-gradient(135deg, #818cf8, #4f46e5);
-}
-
-.object-icon {
-  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
-}
-
-.audio-icon {
-  background: linear-gradient(135deg, #fda4af, #f43f5e);
-}
-
-/* === 相關教學推薦 === */
-.related-tutorials {
-  margin-top: 30px;
-}
-
-.tutorial-actions-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-}
-
-.tutorial-nav {
-  margin-bottom: 20px;
-}
-
-.tutorial-nav-link {
-  display: inline-flex;
-  align-items: center;
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.tutorial-nav-link i {
-  margin-right: 8px;
-}
-
 /* === 響應式調整 === */
 @media (max-width: 768px) {
   .tutorial-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .tutorial-steps {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 10px;
-  }
-  
-  .tutorial-step-connector {
-    width: 20px;
   }
   
   .tutorial-filters {

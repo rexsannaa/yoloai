@@ -1,4 +1,4 @@
-<!-- index.html - 主頁面 (修改後) -->
+<!-- index.html - 主入口頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
+  <!-- 側邊欄 -->
   <div class="sidebar">
     <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
     <ul class="sidebar-menu">
@@ -25,16 +25,16 @@
 
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div class="user-avatar" id="user-avatar">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email" style="font-size: 0.85em;">test@demo.com</div>
+          <div id="user-email">test@demo.com</div>
         </div>
       </div>
       <div id="account-menu">
         <div><strong id="menu-username">測試帳戶</strong></div>
-        <div style="font-size: 0.85em; color: gray;" id="menu-email">test@demo.com</div>
-        <hr style="margin: 10px 0;">
+        <div id="menu-email">test@demo.com</div>
+        <hr>
         <div class="show-coming-soon">⚙ 我的帳戶</div>
         <div class="show-coming-soon">🗂 工作區管理</div>
         <div class="show-coming-soon">💳 訂閱方案</div>
@@ -44,7 +44,18 @@
     </div>
   </div>
 
-  <main class="main-content" id="mainContentArea"></main>
+  <!-- 主內容 -->
+  <main class="main-content" id="mainContentArea">
+    <section class="workspace-container card animated fade-slide">
+      <img src="./icon/01.png" alt="沒有專案">
+      <h2>此工作區中沒有專案。</h2>
+      <p>建立專案並上傳圖像以開始標註、訓練和部署您的電腦視覺模型。</p>
+      <div>
+        <a href="create-project.html" class="btn btn-primary"><i class="fas fa-plus-circle"></i> 新增專案</a>
+        <a href="tutorial.html" class="btn btn-secondary"><i class="fas fa-book-open"></i> 檢視教學</a>
+      </div>
+    </section>
+  </main>
 
   <div id="settings-popup" class="settings-popup">
     <div class="popup-title">工作區設定</div>

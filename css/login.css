@@ -1,4 +1,4 @@
-/* login.css - 登入頁面專用樣式 */
+/* css/login.css - 登入頁面專用樣式 */
 
 :root {
   --primary: #8a2be2;
@@ -14,7 +14,6 @@
   --transition: all 0.3s ease;
 }
 
-/* 基礎樣式 */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -31,7 +30,6 @@ html, body {
   overflow: hidden;
 }
 
-/* 登入卡片樣式 */
 .login-box {
   background: white;
   border-radius: 16px;
@@ -44,7 +42,6 @@ html, body {
   animation: fadeInUp 0.8s ease forwards;
 }
 
-/* 文字與表單元素 */
 h1 {
   font-size: 1.4em;
   color: var(--text-primary);
@@ -72,7 +69,6 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
 }
 
-/* 按鈕樣式 */
 .login-btn {
   width: 100%;
   padding: 12px;
@@ -93,7 +89,6 @@ input:focus {
   box-shadow: 0 8px 16px var(--primary-light);
 }
 
-/* 頁腳樣式 */
 .footer {
   font-size: 0.75em;
   color: var(--text-light);
@@ -109,7 +104,6 @@ input:focus {
   text-decoration: underline;
 }
 
-/* 錯誤訊息 */
 .error-message {
   color: red;
   font-size: 0.85em;
@@ -117,7 +111,6 @@ input:focus {
   display: none;
 }
 
-/* 載入動畫 */
 .spinner {
   width: 20px;
   height: 20px;
@@ -132,7 +125,6 @@ input:focus {
   display: none;
 }
 
-/* 動畫效果 */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -149,7 +141,6 @@ input:focus {
   100% { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* 響應式設計 */
 @media (max-width: 360px) {
   .login-box {
     width: 90%;

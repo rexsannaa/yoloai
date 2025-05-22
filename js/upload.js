@@ -1,4 +1,4 @@
-// upload.js - 上傳功能相關邏輯
+// js/upload.js - 上傳功能相關邏輯
 
 /**
  * 上傳頁面功能模組
@@ -6,13 +6,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 載入專案資訊
   loadProjectInfo();
-  
-  // 設置上傳按鈕事件
   setupUploadEvents();
-  
-  // 設置頁面事件
   setupUploadPageEvents();
 });
 
@@ -23,10 +18,8 @@ function loadProjectInfo() {
   const projectInfo = JSON.parse(localStorage.getItem('currentProject') || '{}');
   const projectName = projectInfo.name || '我的第一個專案';
   
-  // 更新頁面標題
   document.title = `上傳檔案 - ${projectName} - 南臺科技大學AI視覺訓練平台`;
   
-  // 更新專案側邊欄名稱 (如果在上傳頁面)
   const projectNameDisplay = document.getElementById('project-name-display');
   if (projectNameDisplay) {
     projectNameDisplay.textContent = projectName;
@@ -43,51 +36,43 @@ function setupUploadEvents() {
   const selectFolderBtn = document.getElementById('select-folder-btn');
   const uploadArea = document.getElementById('upload-area');
   
-  // 點擊選擇檔案按鈕
   if (selectFileBtn && fileInput) {
     selectFileBtn.addEventListener('click', function() {
       fileInput.click();
     });
   }
   
-  // 點擊選擇資料夾按鈕
   if (selectFolderBtn && folderInput) {
     selectFolderBtn.addEventListener('click', function() {
       folderInput.click();
     });
   }
   
-  // 檔案選擇後的處理
   if (fileInput) {
     fileInput.addEventListener('change', function() {
       handleFiles(this.files);
     });
   }
   
-  // 資料夾選擇後的處理
   if (folderInput) {
     folderInput.addEventListener('change', function() {
       handleFiles(this.files);
     });
   }
   
-  // 設置拖放區域事件
   if (uploadArea) {
-    // 拖曳經過時
     uploadArea.addEventListener('dragover', function(e) {
       e.preventDefault();
       e.stopPropagation();
       this.classList.add('dragover');
     });
     
-    // 拖曳離開時
     uploadArea.addEventListener('dragleave', function(e) {
       e.preventDefault();
       e.stopPropagation();
       this.classList.remove('dragover');
     });
     
-    // 拖曳放開時
     uploadArea.addEventListener('drop', function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -104,7 +89,6 @@ function setupUploadEvents() {
  * 設置上傳頁面的特定事件
  */
 function setupUploadPageEvents() {
-  // 移動設備側邊欄切換
   const toggleBtn = document.getElementById('toggle-project-sidebar');
   const projectSidebar = document.querySelector('.project-sidebar');
   
@@ -114,7 +98,6 @@ function setupUploadPageEvents() {
     });
   }
   
-  // 取消按鈕
   const cancelBtn = document.getElementById('cancel-btn');
   if (cancelBtn) {
     cancelBtn.addEventListener('click', () => {
@@ -122,7 +105,6 @@ function setupUploadPageEvents() {
     });
   }
   
-  // 繼續按鈕
   const continueBtn = document.getElementById('continue-btn');
   if (continueBtn) {
     continueBtn.addEventListener('click', continueToAnnotation);
@@ -140,17 +122,14 @@ function handleFiles(files) {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     
-    // 檢查是否為圖片
     if (!file.type.startsWith('image/')) {
       alert(`檔案 "${file.name}" 不是支援的圖片格式`);
       continue;
     }
     
-    // 建立檔案項目
     const fileItem = document.createElement('div');
     fileItem.className = 'file-item';
     
-    // 根據檔案類型選擇適當的圖示
     const fileExt = file.name.split('.').pop().toLowerCase();
     let iconClass = 'fa-file-image';
     
@@ -170,11 +149,9 @@ function handleFiles(files) {
     
     fileList.appendChild(fileItem);
     
-    // 模擬上傳進度
     simulateUpload(i);
   }
   
-  // 更新檔案計數徽章
   updateFileBadge();
 }
 
@@ -188,7 +165,6 @@ function simulateUpload(fileIndex) {
   
   progressBar.style.animation = 'progressAnimation 1.5s forwards';
   
-  // 在進度完成後更新進度條顏色
   setTimeout(() => {
     progressBar.style.backgroundColor = '#10b981';
   }, 1500);
@@ -221,7 +197,6 @@ function updateFileBadge() {
     const count = fileList.children.length;
     badge.textContent = count;
     
-    // 根據有無檔案更新徽章樣式
     if (count > 0) {
       badge.style.backgroundColor = '#d6e5ff';
       badge.style.color = '#3b82f6';
@@ -251,20 +226,17 @@ function formatFileSize(bytes) {
  * 前往標註頁面
  */
 function continueToAnnotation() {
-  // 檢查是否有上傳檔案
   const fileList = document.getElementById('file-list');
   if (fileList && fileList.children.length === 0) {
     alert('請上傳至少一張圖片');
     return;
   }
   
-  // 顯示功能開發中訊息
   if (typeof showComingSoonMessage === 'function') {
     showComingSoonMessage();
   } else {
     alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
   }
   
-  // 導回專案頁面
   setTimeout(() => window.location.href = 'index.html', 800);
 }
