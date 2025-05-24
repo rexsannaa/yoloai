@@ -2,99 +2,49 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>南臺科技大學AI視覺訓練平台 - 登入</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登入 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+  <div class="login-container">
+    <div class="login-box animated fadeSlideUp">
+      <div class="login-header">
+        <h1>南臺科技大學AI視覺訓練平台</h1>
+        <p>請輸入帳號密碼登入系統</p>
+      </div>
 
-  <div class="login-box animated fadeSlideUp">
-    <h1>南臺科技大學AI視覺訓練平台</h1>
-    <p>請輸入帳號密碼</p>
+      <form class="login-form" id="login-form">
+        <div class="error-message" id="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>帳號或密碼錯誤</span>
+        </div>
 
-    <div id="error" class="error-message">❌ 帳號或密碼錯誤</div>
+        <div class="form-group">
+          <input type="text" id="username" class="form-input" placeholder="帳號 (admin)" autocomplete="username" required>
+          <i class="fas fa-user input-icon"></i>
+        </div>
 
-    <input type="text" id="username" placeholder="帳號 (admin)" autocomplete="username">
-    <input type="password" id="password" placeholder="密碼 (stustai)" autocomplete="current-password">
+        <div class="form-group">
+          <input type="password" id="password" class="form-input" placeholder="密碼 (stustai)" autocomplete="current-password" required>
+          <i class="fas fa-lock input-icon"></i>
+        </div>
 
-    <button class="login-btn" id="login-btn">
-      登入
-      <div class="spinner" id="spinner"></div>
-    </button>
+        <button type="submit" class="login-btn" id="login-btn">
+          <span class="btn-text">登入</span>
+          <div class="btn-spinner" id="spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </button>
+      </form>
 
-    <div class="footer">
-      登入即代表您同意 <a href="#" class="show-coming-soon">服務條款</a> 和 <a href="#" class="show-coming-soon">隱私政策</a>
+      <div class="login-footer">
+        <p>登入即代表您同意 <a href="#" class="show-coming-soon">服務條款</a> 和 <a href="#" class="show-coming-soon">隱私政策</a></p>
+      </div>
     </div>
   </div>
 
-  <script>
-    // 獲取DOM元素
-    const elements = {
-      username: document.getElementById('username'),
-      password: document.getElementById('password'),
-      error: document.getElementById('error'),
-      spinner: document.getElementById('spinner'),
-      loginBtn: document.getElementById('login-btn')
-    };
-
-    // 表單輸入事件 - 按Enter鍵登入
-    function setupFormEvents() {
-      const form = [elements.username, elements.password];
-      form.forEach(input => {
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') handleLogin();
-        });
-      });
-      
-      elements.loginBtn.addEventListener('click', handleLogin);
-      
-      // 添加彈窗事件处理
-      document.querySelectorAll('.show-coming-soon').forEach(el => {
-        el.addEventListener('click', function(e) {
-          e.preventDefault();
-          alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
-        });
-      });
-    }
-
-    // 登入處理
-    function handleLogin() {
-      const user = elements.username.value.trim();
-      const pass = elements.password.value.trim();
-      
-      // 隱藏錯誤訊息並顯示載入動畫
-      elements.error.style.display = "none";
-      elements.spinner.style.display = "block";
-
-      // 驗證登入資訊
-      setTimeout(() => {
-        if (isValidLogin(user, pass)) {
-          saveUserInfo(user);
-          window.location.href = "index.html";
-        } else {
-          elements.spinner.style.display = "none";
-          elements.error.style.display = "block";
-        }
-      }, 600);
-    }
-
-    // 驗證登入
-    function isValidLogin(user, pass) {
-      return user === "" || (user === "admin" && pass === "stustai");
-    }
-
-    // 儲存使用者資訊
-    function saveUserInfo(user) {
-      const username = user || "測試帳戶";
-      const email = user ? `${user}@demo.com` : "test@demo.com";
-      localStorage.setItem("username", username);
-      localStorage.setItem("email", email);
-    }
-
-    // 頁面載入時初始化
-    document.addEventListener('DOMContentLoaded', setupFormEvents);
-  </script>
-
+  <script src="js/login.js"></script>
 </body>
 </html>

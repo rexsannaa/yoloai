@@ -1,20 +1,20 @@
-/* login.css - 登入頁面專用樣式 */
+/* css/login.css - 登入頁面專用樣式 */
 
 :root {
   --primary: #8a2be2;
   --primary-dark: #7324bf;
-  --primary-light: rgba(138, 43, 226, 0.4);
-  --bg-gradient: linear-gradient(135deg, #8a2be2, #6a1db8);
+  --primary-light: rgba(138, 43, 226, 0.1);
+  --bg-gradient: linear-gradient(135deg, #8a2be2, #6a1db8, #4a0e83);
   --text-primary: #8a2be2;
-  --text-secondary: #666;
-  --text-light: #aaa;
-  --border-light: #ccc;
-  --bg-light: #f9fafb;
-  --box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-  --transition: all 0.3s ease;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
+  --border-color: #d1d5db;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 基礎樣式 */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -22,8 +22,8 @@
 }
 
 html, body {
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-gradient);
   display: flex;
   align-items: center;
@@ -31,132 +31,194 @@ html, body {
   overflow: hidden;
 }
 
-/* 登入卡片樣式 */
+/* === 登入容器 === */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
 .login-box {
   background: white;
   border-radius: 16px;
-  padding: 40px 30px;
-  width: 320px;
-  text-align: center;
-  box-shadow: var(--box-shadow);
-  transform: scale(0.96);
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-/* 文字與表單元素 */
-h1 {
-  font-size: 1.4em;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 0.9em;
-  color: var(--text-secondary);
-  margin-bottom: 25px;
-}
-
-input {
+  padding: 40px 32px;
+  box-shadow: var(--shadow-lg);
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid var(--border-light);
-  border-radius: 6px;
-  font-size: 0.95em;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
 
-input:focus {
+/* === 登入標題 === */
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.login-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* === 表單樣式 === */
+.login-form {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  background: #fff;
+}
+
+.form-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-/* 按鈕樣式 */
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.form-input:focus + .input-icon {
+  color: var(--primary);
+}
+
+/* === 錯誤訊息 === */
+.error-message {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.error-message.show {
+  display: flex;
+}
+
+/* === 登入按鈕 === */
 .login-btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px 20px;
   background: var(--primary);
   color: white;
-  font-weight: bold;
-  font-size: 1em;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.login-btn:hover {
+.login-btn:hover:not(:disabled) {
   background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 8px 16px var(--primary-light);
+  box-shadow: 0 8px 25px rgba(138, 43, 226, 0.3);
 }
 
-/* 頁腳樣式 */
-.footer {
-  font-size: 0.75em;
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-spinner {
+  display: none;
+  margin-left: 8px;
+}
+
+.btn-spinner.show {
+  display: inline-block;
+}
+
+/* === 頁腳 === */
+.login-footer {
+  text-align: center;
+}
+
+.login-footer p {
+  font-size: 0.8rem;
   color: var(--text-light);
-  margin-top: 20px;
+  line-height: 1.5;
 }
 
-.footer a {
+.login-footer a {
   color: var(--text-primary);
   text-decoration: none;
+  font-weight: 500;
 }
 
-.footer a:hover {
+.login-footer a:hover {
   text-decoration: underline;
 }
 
-/* 錯誤訊息 */
-.error-message {
-  color: red;
-  font-size: 0.85em;
-  margin-bottom: 10px;
-  display: none;
+/* === 動畫效果 === */
+.animated.fadeSlideUp {
+  animation: fadeSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 載入動畫 */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #fff;
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-}
-
-/* 動畫效果 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
+@keyframes fadeSlideUp {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
-@keyframes spin {
-  0% { transform: translateY(-50%) rotate(0deg); }
-  100% { transform: translateY(-50%) rotate(360deg); }
-}
-
-/* 響應式設計 */
-@media (max-width: 360px) {
-  .login-box {
-    width: 90%;
-    padding: 30px 20px;
+/* === 響應式設計 === */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
   }
   
-  h1 {
-    font-size: 1.2em;
+  .login-box {
+    padding: 32px 24px;
+  }
+  
+  .login-header h1 {
+    font-size: 1.25rem;
+  }
+  
+  .form-input {
+    padding: 10px 14px 10px 40px;
+  }
+  
+  .input-icon {
+    left: 14px;
   }
 }
