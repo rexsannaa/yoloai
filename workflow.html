@@ -1,10 +1,10 @@
-<!-- workflow.html - 工作流頁面 -->
+<!-- workflow.html - AI訓練工作流頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>工作流 - 南臺科技大學AI視覺訓練平台</title>
+  <title>AI訓練工作流 - 南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/core.css">
   <link rel="stylesheet" href="css/components.css">
@@ -18,15 +18,15 @@
       <li data-view="workspace"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
       <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
       <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
-      <li id="workflows-link" class="active" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
+      <li id="workflows-link" class="active" data-view="workflows"><span><i class="fas fa-cogs"></i> AI訓練</span></li>
+      <li data-view="model-zoo"><span><i class="fas fa-brain"></i> 模型庫</span></li>
+      <li data-view="deployment"><span><i class="fas fa-rocket"></i> 部署</span></li>
+      <li data-view="monitoring"><span><i class="fas fa-chart-line"></i> 監控</span></li>
       <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
     </ul>
     <div class="sidebar-footer">
       <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
+        <div class="user-avatar" id="user-avatar">測</div>
         <div>
           <div id="user-name"><strong>測試帳戶</strong></div>
           <div id="user-email">test@demo.com</div>
@@ -40,103 +40,280 @@
     <div class="page-container animated fadeSlideUp">
       <!-- 頁面標題 -->
       <div class="page-header">
-        <h1><i class="fas fa-cogs"></i>工作流程</h1>
+        <h1><i class="fas fa-brain"></i>AI模型訓練工作流</h1>
         <div class="page-actions">
-          <input type="text" class="search-bar" placeholder="🔍 搜尋工作流...">
-          <button class="btn btn-outline show-coming-soon">
-            <i class="fas fa-layer-group"></i> 探索範本
+          <input type="text" class="search-bar" placeholder="🔍 搜尋訓練模板...">
+          <button class="btn btn-outline" onclick="showModelZoo()">
+            <i class="fas fa-download"></i> 預訓練模型
           </button>
-          <button class="btn btn-primary show-coming-soon">
-            <i class="fas fa-plus"></i> 建立工作流
+          <button class="btn btn-primary" onclick="createNewProject()">
+            <i class="fas fa-plus"></i> 新增訓練專案
           </button>
         </div>
       </div>
       
       <!-- 工作流網格 -->
       <div class="workflow-grid">
-        <!-- 自訂工作流卡片 -->
-        <div class="workflow-card" onclick="navigateToWorkflow('custom')">
-          <div class="workflow-card-header">
-            <h3>自訂工作流程</h3>
-            <i class="fas fa-ellipsis-h show-coming-soon"></i>
-          </div>
-          <div class="workflow-card-image-placeholder">
-            <img src="./icon/02.png" alt="自訂工作流" style="max-width: 80%; max-height: 80%; object-fit: contain;">
-          </div>
-          <p>點擊編輯或查看自訂工作流程的詳細資訊</p>
-        </div>
         
-        <!-- 教學工作流卡片 -->
-        <div class="workflow-card tutorial-card">
+        <!-- 物件偵測訓練卡片 -->
+        <div class="workflow-card training-card object-detection" onclick="startTraining('object-detection')">
           <div class="workflow-card-header">
-            <h3>開始教學</h3>
-            <div class="tutorial-badge">教學</div>
+            <h3><i class="fas fa-vector-square"></i> 物件偵測訓練</h3>
+            <div class="training-badge popular">熱門</div>
           </div>
           
-          <div class="tutorial-options">
-            <div class="tutorial-option" onclick="navigateToWorkflow('object-detection')">
-              <div class="tutorial-icon object-icon">
-                <i class="fas fa-vector-square"></i>
-              </div>
-              <div class="tutorial-content">
-                <div class="tutorial-title">圖像：物件偵測</div>
-                <div class="tutorial-desc">學習識別圖像中的物體位置</div>
-              </div>
+          <div class="training-preview">
+            <div class="preview-image">
+              <img src="./icon/02.png" alt="物件偵測" style="max-width: 80%; max-height: 80%; object-fit: contain;">
             </div>
-            
-            <div class="tutorial-option" onclick="navigateToWorkflow('gesture-recognition')">
-              <div class="tutorial-icon gesture-icon">
-                <i class="fas fa-hand-paper"></i>
+            <div class="training-stats">
+              <div class="stat-item">
+                <i class="fas fa-images"></i>
+                <span>需要 20+ 張圖片</span>
               </div>
-              <div class="tutorial-content">
-                <div class="tutorial-title">動作：手勢識別</div>
-                <div class="tutorial-desc">訓練識別不同手勢動作</div>
-              </div>
-            </div>
-            
-            <div class="tutorial-option" onclick="navigateToWorkflow('audio-classification')">
-              <div class="tutorial-icon audio-icon">
-                <i class="fas fa-volume-up"></i>
-              </div>
-              <div class="tutorial-content">
-                <div class="tutorial-title">音頻：聲音分類</div>
-                <div class="tutorial-desc">分析和分類不同聲音</div>
+              <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span>訓練時間 ~15分鐘</span>
               </div>
             </div>
           </div>
           
-          <p class="tutorial-footer-text">
-            <i class="fas fa-lightbulb"></i>
-            不知道從何開始？跟隨教學在幾分鐘內建立你的第一個模型！
-          </p>
+          <div class="training-description">
+            <p>訓練AI識別和定位圖像中的多個物體，支援邊界框標註和實時偵測</p>
+          </div>
+          
+          <div class="training-features">
+            <span class="feature-tag">YOLO v8</span>
+            <span class="feature-tag">實時偵測</span>
+            <span class="feature-tag">邊緣部署</span>
+          </div>
         </div>
 
-        <!-- 快速開始卡片 -->
-        <div class="workflow-card quick-start-card">
+        <!-- 影像分類訓練卡片 -->
+        <div class="workflow-card training-card image-classification" onclick="startTraining('image-classification')">
           <div class="workflow-card-header">
-            <h3>快速開始</h3>
-            <i class="fas fa-rocket" style="color: var(--warning);"></i>
+            <h3><i class="fas fa-layer-group"></i> 影像分類訓練</h3>
+            <div class="training-badge beginner">新手</div>
           </div>
           
-          <div class="quick-start-options">
-            <div class="quick-start-item" onclick="location.href='tutorial.html'">
-              <i class="fas fa-graduation-cap"></i>
-              <span>學習教學</span>
+          <div class="training-preview">
+            <div class="preview-image">
+              <div class="classification-demo">
+                <div class="demo-categories">
+                  <div class="category-item">🐱 貓</div>
+                  <div class="category-item">🐶 狗</div>
+                  <div class="category-item">🐦 鳥</div>
+                </div>
+              </div>
             </div>
-            
-            <div class="quick-start-item show-coming-soon">
-              <i class="fas fa-upload"></i>
-              <span>上傳資料</span>
-            </div>
-            
-            <div class="quick-start-item show-coming-soon">
-              <i class="fas fa-brain"></i>
-              <span>預訓練模型</span>
+            <div class="training-stats">
+              <div class="stat-item">
+                <i class="fas fa-images"></i>
+                <span>需要 10+ 張/類別</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span>訓練時間 ~8分鐘</span>
+              </div>
             </div>
           </div>
           
-          <p>選擇最適合你的開始方式</p>
+          <div class="training-description">
+            <p>訓練AI將圖像分類到不同類別，最適合初學者入門AI訓練</p>
+          </div>
+          
+          <div class="training-features">
+            <span class="feature-tag">ResNet</span>
+            <span class="feature-tag">多類別</span>
+            <span class="feature-tag">高準確率</span>
+          </div>
         </div>
+
+        <!-- 語義分割訓練卡片 -->
+        <div class="workflow-card training-card segmentation show-coming-soon">
+          <div class="workflow-card-header">
+            <h3><i class="fas fa-puzzle-piece"></i> 語義分割訓練</h3>
+            <div class="training-badge advanced">進階</div>
+          </div>
+          
+          <div class="training-preview">
+            <div class="preview-image">
+              <div class="segmentation-demo">
+                <div class="segment-overlay"></div>
+              </div>
+            </div>
+            <div class="training-stats">
+              <div class="stat-item">
+                <i class="fas fa-images"></i>
+                <span>需要 30+ 張圖片</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span>訓練時間 ~25分鐘</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="training-description">
+            <p>像素級物體分割，精確識別每個像素所屬的物體類別</p>
+          </div>
+          
+          <div class="training-features">
+            <span class="feature-tag">U-Net</span>
+            <span class="feature-tag">像素精度</span>
+            <span class="feature-tag">醫療應用</span>
+          </div>
+        </div>
+
+        <!-- 異常偵測訓練卡片 -->
+        <div class="workflow-card training-card anomaly-detection show-coming-soon">
+          <div class="workflow-card-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> 異常偵測訓練</h3>
+            <div class="training-badge industrial">工業</div>
+          </div>
+          
+          <div class="training-preview">
+            <div class="preview-image">
+              <div class="anomaly-demo">
+                <div class="normal-samples">✓ 正常</div>
+                <div class="anomaly-samples">⚠ 異常</div>
+              </div>
+            </div>
+            <div class="training-stats">
+              <div class="stat-item">
+                <i class="fas fa-images"></i>
+                <span>需要 50+ 正常樣本</span>
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span>訓練時間 ~20分鐘</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="training-description">
+            <p>只需正常樣本即可訓練，自動偵測生產線上的缺陷和異常</p>
+          </div>
+          
+          <div class="training-features">
+            <span class="feature-tag">無監督</span>
+            <span class="feature-tag">品質檢測</span>
+            <span class="feature-tag">工業4.0</span>
+          </div>
+        </div>
+
+        <!-- 快速開始指南卡片 -->
+        <div class="workflow-card guide-card">
+          <div class="workflow-card-header">
+            <h3><i class="fas fa-rocket"></i> 快速開始指南</h3>
+            <i class="fas fa-lightbulb" style="color: var(--warning);"></i>
+          </div>
+          
+          <div class="guide-steps">
+            <div class="guide-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <div class="step-title">選擇訓練類型</div>
+                <div class="step-desc">根據需求選擇合適的AI模型</div>
+              </div>
+            </div>
+            
+            <div class="guide-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <div class="step-title">上傳訓練資料</div>
+                <div class="step-desc">拖拽上傳圖片並進行標註</div>
+              </div>
+            </div>
+            
+            <div class="guide-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <div class="step-title">開始訓練</div>
+                <div class="step-desc">一鍵啟動AI模型訓練過程</div>
+              </div>
+            </div>
+            
+            <div class="guide-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <div class="step-title">測試與部署</div>
+                <div class="step-desc">驗證模型並部署到邊緣設備</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-actions">
+            <button class="btn btn-outline" onclick="showTutorial()">
+              <i class="fas fa-play-circle"></i> 觀看教學
+            </button>
+            <button class="btn btn-primary" onclick="startQuickDemo()">
+              <i class="fas fa-magic"></i> 快速體驗
+            </button>
+          </div>
+        </div>
+
+        <!-- 最近的訓練項目 -->
+        <div class="workflow-card recent-projects">
+          <div class="workflow-card-header">
+            <h3><i class="fas fa-history"></i> 最近的訓練</h3>
+            <a href="#" class="view-all">查看全部</a>
+          </div>
+          
+          <div class="recent-list">
+            <div class="recent-item">
+              <div class="project-icon object-detection-icon">
+                <i class="fas fa-vector-square"></i>
+              </div>
+              <div class="project-info">
+                <div class="project-name">零件品檢模型</div>
+                <div class="project-status training">
+                  <i class="fas fa-spinner fa-spin"></i> 訓練中 (85%)
+                </div>
+              </div>
+              <div class="project-actions">
+                <button class="btn-icon" onclick="viewProject('parts-detection')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="recent-item">
+              <div class="project-icon classification-icon">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <div class="project-info">
+                <div class="project-name">水果分類器</div>
+                <div class="project-status completed">
+                  <i class="fas fa-check-circle"></i> 已完成
+                </div>
+              </div>
+              <div class="project-actions">
+                <button class="btn-icon" onclick="deployModel('fruit-classifier')">
+                  <i class="fas fa-rocket"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="recent-item">
+              <div class="project-icon segmentation-icon">
+                <i class="fas fa-puzzle-piece"></i>
+              </div>
+              <div class="project-info">
+                <div class="project-name">醫療影像分割</div>
+                <div class="project-status error">
+                  <i class="fas fa-exclamation-circle"></i> 訓練失敗
+                </div>
+              </div>
+              <div class="project-actions">
+                <button class="btn-icon" onclick="retryTraining('medical-seg')">
+                  <i class="fas fa-redo"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -156,7 +333,7 @@
   <div id="settings-popup" class="popup-menu">
     <div class="popup-title">工作區設定</div>
     <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
-    <div class="show-coming-soon">💰 點數使用情況</div>
+    <div class="show-coming-soon">💰 GPU 使用情況</div>
     <div class="show-coming-soon">👥 使用者管理</div>
     <div class="show-coming-soon">🔑 API 金鑰</div>
   </div>

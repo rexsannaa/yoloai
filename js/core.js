@@ -109,6 +109,22 @@ function setupSidebarMenu() {
         return;
       }
       
+      // 新增的導航選項
+      if (viewName === 'model-zoo') {
+        showComingSoonMessage();
+        return;
+      }
+      
+      if (viewName === 'deployment') {
+        showComingSoonMessage();
+        return;
+      }
+      
+      if (viewName === 'monitoring') {
+        showComingSoonMessage();
+        return;
+      }
+      
       // 其他導航
       if (viewName) {
         if (viewName === 'workspace') {
@@ -241,6 +257,9 @@ function markCurrentPage() {
   if (currentPath.includes('workflow.html')) {
     const workflowsLink = document.getElementById('workflows-link');
     if (workflowsLink) workflowsLink.classList.add('active');
+  } else if (currentPath.includes('train-object-detection.html')) {
+    const workflowsLink = document.getElementById('workflows-link');
+    if (workflowsLink) workflowsLink.classList.add('active');
   } else if (currentPath.includes('index.html') || currentPath.endsWith('/')) {
     const projectsLink = document.getElementById('projects-link');
     if (projectsLink) projectsLink.classList.add('active');
@@ -325,7 +344,23 @@ function navigateTo(page) {
  * 登出功能
  */
 function logout() {
-  localStorage.clear();
+  // 清除所有訓練相關的儲存資料
+  const keysToRemove = [
+    'username',
+    'email',
+    'loginTime',
+    'selectedTrainingType',
+    'trainingConfig',
+    'currentProject',
+    'activeTraining',
+    'lastTrainingResult',
+    'completedTraining'
+  ];
+  
+  keysToRemove.forEach(key => {
+    localStorage.removeItem(key);
+  });
+  
   navigateTo("login.html");
 }
 
@@ -362,7 +397,7 @@ function createProject() {
     };
     
     localStorage.setItem('currentProject', JSON.stringify(projectInfo));
-    navigateTo('upload.html');
+    navigateTo('train-object-detection.html');
   } else {
     showComingSoonMessage();
   }
@@ -471,6 +506,191 @@ const Utils = {
   // 深拷貝
   deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
+  },
+  
+  // 格式化時間
+  formatTime(date) {
+    if (!date) return '-';
+    return new Date(date).toLocaleString('zh-TW');
+  },
+  
+  // 計算時間差
+  getTimeDiff(startTime, endTime = new Date()) {
+    const diff = endTime - new Date(startTime);
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${minutes}分${seconds}秒`;
+  }
+};
+
+/**
+ * 本地儲存管理
+ */
+const StorageManager = {
+  // 設置項目
+  setItem(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.error('儲存失敗:', e);
+      return false;
+    }
+  },
+  
+  // 獲取項目
+  getItem(key, defaultValue = null) {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (e) {
+      console.error('讀取失敗:', e);
+      return defaultValue;
+    }
+  },
+  
+  // 移除項目
+  removeItem(key) {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (e) {
+      console.error('刪除失敗:', e);
+      return false;
+    }
+  },
+  
+  // 清空所有
+  clear() {
+    try {
+      localStorage.clear();
+      return true;
+    } catch (e) {
+      console.error('清空失敗:', e);
+      return false;
+    }
+  }
+};
+
+/**
+ * 通知系統
+ */
+const NotificationManager = {
+  show(message, type = 'info', duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-${this.getIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    `;
+    
+    // 添加樣式
+    this.addNotificationStyles();
+    
+    document.body.appendChild(notification);
+    
+    // 自動移除
+    if (duration > 0) {
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, duration);
+    }
+    
+    return notification;
+  },
+  
+  getIcon(type) {
+    const icons = {
+      'success': 'check-circle',
+      'error': 'exclamation-circle',
+      'warning': 'exclamation-triangle',
+      'info': 'info-circle'
+    };
+    return icons[type] || 'info-circle';
+  },
+  
+  addNotificationStyles() {
+    if (document.querySelector('#notification-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        min-width: 300px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideInRight 0.3s ease-out;
+      }
+      
+      .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+      }
+      
+      .notification-success {
+        border-left: 4px solid var(--success);
+      }
+      
+      .notification-error {
+        border-left: 4px solid var(--danger);
+      }
+      
+      .notification-warning {
+        border-left: 4px solid var(--warning);
+      }
+      
+      .notification-info {
+        border-left: 4px solid var(--primary);
+      }
+      
+      .notification-close {
+        background: none;
+        border: none;
+        color: var(--text-light);
+        cursor: pointer;
+        margin-left: auto;
+        padding: 4px;
+      }
+      
+      .notification-close:hover {
+        color: var(--text-dark);
+      }
+      
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .notification {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          min-width: auto;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
 };
 
@@ -481,3 +701,5 @@ window.logout = logout;
 window.createProject = createProject;
 window.EventBus = EventBus;
 window.Utils = Utils;
+window.StorageManager = StorageManager;
+window.NotificationManager = NotificationManager;
