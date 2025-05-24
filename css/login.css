@@ -1,4 +1,4 @@
-/* css/login.css - 登入頁面專用樣式 */
+/* css/login.css - 登入頁面樣式 */
 
 :root {
   --primary: #8a2be2;
@@ -44,8 +44,18 @@ html, body {
   padding: 40px 32px;
   box-shadow: var(--shadow-lg);
   width: 100%;
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* === 登入標題 === */
@@ -186,18 +196,6 @@ html, body {
 
 .login-footer a:hover {
   text-decoration: underline;
-}
-
-/* === 動畫效果 === */
-.animated.fadeSlideUp {
-  animation: fadeSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes fadeSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 /* === 響應式設計 === */

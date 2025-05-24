@@ -1,4 +1,4 @@
-// js/login.js - 登入功能模組
+// js/login.js - 登入功能
 
 /**
  * 登入頁面功能處理
@@ -18,7 +18,6 @@ const elements = {
 document.addEventListener('DOMContentLoaded', function() {
   initElements();
   setupEventListeners();
-  setupComingSoonHandlers();
 });
 
 /**
@@ -216,20 +215,8 @@ function hideErrorMessage() {
 }
 
 /**
- * 設置即將推出功能處理程序
- */
-function setupComingSoonHandlers() {
-  document.querySelectorAll('.show-coming-soon').forEach(el => {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      showComingSoonMessage();
-    });
-  });
-}
-
-/**
  * 顯示即將推出訊息
  */
-function showComingSoonMessage() {
+function showComingSoon() {
   alert("🚧 功能尚未開放\n這個功能目前仍在開發中，敬請期待！");
 }

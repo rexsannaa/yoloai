@@ -1,4 +1,4 @@
-<!-- index.html - 主頁面入口 -->
+<!-- index.html - 主頁面 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -6,60 +6,274 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>南臺科技大學AI視覺訓練平台</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="css/core.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-  <!-- 側邊欄組件 -->
+  <!-- 側邊欄 -->
   <div class="sidebar" id="main-sidebar">
-    <div class="sidebar-header">南臺科技大學AI視覺訓練平台</div>
+    <div class="sidebar-header">
+      南臺科技大學AI視覺訓練平台
+    </div>
+    
     <ul class="sidebar-menu">
-      <li data-view="workspace"><span><i class="fas fa-user-friends"></i> 1120</span><span>&gt;</span></li>
-      <li data-view="public-projects"><span>公共計畫</span><span>&gt;</span></li>
-      <li id="projects-link" data-view="projects"><span><i class="fas fa-project-diagram"></i> 專案</span></li>
-      <li id="workflows-link" data-view="workflows"><span><i class="fas fa-cogs"></i> 工作流</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-chart-line"></i> 監控</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-rocket"></i> 部署</span></li>
-      <li data-view="coming-soon"><span><i class="fas fa-compass"></i> 探索</span></li>
-      <li id="settings-toggle" data-popup="settings-popup"><span><i class="fas fa-cog"></i> 設定</span><span>&gt;</span></li>
+      <li class="menu-item active" data-view="dashboard">
+        <i class="fas fa-home"></i>
+        <span>儀表板</span>
+      </li>
+      <li class="menu-item" data-view="projects">
+        <i class="fas fa-project-diagram"></i>
+        <span>專案</span>
+      </li>
+      <li class="menu-item" data-view="workflows">
+        <i class="fas fa-cogs"></i>
+        <span>AI訓練</span>
+      </li>
+      <li class="menu-item" data-view="models">
+        <i class="fas fa-brain"></i>
+        <span>模型庫</span>
+      </li>
+      <li class="menu-item" data-view="deploy">
+        <i class="fas fa-rocket"></i>
+        <span>部署</span>
+      </li>
+      <li class="menu-item" data-view="monitor">
+        <i class="fas fa-chart-line"></i>
+        <span>監控</span>
+      </li>
     </ul>
+    
     <div class="sidebar-footer">
-      <div class="user-info" data-popup="account-menu">
-        <div class="user-avatar" id="user-avatar" style="width: 40px !important; height: 40px !important; border-radius: 50% !important; min-width: 40px !important; max-width: 40px !important;">測</div>
-        <div>
-          <div id="user-name"><strong>測試帳戶</strong></div>
-          <div id="user-email">test@demo.com</div>
+      <div class="user-info" id="user-info">
+        <div class="user-avatar" id="user-avatar">測</div>
+        <div class="user-details">
+          <div class="user-name" id="user-name">測試帳戶</div>
+          <div class="user-email" id="user-email">test@demo.com</div>
+        </div>
+        <div class="user-menu-btn" id="user-menu-btn">
+          <i class="fas fa-chevron-down"></i>
         </div>
       </div>
     </div>
   </div>
 
   <!-- 主內容區域 -->
-  <main class="main-content" id="main-content-area">
+  <main class="main-content">
+    <!-- 頂部導航 -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <button class="sidebar-toggle" id="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="page-title" id="page-title">儀表板</h1>
+      </div>
+      <div class="nav-right">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="搜尋專案、模型...">
+        </div>
+        <button class="nav-btn" title="通知">
+          <i class="fas fa-bell"></i>
+        </button>
+        <button class="nav-btn" title="設定">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </header>
+
     <!-- 動態內容區域 -->
+    <div class="content-area" id="content-area">
+      <!-- 儀表板視圖 -->
+      <div class="view-content" id="dashboard-view">
+        <div class="dashboard-header">
+          <h2>歡迎回來，<span id="welcome-name">測試帳戶</span>！</h2>
+          <p>開始您的AI視覺訓練之旅</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-project-diagram"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">3</div>
+              <div class="stat-label">活躍專案</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">12</div>
+              <div class="stat-label">訓練模型</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">8</div>
+              <div class="stat-label">已部署</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number">24h</div>
+              <div class="stat-label">總訓練時間</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <h3>快速開始</h3>
+          <div class="action-cards">
+            <div class="action-card" onclick="showComingSoon()">
+              <div class="action-icon">
+                <i class="fas fa-plus-circle"></i>
+              </div>
+              <div class="action-content">
+                <h4>新增專案</h4>
+                <p>建立新的AI視覺訓練專案</p>
+              </div>
+            </div>
+            <div class="action-card" onclick="showComingSoon()">
+              <div class="action-icon">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="action-content">
+                <h4>上傳資料</h4>
+                <p>上傳圖片資料集進行標註</p>
+              </div>
+            </div>
+            <div class="action-card" onclick="showComingSoon()">
+              <div class="action-icon">
+                <i class="fas fa-play"></i>
+              </div>
+              <div class="action-content">
+                <h4>開始訓練</h4>
+                <p>使用現有資料開始模型訓練</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+          <h3>最近活動</h3>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon success">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">物件偵測模型訓練完成</div>
+                <div class="activity-time">2 小時前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon warning">
+                <i class="fas fa-pause"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">影像分類訓練已暫停</div>
+                <div class="activity-time">5 小時前</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon info">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">新增了 50 張標註圖片</div>
+                <div class="activity-time">1 天前</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 專案視圖 -->
+      <div class="view-content hidden" id="projects-view">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <h3>尚無專案</h3>
+          <p>建立您的第一個AI視覺訓練專案</p>
+          <button class="btn btn-primary" onclick="showComingSoon()">
+            <i class="fas fa-plus"></i>
+            新增專案
+          </button>
+        </div>
+      </div>
+
+      <!-- 其他視圖（工作流、模型庫等） -->
+      <div class="view-content hidden" id="workflows-view">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3>AI訓練工作流</h3>
+          <p>功能開發中，敬請期待</p>
+        </div>
+      </div>
+
+      <div class="view-content hidden" id="models-view">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>模型庫</h3>
+          <p>功能開發中，敬請期待</p>
+        </div>
+      </div>
+
+      <div class="view-content hidden" id="deploy-view">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h3>模型部署</h3>
+          <p>功能開發中，敬請期待</p>
+        </div>
+      </div>
+
+      <div class="view-content hidden" id="monitor-view">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>系統監控</h3>
+          <p>功能開發中，敬請期待</p>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <!-- 彈出窗口組件 -->
-  <div id="account-menu" class="popup-menu">
-    <div><strong id="menu-username">測試帳戶</strong></div>
-    <div id="menu-email">test@demo.com</div>
-    <hr>
-    <div class="show-coming-soon">⚙ 我的帳戶</div>
-    <div class="show-coming-soon">🗂 工作區管理</div>
-    <div class="show-coming-soon">💳 訂閱方案</div>
-    <div class="show-coming-soon">📊 使用紀錄</div>
-    <div onclick="logout()">⇦ 登出</div>
+  <!-- 用戶選單彈窗 -->
+  <div class="user-menu" id="user-menu">
+    <div class="menu-item" onclick="showComingSoon()">
+      <i class="fas fa-user"></i>
+      <span>個人資料</span>
+    </div>
+    <div class="menu-item" onclick="showComingSoon()">
+      <i class="fas fa-cog"></i>
+      <span>帳戶設定</span>
+    </div>
+    <div class="menu-item" onclick="showComingSoon()">
+      <i class="fas fa-question-circle"></i>
+      <span>說明中心</span>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>登出</span>
+    </div>
   </div>
 
-  <div id="settings-popup" class="popup-menu">
-    <div class="popup-title">工作區設定</div>
-    <div class="show-coming-soon">🧾 訂閱方案與帳單</div>
-    <div class="show-coming-soon">💰 點數使用情況</div>
-    <div class="show-coming-soon">👥 使用者管理</div>
-    <div class="show-coming-soon">🔑 API 金鑰</div>
-  </div>
-
-  <!-- 核心腳本 -->
-  <script src="js/core.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>
