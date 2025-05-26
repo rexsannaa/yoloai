@@ -1,4 +1,25 @@
-// js/data-upload.js - 資料管理頁面功能
+/**
+ * 顯示即將推出訊息
+ */
+function showComingSoon() {
+  showNotification('功能開發中', '此功能正在開發中，敬請期待！', 'info');
+}
+
+// 暴露全域函數
+window.switchMainTab = switchMainTab;
+window.showAddDataModal = showAddDataModal;
+window.closeAddDataModal = closeAddDataModal;
+window.selectUploadType = selectUploadType;
+window.removeFile = removeFile;
+window.confirmUpload = confirmUpload;
+window.goToMain = goToMain;
+window.showComingSoon = showComingSoon;
+window.closeNotification = closeNotification;
+window.showDeviceConfig = showDeviceConfig;
+window.closeDeviceConfig = closeDeviceConfig;
+window.updateDeviceSpecs = updateDeviceSpecs;
+window.resetToDefaults = resetToDefaults;
+window.saveDeviceConfig = saveDeviceConfig;// js/data-upload.js - 資料管理頁面功能
 
 /**
  * 資料管理頁面功能處理
@@ -328,11 +349,292 @@ function goToMain() {
 }
 
 /**
- * 顯示即將推出訊息
+ * 顯示設備配置彈窗
  */
-function showComingSoon() {
-  showNotification('功能開發中', '此功能正在開發中，敬請期待！', 'info');
+function showDeviceConfig() {
+  const modal = document.getElementById('device-config-modal');
+  if (modal) {
+    modal.classList.add('show');
+  }
 }
+
+/**
+ * 關閉設備配置彈窗
+ */
+function closeDeviceConfig() {
+  const modal = document.getElementById('device-config-modal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+/**
+ * 顯示設備選擇彈窗
+ */
+function showDeviceSelect() {
+  const modal = document.getElementById('device-select-modal');
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+/**
+ * 關閉設備選擇彈窗
+ */
+function closeDeviceSelect() {
+  const modal = document.getElementById('device-select-modal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+/**
+ * 更新設備規格
+ */
+function updateDeviceSpecs() {
+  const deviceSelect = document.getElementById('target-device');
+  const clockRate = document.getElementById('clock-rate');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  const latencyBudget = document.getElementById('latency-budget');
+  
+  if (!deviceSelect || !clockRate || !ramBudget || !romBudget || !latencyBudget) return;
+  
+  const deviceSpecs = {
+    // 預設 Cortex-M4F
+    'cortex-m4f-80': { clock: 80, ram: 128, rom: 1, latency: 100 },
+    
+    // Alif 系列
+    'alif-he-m55': { clock: 160, ram: 4096, rom: 8, latency: 50 },
+    'alif-hp-m55': { clock: 400, ram: 8192, rom: 16, latency: 30 },
+    
+    // Ambiq 系列
+    'ambiq-apollo4': { clock: 192, ram: 2048, rom: 2, latency: 60 },
+    'ambiq-apollo5': { clock: 250, ram: 4096, rom: 4, latency: 50 },
+    
+    // Arduino 系列
+    'arduino-nano33-ble': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'arduino-nicla-vision': { clock: 480, ram: 1024, rom: 2, latency: 80 },
+    'arduino-nicla-voice': { clock: 240, ram: 512, rom: 1, latency: 120 },
+    'arduino-portenta-h7': { clock: 480, ram: 1024, rom: 2, latency: 80 },
+    
+    // BrainChip
+    'brainchip-akd1000': { clock: 1000, ram: 8192, rom: 32, latency: 10 },
+    
+    // BrickML
+    'brickml-m33': { clock: 192, ram: 512, rom: 2, latency: 100 },
+    
+    // Cortex 通用系列
+    'cortex-m7-216': { clock: 216, ram: 512, rom: 2, latency: 80 },
+    
+    // Digi ConnectCore
+    'digi-connect-core': { clock: 1700, ram: 2048, rom: 8, latency: 20 },
+    
+    // Espressif
+    'espressif-esp-eye': { clock: 240, ram: 520, rom: 4, latency: 100 },
+    
+    // Himax 系列
+    'himax-we1': { clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'himax-wiseye2': { clock: 400, ram: 2560, rom: 16, latency: 40 },
+    'himax-wiseye2-ethos': { clock: 400, ram: 2560, rom: 16, latency: 30 },
+    
+    // IMDT
+    'imdt-v2h-cpu': { clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'imdt-v2h-renesas': { clock: 1200, ram: 2048, rom: 8, latency: 20 },
+    
+    // Infineon PSoC6
+    'infineon-psoc6-cy8c6244': { clock: 150, ram: 1024, rom: 2, latency: 100 },
+    'infineon-psoc6-cy8c6347': { clock: 150, ram: 1024, rom: 2, latency: 100 },
+    
+    // MacBook Pro (特殊情況)
+    'macbook-pro-16-2020': { clock: 2400, ram: 16384, rom: 512, latency: 5 },
+    
+    // MemoryX
+    'memoryx-mx3': { clock: 800, ram: 4096, rom: 32, latency: 20 },
+    
+    // Microchip
+    'microchip-sama7g54': { clock: 1000, ram: 512, rom: 4, latency: 30 },
+    
+    // Nordic 系列
+    'nordic-nrf52840': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf5340': { clock: 128, ram: 512, rom: 1, latency: 120 },
+    'nordic-nrf9151': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9160': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9161': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    
+    // Nvidia Jetson 系列
+    'nvidia-jetson-nano': { clock: 1430, ram: 4096, rom: 16, latency: 15 },
+    'nvidia-jetson-orin-nx': { clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'nvidia-jetson-orin-nano': { clock: 1500, ram: 8192, rom: 32, latency: 12 },
+    
+    // OpenMV
+    'openmv-cam-h7': { clock: 480, ram: 1024, rom: 2, latency: 80 },
+    
+    // Particle 系列
+    'particle-boron': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'particle-photon-2': { clock: 200, ram: 512, rom: 2, latency: 100 },
+    
+    // Qualcomm
+    'qualcomm-dragonwing-rb3': { clock: 2840, ram: 4096, rom: 32, latency: 8 },
+    
+    // Raspberry Pi 系列
+    'raspberry-pi-4': { clock: 1500, ram: 4096, rom: 32, latency: 15 },
+    'raspberry-pi-5': { clock: 2400, ram: 8192, rom: 64, latency: 10 },
+    'raspberry-pi-rp2040': { clock: 133, ram: 264, rom: 2, latency: 120 },
+    
+    // Renesas 系列
+    'renesas-ra6m5': { clock: 200, ram: 512, rom: 2, latency: 90 },
+    'renesas-ra8d1': { clock: 480, ram: 1024, rom: 4, latency: 60 },
+    'renesas-rz-g2l': { clock: 1200, ram: 1024, rom: 4, latency: 25 },
+    'renesas-rz-v2h-cpu': { clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'renesas-rz-v2h-drp': { clock: 1200, ram: 2048, rom: 8, latency: 15 },
+    'renesas-rz-v2l-cpu': { clock: 1200, ram: 1024, rom: 4, latency: 30 },
+    'renesas-rz-v2l-drp': { clock: 1200, ram: 1024, rom: 4, latency: 20 },
+    
+    // STMicroelectronics 系列
+    'st-discovery-kit': { clock: 80, ram: 128, rom: 1, latency: 100 },
+    'st-stm32n6': { clock: 600, ram: 2048, rom: 8, latency: 40 },
+    
+    // Seeed 系列
+    'seeed-sensecap-a1101': { clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'seeed-studio-wio-terminal': { clock: 120, ram: 192, rom: 4, latency: 120 },
+    'seeed-vision-ai-module': { clock: 400, ram: 2048, rom: 16, latency: 50 },
+    
+    // SiLabs 系列
+    'silabs-efr32mg24': { clock: 78, ram: 256, rom: 1, latency: 140 },
+    'silabs-thunderboard-sense2': { clock: 40, ram: 256, rom: 1, latency: 200 },
+    
+    // Sony
+    'sony-spresense': { clock: 156, ram: 1536, rom: 8, latency: 80 },
+    
+    // Synaptics
+    'synaptics-ka10000': { clock: 1000, ram: 4096, rom: 16, latency: 20 },
+    
+    // Texas Instruments 系列
+    'ti-am62a-deep-learning': { clock: 1400, ram: 2048, rom: 8, latency: 15 },
+    'ti-am68a-deep-learning': { clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'ti-launchxl-cc1352p': { clock: 48, ram: 80, rom: 0.3, latency: 200 },
+    'ti-tda4vm-mma': { clock: 2000, ram: 4096, rom: 16, latency: 12 },
+    
+    // Think Silicon
+    'think-silicon-neox-ga100': { clock: 200, ram: 512, rom: 4, latency: 100 },
+    
+    // 自訂
+    'custom': { clock: 100, ram: 256, rom: 2, latency: 100 }
+  };
+  
+  const specs = deviceSpecs[deviceSelect.value] || deviceSpecs['cortex-m4f-80'];
+  clockRate.value = specs.clock;
+  ramBudget.value = specs.ram;
+  romBudget.value = specs.rom;
+  latencyBudget.value = specs.latency;
+}
+
+/**
+ * 篩選設備列表
+ */
+function filterDevices() {
+  const searchInput = document.getElementById('device-search');
+  const deviceItems = document.querySelectorAll('.device-item');
+  
+  if (!searchInput) return;
+  
+  const searchTerm = searchInput.value.toLowerCase();
+  
+  deviceItems.forEach(item => {
+    const deviceName = item.textContent.toLowerCase();
+    if (deviceName.includes(searchTerm)) {
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+}
+
+/**
+ * 選擇設備
+ */
+function selectDevice() {
+  const selectedItem = document.querySelector('.device-item.selected');
+  const targetDeviceSelect = document.getElementById('target-device');
+  
+  if (selectedItem && targetDeviceSelect) {
+    const deviceValue = selectedItem.getAttribute('data-device');
+    targetDeviceSelect.value = deviceValue;
+    updateDeviceSpecs();
+    closeDeviceSelect();
+  }
+}
+
+/**
+ * 重設為預設設定
+ */
+function resetToDefaults() {
+  const targetDevice = document.getElementById('target-device');
+  const processorFamily = document.getElementById('processor-family');
+  const clockRate = document.getElementById('clock-rate');
+  const customName = document.getElementById('custom-name');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  const latencyBudget = document.getElementById('latency-budget');
+  
+  if (targetDevice) targetDevice.value = 'cortex-m4f-80';
+  if (processorFamily) processorFamily.value = 'cortex-m';
+  if (clockRate) clockRate.value = '80';
+  if (customName) customName.value = '';
+  if (ramBudget) ramBudget.value = '128';
+  if (romBudget) romBudget.value = '1';
+  if (latencyBudget) latencyBudget.value = '100';
+  
+  showNotification('已重設', '所有設定已重設為預設值', 'info');
+}
+
+/**
+ * 儲存設備配置
+ */
+function saveDeviceConfig() {
+  const targetDevice = document.getElementById('target-device');
+  const clockRate = document.getElementById('clock-rate');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  
+  if (targetDevice && clockRate && ramBudget && romBudget) {
+    const config = {
+      device: targetDevice.value,
+      clock: clockRate.value,
+      ram: ramBudget.value,
+      rom: romBudget.value
+    };
+    
+    // 這裡可以保存配置到 localStorage 或發送到伺服器
+    localStorage.setItem('deviceConfig', JSON.stringify(config));
+    
+    showNotification('配置已儲存', '設備配置已成功儲存', 'success');
+    closeDeviceConfig();
+  }
+}
+
+// 設備項目點擊事件
+document.addEventListener('DOMContentLoaded', function() {
+  // 載入已保存的設備配置
+  const savedConfig = localStorage.getItem('deviceConfig');
+  if (savedConfig) {
+    try {
+      const config = JSON.parse(savedConfig);
+      const targetDevice = document.getElementById('target-device');
+      const clockRate = document.getElementById('clock-rate');
+      const ramBudget = document.getElementById('ram-budget');
+      const romBudget = document.getElementById('rom-budget');
+      
+      if (targetDevice && config.device) targetDevice.value = config.device;
+      if (clockRate && config.clock) clockRate.value = config.clock;
+      if (ramBudget && config.ram) ramBudget.value = config.ram;
+      if (romBudget && config.rom) romBudget.value = config.rom;
+    } catch (e) {
+      console.log('無法載入設備配置');
+    }
+  }
+});
 
 /**
  * 顯示通知

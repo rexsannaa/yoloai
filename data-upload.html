@@ -23,7 +23,7 @@
         <i class="fas fa-home"></i>
         <span>儀表板</span>
       </li>
-      <li class="menu-item" onclick="showComingSoon()">
+      <li class="menu-item" onclick="showDeviceConfig()">
         <i class="fas fa-microchip"></i>
         <span>設備</span>
       </li>
@@ -212,6 +212,177 @@
       </div>
     </div>
   </main>
+
+  <!-- 設備配置彈窗 -->
+  <div class="modal-overlay" id="device-config-modal">
+    <div class="modal-container large">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-microchip"></i>
+          <span>配置您的目標設備和應用程式預算</span>
+        </div>
+        <button class="modal-close" onclick="closeDeviceConfig()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-content">
+        <!-- 目標設備區域 -->
+        <div class="config-section">
+          <div class="section-header">
+            <h3>目標設備</h3>
+            <p>定義您的目標設備需求以提供模型優化和性能計算。沒有設備嗎？使用預設設定，您可以隨時更改。</p>
+          </div>
+          
+          <div class="config-form">
+            <div class="form-group">
+              <label for="target-device">目標設備</label>
+              <select id="target-device" class="form-select" onchange="updateDeviceSpecs()">
+                <option value="cortex-m4f-80">Cortex-M4F 80MHz</option>
+                <optgroup label="生產設備">
+                  <option value="custom">自訂</option>
+                </optgroup>
+                <optgroup label="開發板">
+                  <option value="alif-he-m55">Alif HE (Cortex-M55 160MHz + U55-128MACC)</option>
+                  <option value="alif-hp-m55">Alif HP (Cortex-M55 400MHz + U55-256MACC)</option>
+                  <option value="ambiq-apollo4">Ambiq Apollo4 EVB (Cortex-M4F 192MHz)</option>
+                  <option value="ambiq-apollo5">Ambiq Apollo5 EVB (Cortex-M55 250MHz)</option>
+                  <option value="arduino-nano33-ble">Arduino Nano 33 BLE Sense (Cortex-M4F 64MHz)</option>
+                  <option value="arduino-nicla-vision">Arduino Nicla Vision (Cortex-M7 480MHz)</option>
+                  <option value="arduino-nicla-voice">Arduino Nicla Voice (Cortex-M4 240MHz)</option>
+                  <option value="arduino-portenta-h7">Arduino Portenta H7 (Cortex-M7 480MHz)</option>
+                  <option value="brainchip-akd1000">BrainChip AKD1000 or AKD1500</option>
+                  <option value="brickml-m33">BrickML (Cortex-M33 192MHz)</option>
+                  <option value="cortex-m4f-80" selected>Cortex-M4F 80MHz</option>
+                  <option value="cortex-m7-216">Cortex-M7 216MHz</option>
+                  <option value="digi-connect-core">Digi ConnectCore 93 (NXP i.MX 93 - Cortex-A55 1.7GHz + Ethos-U65-256)</option>
+                  <option value="espressif-esp-eye">Espressif ESP-EYE (ESP32 240MHz)</option>
+                  <option value="himax-we1">Himax WE-I (ARC DSP 400MHz)</option>
+                  <option value="himax-wiseye2">Himax WiseEye2 (Cortex-M55 400 MHz)</option>
+                  <option value="himax-wiseye2-ethos">Himax WiseEye2 (Cortex-M55 400 MHz) + Ethos-U55-64</option>
+                  <option value="imdt-v2h-cpu">IMDT V2H (CPU)</option>
+                  <option value="imdt-v2h-renesas">IMDT V2H (with Renesas' RZ/V2H)</option>
+                  <option value="infineon-psoc6-cy8c6244">Infineon PSoC6 CY8C6244 (Cortex-M4F 150 MHz)</option>
+                  <option value="infineon-psoc6-cy8c6347">Infineon PSoC6 CY8C6347 (Cortex-M4F 150 MHz)</option>
+                  <option value="macbook-pro-16-2020">MacBook Pro 16" 2020 (Intel Core i9 2.4GHz)</option>
+                  <option value="memoryx-mx3">MemoryX MX3</option>
+                  <option value="microchip-sama7g54">Microchip SAMA7G54 Evaluation Kit</option>
+                  <option value="nordic-nrf52840">Nordic nRF52840 DK (Cortex-M4F 64MHz)</option>
+                  <option value="nordic-nrf5340">Nordic nRF5340 DK (Cortex-M33 128MHz)</option>
+                  <option value="nordic-nrf9151">Nordic nRF9151 DK (Cortex-M33 64MHz)</option>
+                  <option value="nordic-nrf9160">Nordic nRF9160 DK (Cortex-M33 64MHz)</option>
+                  <option value="nordic-nrf9161">Nordic nRF9161 DK (Cortex-M33 64MHz)</option>
+                  <option value="nvidia-jetson-nano">Nvidia Jetson Nano</option>
+                  <option value="nvidia-jetson-orin-nx">Nvidia Jetson Orin NX</option>
+                  <option value="nvidia-jetson-orin-nano">Nvidia Jetson Orin Nano</option>
+                  <option value="openmv-cam-h7">OpenMV Cam H7 Plus</option>
+                  <option value="particle-boron">Particle Boron</option>
+                  <option value="particle-photon-2">Particle Photon 2</option>
+                  <option value="qualcomm-dragonwing-rb3">Qualcomm Dragonwing RB3 Gen 2 Development Kit</option>
+                  <option value="raspberry-pi-4">Raspberry Pi 4</option>
+                  <option value="raspberry-pi-5">Raspberry Pi 5</option>
+                  <option value="raspberry-pi-rp2040">Raspberry Pi RP2040 (Cortex-M0+ 133MHz)</option>
+                  <option value="renesas-ra6m5">Renesas RA6M5 (Cortex-M33 200MHz)</option>
+                  <option value="renesas-ra8d1">Renesas RA8D1 (Cortex-M85 480MHz)</option>
+                  <option value="renesas-rz-g2l">Renesas RZ/G2L</option>
+                  <option value="renesas-rz-v2h-cpu">Renesas RZ/V2H (CPU)</option>
+                  <option value="renesas-rz-v2h-drp">Renesas RZ/V2H (with DRP-AI3 accelerator)</option>
+                  <option value="renesas-rz-v2l-cpu">Renesas RZ/V2L (CPU)</option>
+                  <option value="renesas-rz-v2l-drp">Renesas RZ/V2L (with DRP-AI accelerator)</option>
+                  <option value="st-discovery-kit">ST IoT Discovery Kit (Cortex-M4F 80MHz)</option>
+                  <option value="st-stm32n6">ST STM32N6 (Cortex-M55 600MHz + ST Neural-ART accelerator)</option>
+                  <option value="seeed-sensecap-a1101">Seeed SenseCap A1101 (HX6537-A ARC DSP 400MHz)</option>
+                  <option value="seeed-studio-wio-terminal">Seeed Studio Wio Terminal (Cortex-M4F 120MHz)</option>
+                  <option value="seeed-vision-ai-module">Seeed Vision AI Module (HX6537-A ARC DSP 400MHz)</option>
+                  <option value="silabs-efr32mg24">SiLabs EFR32MG24 (Cortex-M33 78MHz)</option>
+                  <option value="silabs-thunderboard-sense2">SiLabs Thunderboard Sense 2 (Cortex-M4F 40MHz)</option>
+                  <option value="sony-spresense">Sony Spresense (Cortex-M4F 156MHz)</option>
+                  <option value="synaptics-ka10000">Synaptics KA10000</option>
+                  <option value="ti-am62a-deep-learning">TI AM62A (with Deep Learning Accelerator)</option>
+                  <option value="ti-am68a-deep-learning">TI AM68A (with Deep Learning Accelerator)</option>
+                  <option value="ti-launchxl-cc1352p">TI LAUNCHXL-CC1352P (Cortex-M4F 48MHz)</option>
+                  <option value="ti-tda4vm-mma">TI TDA4VM (with matrix multiply accelerator (MMA))</option>
+                  <option value="think-silicon-neox-ga100">Think Silicon Neox GA100 (200 MHz) [BETA]</option>
+                </optgroup>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="processor-family">處理器系列</label>
+              <select id="processor-family" class="form-select">
+                <option value="cortex-m">Cortex-M</option>
+                <option value="cortex-a">Cortex-A</option>
+                <option value="x86">x86</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="clock-rate">時鐘頻率 <i class="fas fa-question-circle" title="處理器時鐘頻率"></i></label>
+              <div class="input-group">
+                <input type="number" id="clock-rate" class="form-input" value="80" min="1" max="3000">
+                <span class="input-suffix">MHz</span>
+              </div>
+              <small class="form-help">最大</small>
+            </div>
+            
+            <div class="form-group">
+              <label for="custom-name">自訂設備名稱 <span class="optional">(可選)</span> <i class="fas fa-question-circle" title="為您的設備指定一個自訂名稱"></i></label>
+              <input type="text" id="custom-name" class="form-input" placeholder="輸入自訂名稱">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 應用程式預算區域 -->
+        <div class="config-section">
+          <div class="section-header">
+            <h3>應用程式預算</h3>
+            <p>指定模型運行可用的 RAM 和 ROM，以及您特定應用程式允許的最大延遲。不確定？從預設值開始，稍後再修改。</p>
+          </div>
+          
+          <div class="config-form">
+            <div class="form-group">
+              <label for="ram-budget">RAM</label>
+              <div class="input-group">
+                <input type="number" id="ram-budget" class="form-input" value="128" min="1" max="8192">
+                <span class="input-suffix">KB</span>
+              </div>
+              <small class="form-help">最大</small>
+            </div>
+            
+            <div class="form-group">
+              <label for="rom-budget">ROM</label>
+              <div class="input-group">
+                <input type="number" id="rom-budget" class="form-input" value="1" min="1" max="1024">
+                <span class="input-suffix">MB</span>
+              </div>
+              <small class="form-help">最大</small>
+            </div>
+            
+            <div class="form-group">
+              <label for="latency-budget">延遲 <i class="fas fa-question-circle" title="最大允許的推理延遲"></i></label>
+              <div class="input-group">
+                <input type="number" id="latency-budget" class="form-input" value="100" min="1" max="10000">
+                <span class="input-suffix">ms</span>
+              </div>
+              <small class="form-help">最大</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="resetToDefaults()">
+          重設為預設設定
+        </button>
+        <div class="footer-actions">
+          <button class="btn btn-secondary" onclick="closeDeviceConfig()">取消</button>
+          <button class="btn btn-primary" onclick="saveDeviceConfig()">
+            儲存
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 添加資料彈窗 -->
   <div class="modal-overlay" id="add-data-modal">
