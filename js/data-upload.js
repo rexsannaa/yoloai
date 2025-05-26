@@ -393,137 +393,139 @@ function closeDeviceSelect() {
  */
 function updateDeviceSpecs() {
   const deviceSelect = document.getElementById('target-device');
+  const processorFamily = document.getElementById('processor-family');
   const clockRate = document.getElementById('clock-rate');
   const ramBudget = document.getElementById('ram-budget');
   const romBudget = document.getElementById('rom-budget');
   const latencyBudget = document.getElementById('latency-budget');
   
-  if (!deviceSelect || !clockRate || !ramBudget || !romBudget || !latencyBudget) return;
+  if (!deviceSelect || !processorFamily || !clockRate || !ramBudget || !romBudget || !latencyBudget) return;
   
   const deviceSpecs = {
     // 預設 Cortex-M4F
-    'cortex-m4f-80': { clock: 80, ram: 128, rom: 1, latency: 100 },
+    'cortex-m4f-80': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
     
     // Alif 系列
-    'alif-he-m55': { clock: 160, ram: 4096, rom: 8, latency: 50 },
-    'alif-hp-m55': { clock: 400, ram: 8192, rom: 16, latency: 30 },
+    'alif-he-m55': { family: 'cortex-m', clock: 160, ram: 4096, rom: 8, latency: 50 },
+    'alif-hp-m55': { family: 'cortex-m', clock: 400, ram: 8192, rom: 16, latency: 30 },
     
     // Ambiq 系列
-    'ambiq-apollo4': { clock: 192, ram: 2048, rom: 2, latency: 60 },
-    'ambiq-apollo5': { clock: 250, ram: 4096, rom: 4, latency: 50 },
+    'ambiq-apollo4': { family: 'cortex-m', clock: 192, ram: 2048, rom: 2, latency: 60 },
+    'ambiq-apollo5': { family: 'cortex-m', clock: 250, ram: 4096, rom: 4, latency: 50 },
     
     // Arduino 系列
-    'arduino-nano33-ble': { clock: 64, ram: 256, rom: 1, latency: 150 },
-    'arduino-nicla-vision': { clock: 480, ram: 1024, rom: 2, latency: 80 },
-    'arduino-nicla-voice': { clock: 240, ram: 512, rom: 1, latency: 120 },
-    'arduino-portenta-h7': { clock: 480, ram: 1024, rom: 2, latency: 80 },
+    'arduino-nano33-ble': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'arduino-nicla-vision': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
+    'arduino-nicla-voice': { family: 'cortex-m', clock: 240, ram: 512, rom: 1, latency: 120 },
+    'arduino-portenta-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
     
     // BrainChip
-    'brainchip-akd1000': { clock: 1000, ram: 8192, rom: 32, latency: 10 },
+    'brainchip-akd1000': { family: 'other', clock: 1000, ram: 8192, rom: 32, latency: 10 },
     
     // BrickML
-    'brickml-m33': { clock: 192, ram: 512, rom: 2, latency: 100 },
+    'brickml-m33': { family: 'cortex-m', clock: 192, ram: 512, rom: 2, latency: 100 },
     
     // Cortex 通用系列
-    'cortex-m7-216': { clock: 216, ram: 512, rom: 2, latency: 80 },
+    'cortex-m7-216': { family: 'cortex-m', clock: 216, ram: 512, rom: 2, latency: 80 },
     
     // Digi ConnectCore
-    'digi-connect-core': { clock: 1700, ram: 2048, rom: 8, latency: 20 },
+    'digi-connect-core': { family: 'cortex-a', clock: 1700, ram: 2048, rom: 8, latency: 20 },
     
     // Espressif
-    'espressif-esp-eye': { clock: 240, ram: 520, rom: 4, latency: 100 },
+    'espressif-esp-eye': { family: 'xtensa', clock: 240, ram: 520, rom: 4, latency: 100 },
     
     // Himax 系列
-    'himax-we1': { clock: 400, ram: 2048, rom: 16, latency: 50 },
-    'himax-wiseye2': { clock: 400, ram: 2560, rom: 16, latency: 40 },
-    'himax-wiseye2-ethos': { clock: 400, ram: 2560, rom: 16, latency: 30 },
+    'himax-we1': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'himax-wiseye2': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 40 },
+    'himax-wiseye2-ethos': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 30 },
     
     // IMDT
-    'imdt-v2h-cpu': { clock: 1200, ram: 2048, rom: 8, latency: 25 },
-    'imdt-v2h-renesas': { clock: 1200, ram: 2048, rom: 8, latency: 20 },
+    'imdt-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'imdt-v2h-renesas': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 20 },
     
     // Infineon PSoC6
-    'infineon-psoc6-cy8c6244': { clock: 150, ram: 1024, rom: 2, latency: 100 },
-    'infineon-psoc6-cy8c6347': { clock: 150, ram: 1024, rom: 2, latency: 100 },
+    'infineon-psoc6-cy8c6244': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
+    'infineon-psoc6-cy8c6347': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
     
     // MacBook Pro (特殊情況)
-    'macbook-pro-16-2020': { clock: 2400, ram: 16384, rom: 512, latency: 5 },
+    'macbook-pro-16-2020': { family: 'x86', clock: 2400, ram: 16384, rom: 512, latency: 5 },
     
     // MemoryX
-    'memoryx-mx3': { clock: 800, ram: 4096, rom: 32, latency: 20 },
+    'memoryx-mx3': { family: 'other', clock: 800, ram: 4096, rom: 32, latency: 20 },
     
     // Microchip
-    'microchip-sama7g54': { clock: 1000, ram: 512, rom: 4, latency: 30 },
+    'microchip-sama7g54': { family: 'cortex-a', clock: 1000, ram: 512, rom: 4, latency: 30 },
     
     // Nordic 系列
-    'nordic-nrf52840': { clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf5340': { clock: 128, ram: 512, rom: 1, latency: 120 },
-    'nordic-nrf9151': { clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf9160': { clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf9161': { clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf52840': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf5340': { family: 'cortex-m', clock: 128, ram: 512, rom: 1, latency: 120 },
+    'nordic-nrf9151': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9160': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9161': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
     
     // Nvidia Jetson 系列
-    'nvidia-jetson-nano': { clock: 1430, ram: 4096, rom: 16, latency: 15 },
-    'nvidia-jetson-orin-nx': { clock: 2000, ram: 8192, rom: 32, latency: 10 },
-    'nvidia-jetson-orin-nano': { clock: 1500, ram: 8192, rom: 32, latency: 12 },
+    'nvidia-jetson-nano': { family: 'cortex-a', clock: 1430, ram: 4096, rom: 16, latency: 15 },
+    'nvidia-jetson-orin-nx': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'nvidia-jetson-orin-nano': { family: 'cortex-a', clock: 1500, ram: 8192, rom: 32, latency: 12 },
     
     // OpenMV
-    'openmv-cam-h7': { clock: 480, ram: 1024, rom: 2, latency: 80 },
+    'openmv-cam-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
     
     // Particle 系列
-    'particle-boron': { clock: 64, ram: 256, rom: 1, latency: 150 },
-    'particle-photon-2': { clock: 200, ram: 512, rom: 2, latency: 100 },
+    'particle-boron': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'particle-photon-2': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 100 },
     
     // Qualcomm
-    'qualcomm-dragonwing-rb3': { clock: 2840, ram: 4096, rom: 32, latency: 8 },
+    'qualcomm-dragonwing-rb3': { family: 'cortex-a', clock: 2840, ram: 4096, rom: 32, latency: 8 },
     
     // Raspberry Pi 系列
-    'raspberry-pi-4': { clock: 1500, ram: 4096, rom: 32, latency: 15 },
-    'raspberry-pi-5': { clock: 2400, ram: 8192, rom: 64, latency: 10 },
-    'raspberry-pi-rp2040': { clock: 133, ram: 264, rom: 2, latency: 120 },
+    'raspberry-pi-4': { family: 'cortex-a', clock: 1500, ram: 4096, rom: 32, latency: 15 },
+    'raspberry-pi-5': { family: 'cortex-a', clock: 2400, ram: 8192, rom: 64, latency: 10 },
+    'raspberry-pi-rp2040': { family: 'cortex-m', clock: 133, ram: 264, rom: 2, latency: 120 },
     
     // Renesas 系列
-    'renesas-ra6m5': { clock: 200, ram: 512, rom: 2, latency: 90 },
-    'renesas-ra8d1': { clock: 480, ram: 1024, rom: 4, latency: 60 },
-    'renesas-rz-g2l': { clock: 1200, ram: 1024, rom: 4, latency: 25 },
-    'renesas-rz-v2h-cpu': { clock: 1200, ram: 2048, rom: 8, latency: 25 },
-    'renesas-rz-v2h-drp': { clock: 1200, ram: 2048, rom: 8, latency: 15 },
-    'renesas-rz-v2l-cpu': { clock: 1200, ram: 1024, rom: 4, latency: 30 },
-    'renesas-rz-v2l-drp': { clock: 1200, ram: 1024, rom: 4, latency: 20 },
+    'renesas-ra6m5': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 90 },
+    'renesas-ra8d1': { family: 'cortex-m', clock: 480, ram: 1024, rom: 4, latency: 60 },
+    'renesas-rz-g2l': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 25 },
+    'renesas-rz-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'renesas-rz-v2h-drp': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 15 },
+    'renesas-rz-v2l-cpu': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 30 },
+    'renesas-rz-v2l-drp': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 20 },
     
     // STMicroelectronics 系列
-    'st-discovery-kit': { clock: 80, ram: 128, rom: 1, latency: 100 },
-    'st-stm32n6': { clock: 600, ram: 2048, rom: 8, latency: 40 },
+    'st-discovery-kit': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
+    'st-stm32n6': { family: 'cortex-m', clock: 600, ram: 2048, rom: 8, latency: 40 },
     
     // Seeed 系列
-    'seeed-sensecap-a1101': { clock: 400, ram: 2048, rom: 16, latency: 50 },
-    'seeed-studio-wio-terminal': { clock: 120, ram: 192, rom: 4, latency: 120 },
-    'seeed-vision-ai-module': { clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'seeed-sensecap-a1101': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'seeed-studio-wio-terminal': { family: 'cortex-m', clock: 120, ram: 192, rom: 4, latency: 120 },
+    'seeed-vision-ai-module': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
     
     // SiLabs 系列
-    'silabs-efr32mg24': { clock: 78, ram: 256, rom: 1, latency: 140 },
-    'silabs-thunderboard-sense2': { clock: 40, ram: 256, rom: 1, latency: 200 },
+    'silabs-efr32mg24': { family: 'cortex-m', clock: 78, ram: 256, rom: 1, latency: 140 },
+    'silabs-thunderboard-sense2': { family: 'cortex-m', clock: 40, ram: 256, rom: 1, latency: 200 },
     
     // Sony
-    'sony-spresense': { clock: 156, ram: 1536, rom: 8, latency: 80 },
+    'sony-spresense': { family: 'cortex-m', clock: 156, ram: 1536, rom: 8, latency: 80 },
     
     // Synaptics
-    'synaptics-ka10000': { clock: 1000, ram: 4096, rom: 16, latency: 20 },
+    'synaptics-ka10000': { family: 'other', clock: 1000, ram: 4096, rom: 16, latency: 20 },
     
     // Texas Instruments 系列
-    'ti-am62a-deep-learning': { clock: 1400, ram: 2048, rom: 8, latency: 15 },
-    'ti-am68a-deep-learning': { clock: 2000, ram: 8192, rom: 32, latency: 10 },
-    'ti-launchxl-cc1352p': { clock: 48, ram: 80, rom: 0.3, latency: 200 },
-    'ti-tda4vm-mma': { clock: 2000, ram: 4096, rom: 16, latency: 12 },
+    'ti-am62a-deep-learning': { family: 'cortex-a', clock: 1400, ram: 2048, rom: 8, latency: 15 },
+    'ti-am68a-deep-learning': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'ti-launchxl-cc1352p': { family: 'cortex-m', clock: 48, ram: 80, rom: 0.3, latency: 200 },
+    'ti-tda4vm-mma': { family: 'cortex-a', clock: 2000, ram: 4096, rom: 16, latency: 12 },
     
     // Think Silicon
-    'think-silicon-neox-ga100': { clock: 200, ram: 512, rom: 4, latency: 100 },
+    'think-silicon-neox-ga100': { family: 'other', clock: 200, ram: 512, rom: 4, latency: 100 },
     
     // 自訂
-    'custom': { clock: 100, ram: 256, rom: 2, latency: 100 }
+    'custom': { family: 'cortex-m', clock: 100, ram: 256, rom: 2, latency: 100 }
   };
   
   const specs = deviceSpecs[deviceSelect.value] || deviceSpecs['cortex-m4f-80'];
+  processorFamily.value = specs.family;
   clockRate.value = specs.clock;
   ramBudget.value = specs.ram;
   romBudget.value = specs.rom;
