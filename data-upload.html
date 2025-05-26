@@ -1,0 +1,286 @@
+<!-- data-upload.html - 資料管理頁面 -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>資料管理 - 南臺科技大學AI視覺訓練平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/data-upload.css">
+</head>
+<body>
+  <!-- 左側導航 -->
+  <div class="sidebar" id="main-sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-cube"></i>
+        <span>AI視覺訓練平台</span>
+      </div>
+    </div>
+    
+    <ul class="sidebar-menu">
+      <li class="menu-item" onclick="goToMain()">
+        <i class="fas fa-home"></i>
+        <span>儀表板</span>
+      </li>
+      <li class="menu-item" onclick="showComingSoon()">
+        <i class="fas fa-microchip"></i>
+        <span>設備</span>
+      </li>
+      <li class="menu-item active">
+        <i class="fas fa-database"></i>
+        <span>資料獲取</span>
+      </li>
+      <li class="menu-item" onclick="showComingSoon()">
+        <i class="fas fa-flask"></i>
+        <span>實驗</span>
+      </li>
+      <li class="menu-item" onclick="showComingSoon()">
+        <i class="fas fa-adjust"></i>
+        <span>EON調節器</span>
+      </li>
+      <li class="menu-section-header">
+        <i class="fas fa-brain"></i>
+        <span>脈衝設計</span>
+        <i class="fas fa-chevron-down"></i>
+      </li>
+      <li class="menu-sub-item" onclick="showComingSoon()">
+        <i class="fas fa-circle"></i>
+        <span>建立脈衝</span>
+      </li>
+      <li class="menu-sub-item" onclick="showComingSoon()">
+        <i class="fas fa-magic"></i>
+        <span>重新訓練模型</span>
+      </li>
+      <li class="menu-sub-item" onclick="showComingSoon()">
+        <i class="fas fa-play"></i>
+        <span>即時分類</span>
+      </li>
+      <li class="menu-sub-item" onclick="showComingSoon()">
+        <i class="fas fa-vial"></i>
+        <span>模型測試</span>
+      </li>
+      <li class="menu-sub-item" onclick="showComingSoon()">
+        <i class="fas fa-rocket"></i>
+        <span>部署</span>
+      </li>
+      <li class="menu-item" onclick="showComingSoon()">
+        <i class="fas fa-code-branch"></i>
+        <span>版本控制</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="getting-started">
+        <h4>開始使用</h4>
+        <div class="menu-item" onclick="showComingSoon()">
+          <i class="fas fa-book"></i>
+          <span>文件</span>
+        </div>
+        <div class="menu-item" onclick="showComingSoon()">
+          <i class="fas fa-comments"></i>
+          <span>論壇</span>
+        </div>
+        <div class="upgrade-section">
+          <div class="upgrade-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="upgrade-content">
+            <h4>升級計劃</h4>
+            <p>獲得更高的工作限制和更多協作者</p>
+            <button class="upgrade-btn" onclick="showComingSoon()">查看計劃</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主內容區域 -->
+  <main class="main-content">
+    <!-- 頂部標籤導航 -->
+    <div class="top-tabs">
+      <button class="tab-button active" onclick="switchMainTab('dataset')">資料集</button>
+      <button class="tab-button" onclick="switchMainTab('explorer')">資料瀏覽器</button>
+      <button class="tab-button" onclick="switchMainTab('sources')">資料來源</button>
+      <button class="tab-button" onclick="switchMainTab('synthetic')">合成資料</button>
+      <div class="tab-divider"></div>
+      <button class="tab-button" onclick="switchMainTab('labeling')">
+        AI標註
+        <span class="new-badge">NEW</span>
+      </button>
+      <button class="tab-button" onclick="switchMainTab('wizard')">CSV精靈</button>
+    </div>
+
+    <!-- 資料集標籤頁 -->
+    <div class="tab-content active" id="dataset-tab">
+      <div class="content-grid">
+        <!-- 左側：資料集面板 -->
+        <div class="dataset-panel">
+          <div class="panel-header">
+            <h3>資料集</h3>
+            <div class="panel-actions">
+              <button class="icon-btn" onclick="showAddDataModal()" title="添加資料">
+                <i class="fas fa-upload"></i>
+              </button>
+              <button class="icon-btn" onclick="showComingSoon()" title="雲端儲存">
+                <i class="fas fa-cloud"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="dataset-content">
+            <div class="empty-dataset">
+              <div class="empty-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="add-data-section">
+                <h4>添加資料</h4>
+                <p>開始建立您的資料集，添加一些資料。</p>
+                <button class="add-data-btn" onclick="showAddDataModal()">
+                  <i class="fas fa-plus"></i>
+                  添加資料
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：收集資料面板 -->
+        <div class="collect-panel">
+          <div class="panel-header">
+            <h3>收集資料</h3>
+            <div class="panel-actions">
+              <button class="icon-btn" onclick="showComingSoon()" title="設定">
+                <i class="fas fa-cog"></i>
+              </button>
+              <button class="icon-btn" onclick="showComingSoon()" title="分享">
+                <i class="fas fa-share-alt"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="collect-content">
+            <div class="connect-device">
+              <div class="device-icon">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <p><a href="#" onclick="showComingSoon()">連接設備</a>開始建立您的資料集。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 其他標籤頁內容 -->
+    <div class="tab-content" id="explorer-tab">
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>資料瀏覽器</h3>
+        <p>功能開發中</p>
+      </div>
+    </div>
+
+    <div class="tab-content" id="sources-tab">
+      <div class="empty-state">
+        <i class="fas fa-plug"></i>
+        <h3>資料來源</h3>
+        <p>功能開發中</p>
+      </div>
+    </div>
+
+    <div class="tab-content" id="synthetic-tab">
+      <div class="empty-state">
+        <i class="fas fa-robot"></i>
+        <h3>合成資料</h3>
+        <p>功能開發中</p>
+      </div>
+    </div>
+
+    <div class="tab-content" id="labeling-tab">
+      <div class="empty-state">
+        <i class="fas fa-tags"></i>
+        <h3>AI標註</h3>
+        <p>功能開發中</p>
+      </div>
+    </div>
+
+    <div class="tab-content" id="wizard-tab">
+      <div class="empty-state">
+        <i class="fas fa-magic"></i>
+        <h3>CSV精靈</h3>
+        <p>功能開發中</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 添加資料彈窗 -->
+  <div class="modal-overlay" id="add-data-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>添加現有資料</h3>
+        <button class="modal-close" onclick="closeAddDataModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-content">
+        <div class="upload-options">
+          <div class="upload-option" onclick="selectUploadType('local')">
+            <div class="option-icon">
+              <i class="fas fa-upload"></i>
+            </div>
+            <div class="option-content">
+              <h4>上傳資料</h4>
+              <p>從本地電腦上傳檔案</p>
+            </div>
+          </div>
+          
+          <div class="upload-option" onclick="selectUploadType('cloud')">
+            <div class="option-icon">
+              <i class="fas fa-cloud"></i>
+            </div>
+            <div class="option-content">
+              <h4>新增儲存桶</h4>
+              <p>從雲端儲存匯入資料</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 本地上傳區域 -->
+        <div class="upload-area" id="upload-area" style="display: none;">
+          <div class="upload-zone">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h4>拖放檔案到此處</h4>
+            <p>或點擊選擇檔案上傳</p>
+            <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.csv,.json" style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+              選擇檔案
+            </button>
+            <div class="upload-info">
+              <small>支援格式：JPG, PNG, CSV, JSON | 最大：100MB</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- 檔案列表 -->
+        <div class="file-list" id="file-list" style="display: none;">
+          <h4>已選擇的檔案</h4>
+          <div class="file-items" id="file-items"></div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAddDataModal()">取消</button>
+        <button class="btn btn-primary" id="confirm-btn" onclick="confirmUpload()" disabled>
+          <i class="fas fa-check"></i>
+          確認
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data-upload.js"></script>
+</body>
+</html>

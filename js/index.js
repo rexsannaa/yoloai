@@ -4,9 +4,173 @@
  * 主頁面功能處理
  */
 
-// 全域變數
+/**
+ * 開始教學流程
+ */
+function startTutorial(type) {
+  // 設置訓練類型
+  currentTrainingType = type;
+  
+  // 更新訓練頁面標題和描述
+  const titles = {
+    motion: 'Motion: 手勢識別',
+    images: 'Images: 物件偵測', 
+    audio: 'Audio: 音頻分類'
+  };
+  
+  const descriptions = {
+    motion: '使用慣性感測器資料進行手勢和動作識別',
+    images: '使用電腦視覺技術進行物件識別和分類',
+    audio: '使用音頻訊號進行聲音識別和分類'
+  };
+  
+  const titleEl = document.getElementById('training-type-title');
+  const descEl = document.getElementById('training-type-desc');
+  
+  if (titleEl) titleEl.textContent = titles[type];
+  if (descEl) descEl.textContent = descriptions[type];
+  
+  // 切換到訓練詳細頁面
+  switchView('training-detail');
+  
+  // 顯示開始通知
+  showNotification('開始教學', `正在開始 ${titles[type]} 教學流程`, 'info');
+}
+
+/**
+ * 開始資料收集
+ */
+function startDataCollection(type) {
+  const messages = {
+    existing: '上傳現有資料功能',
+    new: '收集新資料功能'
+  };
+  
+  showNotification('功能開發中', `${messages[type]}正在開發中，敬請期待！`, 'info');
+}
+
+/**
+ * 上傳模型
+ */
+function uploadModel() {
+  showNotification('功能開發中', '模型上傳功能正在開發中，敬請期待！', 'info');
+}
+
+/**
+ * 返回到AI訓練工作流頁面
+ */
+function backToWorkflows() {
+  switchView('workflows');
+}
+
+/**
+ * 切換視圖 - 更新以支援新的訓練詳細頁面
+ */
+function switchView(viewName) {
+  if (currentView === viewName) return;
+  
+  // 更新選單項目狀態
+  elements.menuItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('data-view') === viewName || 
+        (viewName === 'training-detail' && item.getAttribute('data-view') === 'workflows')) {
+      item.classList.add('active');
+    }
+  });
+  
+  // 更新頁面標題
+  const titles = {
+    dashboard: '儀表板',
+    projects: '專案',
+    workflows: 'AI訓練',
+    models: '模型庫',
+    deploy: '部署',
+    monitor: '監控',
+    'training-detail': 'AI訓練'
+  };
+  
+  if (elements.pageTitle) {
+    elements.pageTitle.textContent = titles[viewName] || '南臺科技大學AI視覺訓練平台';
+  }
+  
+  // 切換視圖內容
+  elements.viewContents.forEach(view => {
+    view.classList.add('hidden');
+    if (view.id === `${viewName}-view`) {
+      view.classList.remove('hidden');
+    }
+  });
+  
+  currentView = viewName;
+  
+  // 在手機版上切換視圖後關閉側邊欄
+  if (window.innerWidth <= 768) {
+    closeSidebar();
+  }
+}
+
+/**
+ * 設置事件監聽器 - 增加新的互動功能
+ */
+function setupEventListeners() {
+  // 側邊欄切換
+  if (elements.sidebarToggle) {
+    elements.sidebarToggle.addEventListener('click', toggleSidebar);
+  }
+  
+  // 選單項目點擊
+  elements.menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      const viewName = item.getAttribute('data-view');
+      if (viewName) {
+        switchView(viewName);
+      }
+    });
+  });
+  
+  // 用戶選單切換
+  if (elements.userInfo) {
+    elements.userInfo.addEventListener('click', toggleUserMenu);
+  }
+  
+  // 點擊外部關閉用戶選單
+  document.addEventListener('click', (e) => {
+    if (elements.userMenu && elements.userInfo) {
+      if (!elements.userInfo.contains(e.target) && !elements.userMenu.contains(e.target)) {
+        closeUserMenu();
+      }
+    }
+  });
+  
+  // 響應式處理
+  window.addEventListener('resize', handleResize);
+  
+  // 鍵盤快捷鍵
+  document.addEventListener('keydown', handleKeyDown);
+  
+  // Getting Started 展開/收合
+  const toggleBtn = document.getElementById('getting-started-toggle');
+  const content = document.getElementById('getting-started-content');
+  
+  if (toggleBtn && content) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = !content.style.display || content.style.display !== 'none';
+      
+      if (isExpanded) {
+        content.style.display = 'none';
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+      } else {
+        content.style.display = 'grid';
+        toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+      }
+    });
+  }
+}
+
+// 全域變數 - 增加訓練類型追蹤
 let currentView = 'dashboard';
 let sidebarOpen = false;
+let currentTrainingType = null;
 
 // DOM 元素
 const elements = {
@@ -547,3 +711,7 @@ window.addEventListener('load', function() {
 window.showComingSoon = showComingSoon;
 window.logout = logout;
 window.closeNotification = closeNotification;
+window.startTutorial = startTutorial;
+window.startDataCollection = startDataCollection;
+window.uploadModel = uploadModel;
+window.backToWorkflows = backToWorkflows;

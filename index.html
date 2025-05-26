@@ -210,14 +210,181 @@
         </div>
       </div>
 
-      <!-- 其他視圖（工作流、模型庫等） -->
+      <!-- AI訓練視圖 -->
       <div class="view-content hidden" id="workflows-view">
-        <div class="empty-state">
-          <div class="empty-icon">
-            <i class="fas fa-cogs"></i>
+        <div class="workflows-header">
+          <h2>AI訓練工作流</h2>
+          <p>選擇訓練類型開始建立您的AI模型</p>
+        </div>
+
+        <!-- 教學區塊 -->
+        <div class="tutorial-section">
+          <h3>開始教學</h3>
+          <p>不確定從哪裡開始？跟隨教學在幾分鐘內建立您的第一個模型！</p>
+          
+          <div class="tutorial-cards">
+            <div class="tutorial-card" data-type="motion" onclick="startTutorial('motion')">
+              <div class="tutorial-icon motion">
+                <i class="fas fa-hand-paper"></i>
+              </div>
+              <div class="tutorial-content">
+                <h4>Motion: 手勢識別</h4>
+                <p>使用慣性感測器資料進行手勢和動作識別</p>
+              </div>
+              <div class="tutorial-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
+
+            <div class="tutorial-card" data-type="images" onclick="startTutorial('images')">
+              <div class="tutorial-icon images">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="tutorial-content">
+                <h4>Images: 物件偵測</h4>
+                <p>使用電腦視覺技術進行物件識別和分類</p>
+              </div>
+              <div class="tutorial-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
+
+            <div class="tutorial-card" data-type="audio" onclick="startTutorial('audio')">
+              <div class="tutorial-icon audio">
+                <i class="fas fa-microphone"></i>
+              </div>
+              <div class="tutorial-content">
+                <h4>Audio: 音頻分類</h4>
+                <p>使用音頻訊號進行聲音識別和分類</p>
+              </div>
+              <div class="tutorial-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
           </div>
-          <h3>AI訓練工作流</h3>
-          <p>功能開發中，敬請期待</p>
+        </div>
+
+        <!-- 開始使用區塊 -->
+        <div class="getting-started-section">
+          <div class="section-header">
+            <h3>開始使用</h3>
+            <button class="expand-btn" id="getting-started-toggle">
+              <i class="fas fa-chevron-up"></i>
+            </button>
+          </div>
+          <p>開始建立您的資料集或驗證您模型的設備效能：</p>
+          
+          <div class="getting-started-cards" id="getting-started-content">
+            <div class="getting-started-card" onclick="window.location.href='data-upload.html'">
+              <div class="card-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="card-content">
+                <h4>添加現有資料</h4>
+                <p>上傳您已有的資料集進行訓練</p>
+              </div>
+            </div>
+
+            <div class="getting-started-card" onclick="startDataCollection('new')">
+              <div class="card-icon">
+                <i class="fas fa-plus-circle"></i>
+              </div>
+              <div class="card-content">
+                <h4>收集新資料</h4>
+                <p>使用內建工具收集訓練資料</p>
+              </div>
+            </div>
+
+            <div class="getting-started-card" onclick="uploadModel()">
+              <div class="card-icon">
+                <i class="fas fa-upload"></i>
+              </div>
+              <div class="card-content">
+                <h4>上傳您的模型</h4>
+                <p>測試現有模型的設備效能</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 訓練詳細頁面 -->
+      <div class="view-content hidden" id="training-detail-view">
+        <div class="training-header">
+          <button class="back-btn" onclick="backToWorkflows()">
+            <i class="fas fa-arrow-left"></i>
+            返回
+          </button>
+          <div class="training-title">
+            <h2 id="training-type-title">Motion: 手勢識別</h2>
+            <p id="training-type-desc">使用慣性感測器資料進行手勢和動作識別</p>
+          </div>
+        </div>
+
+        <div class="training-steps">
+          <div class="step-item active" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>資料收集</h4>
+              <p>收集和標註訓練資料</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>特徵提取</h4>
+              <p>分析資料特徵</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>模型訓練</h4>
+              <p>訓練AI模型</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item" data-step="4">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>模型部署</h4>
+              <p>部署到邊緣設備</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-content">
+          <div class="content-card">
+            <div class="card-header">
+              <h3>開始訓練</h3>
+              <p>選擇您偏好的資料收集方式</p>
+            </div>
+            <div class="training-options">
+              <div class="option-card" onclick="showComingSoon()">
+                <div class="option-icon">
+                  <i class="fas fa-database"></i>
+                </div>
+                <h4>使用現有資料</h4>
+                <p>上傳您的資料集</p>
+              </div>
+              <div class="option-card" onclick="showComingSoon()">
+                <div class="option-icon">
+                  <i class="fas fa-record-vinyl"></i>
+                </div>
+                <h4>即時收集</h4>
+                <p>即時錄製訓練資料</p>
+              </div>
+              <div class="option-card" onclick="showComingSoon()">
+                <div class="option-icon">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h4>雲端同步</h4>
+                <p>從雲端載入資料</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
