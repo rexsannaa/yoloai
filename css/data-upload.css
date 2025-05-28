@@ -321,6 +321,13 @@ body {
   font-weight: 600;
 }
 
+.panel-header h3 small {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--primary);
+  margin-left: 8px;
+}
+
 .panel-actions {
   display: flex;
   gap: 4px;
@@ -356,7 +363,7 @@ body {
 
 .empty-dataset {
   text-align: center;
-  max-width: 280px;
+  max-width: 320px;
 }
 
 .empty-icon {
@@ -452,6 +459,47 @@ body {
 
 .connect-device a:hover {
   text-decoration: underline;
+}
+
+/* === 已上傳資料樣式 === */
+.uploaded-data {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.uploaded-data .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  border: none;
+}
+
+.uploaded-data .btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.uploaded-data .btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.uploaded-data .btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-medium);
+  border: 1px solid var(--border-color);
+}
+
+.uploaded-data .btn-secondary:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-dark);
 }
 
 /* === 空狀態 === */
@@ -840,7 +888,8 @@ body {
   cursor: pointer;
 }
 
-.upload-zone:hover {
+.upload-zone:hover,
+.upload-zone.dragover {
   border-color: var(--primary);
   background: var(--primary-light);
 }
@@ -923,6 +972,16 @@ body {
 .file-icon.image {
   background: rgba(6, 182, 212, 0.1);
   color: var(--info);
+}
+
+.file-icon.video {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+}
+
+.file-icon.audio {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
 }
 
 .file-icon.data {
@@ -1062,5 +1121,9 @@ body {
   .dataset-content,
   .collect-content {
     padding: 30px 16px;
+  }
+  
+  .empty-dataset {
+    max-width: 100%;
   }
 }

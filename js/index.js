@@ -5,36 +5,25 @@
  */
 
 /**
- * 開始教學流程
+ * 開始教學流程 - 修改為跳轉到 data-upload.html
  */
 function startTutorial(type) {
-  // 設置訓練類型
-  currentTrainingType = type;
+  // 儲存訓練類型到 localStorage
+  localStorage.setItem('trainingType', type);
   
-  // 更新訓練頁面標題和描述
+  // 顯示跳轉通知
   const titles = {
     motion: 'Motion: 手勢識別',
     images: 'Images: 物件偵測', 
     audio: 'Audio: 音頻分類'
   };
   
-  const descriptions = {
-    motion: '使用慣性感測器資料進行手勢和動作識別',
-    images: '使用電腦視覺技術進行物件識別和分類',
-    audio: '使用音頻訊號進行聲音識別和分類'
-  };
+  showNotification('開始教學', `正在跳轉到 ${titles[type]} 訓練頁面`, 'info');
   
-  const titleEl = document.getElementById('training-type-title');
-  const descEl = document.getElementById('training-type-desc');
-  
-  if (titleEl) titleEl.textContent = titles[type];
-  if (descEl) descEl.textContent = descriptions[type];
-  
-  // 切換到訓練詳細頁面
-  switchView('training-detail');
-  
-  // 顯示開始通知
-  showNotification('開始教學', `正在開始 ${titles[type]} 教學流程`, 'info');
+  // 延遲跳轉到資料管理頁面
+  setTimeout(() => {
+    window.location.href = 'data-upload.html';
+  }, 1000);
 }
 
 /**
@@ -241,94 +230,10 @@ function loadUserInfo() {
 }
 
 /**
- * 設置事件監聽器
- */
-function setupEventListeners() {
-  // 側邊欄切換
-  if (elements.sidebarToggle) {
-    elements.sidebarToggle.addEventListener('click', toggleSidebar);
-  }
-  
-  // 選單項目點擊
-  elements.menuItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-      const viewName = item.getAttribute('data-view');
-      if (viewName) {
-        switchView(viewName);
-      }
-    });
-  });
-  
-  // 用戶選單切換
-  if (elements.userInfo) {
-    elements.userInfo.addEventListener('click', toggleUserMenu);
-  }
-  
-  // 點擊外部關閉用戶選單
-  document.addEventListener('click', (e) => {
-    if (elements.userMenu && elements.userInfo) {
-      if (!elements.userInfo.contains(e.target) && !elements.userMenu.contains(e.target)) {
-        closeUserMenu();
-      }
-    }
-  });
-  
-  // 響應式處理
-  window.addEventListener('resize', handleResize);
-  
-  // 鍵盤快捷鍵
-  document.addEventListener('keydown', handleKeyDown);
-}
-
-/**
  * 初始化視圖
  */
 function initializeView() {
   switchView('dashboard');
-}
-
-/**
- * 切換視圖
- */
-function switchView(viewName) {
-  if (currentView === viewName) return;
-  
-  // 更新選單項目狀態
-  elements.menuItems.forEach(item => {
-    item.classList.remove('active');
-    if (item.getAttribute('data-view') === viewName) {
-      item.classList.add('active');
-    }
-  });
-  
-  // 更新頁面標題
-  const titles = {
-    dashboard: '儀表板',
-    projects: '專案',
-    workflows: 'AI訓練',
-    models: '模型庫',
-    deploy: '部署',
-    monitor: '監控'
-  };
-  
-  if (elements.pageTitle) {
-    elements.pageTitle.textContent = titles[viewName] || '南臺科技大學AI視覺訓練平台';
-  }
-  
-  // 切換視圖內容
-  elements.viewContents.forEach(view => {
-    view.classList.add('hidden');
-    if (view.id === `${viewName}-view`) {
-      view.classList.remove('hidden');
-    }
-  });
-  
-  currentView = viewName;
-  
-  // 在手機版上切換視圖後關閉側邊欄
-  if (window.innerWidth <= 768) {
-    closeSidebar();
-  }
 }
 
 /**
