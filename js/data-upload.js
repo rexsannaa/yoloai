@@ -27,14 +27,36 @@ const elements = {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing...');
+  console.log('資料管理頁面初始化...');
   initElements();
   setupEventListeners();
-  
-  // 檢查關鍵元素是否存在
-  console.log('Add data modal:', elements.addDataModal ? 'Found' : 'Not found');
-  console.log('Upload data modal:', elements.uploadDataModal ? 'Found' : 'Not found');
+  checkPageIntegrity();
 });
+
+/**
+ * 檢查頁面完整性
+ */
+function checkPageIntegrity() {
+  const requiredElements = {
+    'add-data-modal': '添加資料彈窗',
+    'upload-data-modal': '上傳資料彈窗',
+    'device-config-modal': '設備配置彈窗'
+  };
+  
+  let missingElements = [];
+  
+  for (const [id, name] of Object.entries(requiredElements)) {
+    if (!document.getElementById(id)) {
+      missingElements.push(name);
+    }
+  }
+  
+  if (missingElements.length > 0) {
+    console.warn('缺少元素:', missingElements);
+  } else {
+    console.log('所有必要元素已載入');
+  }
+}
 
 /**
  * 初始化 DOM 元素
@@ -50,8 +72,7 @@ function initElements() {
   elements.labelInputSection = document.getElementById('label-input-section');
   elements.customLabelInput = document.getElementById('custom-label');
   
-  // 調試信息
-  console.log('Elements initialized:', {
+  console.log('DOM 元素初始化完成:', {
     fileInput: !!elements.fileInput,
     uploadDataModal: !!elements.uploadDataModal,
     addDataModal: !!elements.addDataModal,
@@ -68,6 +89,8 @@ function initElements() {
  * 設置事件監聽器
  */
 function setupEventListeners() {
+  console.log('設置事件監聽器...');
+  
   // 彈窗點擊外部關閉
   if (elements.addDataModal) {
     elements.addDataModal.addEventListener('click', (e) => {
@@ -84,12 +107,34 @@ function setupEventListeners() {
       }
     });
   }
+  
+  // 設備配置彈窗事件
+  const deviceConfigModal = document.getElementById('device-config-modal');
+  if (deviceConfigModal) {
+    deviceConfigModal.addEventListener('click', (e) => {
+      if (e.target === deviceConfigModal) {
+        closeDeviceConfig();
+      }
+    });
+  }
+  
+  // ESC 鍵關閉彈窗
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAddDataModal();
+      closeUploadDataModal();
+      closeDeviceConfig();
+    }
+  });
+  
+  console.log('事件監聽器設置完成');
 }
 
 /**
  * 切換主要標籤頁
  */
 function switchMainTab(tabName) {
+  console.log('切換標籤頁:', tabName);
   currentTab = tabName;
   
   // 更新標籤按鈕狀態
@@ -133,12 +178,13 @@ function getTabDisplayName(tabName) {
  * 顯示添加資料選擇彈窗
  */
 function showAddDataModal() {
-  console.log('showAddDataModal called');
+  console.log('顯示添加資料彈窗');
   if (elements.addDataModal) {
-    console.log('Adding show class to modal');
     elements.addDataModal.classList.add('show');
+    console.log('添加資料彈窗已顯示');
   } else {
-    console.error('Add data modal element not found');
+    console.error('找不到添加資料彈窗元素');
+    showNotification('錯誤', '無法開啟添加資料彈窗', 'error');
   }
 }
 
@@ -148,6 +194,7 @@ function showAddDataModal() {
 function closeAddDataModal() {
   if (elements.addDataModal) {
     elements.addDataModal.classList.remove('show');
+    console.log('添加資料彈窗已關閉');
   }
 }
 
@@ -155,9 +202,13 @@ function closeAddDataModal() {
  * 顯示上傳資料詳細表單彈窗
  */
 function showUploadDataModal() {
-  // 直接顯示詳細表單彈窗
+  console.log('顯示上傳資料彈窗');
   if (elements.uploadDataModal) {
     elements.uploadDataModal.classList.add('show');
+    console.log('上傳資料彈窗已顯示');
+  } else {
+    console.error('找不到上傳資料彈窗元素');
+    showNotification('錯誤', '無法開啟上傳資料彈窗', 'error');
   }
   
   // 重置狀態
@@ -170,6 +221,7 @@ function showUploadDataModal() {
 function closeUploadDataModal() {
   if (elements.uploadDataModal) {
     elements.uploadDataModal.classList.remove('show');
+    console.log('上傳資料彈窗已關閉');
   }
   
   // 重置狀態
@@ -199,6 +251,11 @@ function resetUploadForm() {
     elements.labelInputSection.style.display = 'none';
   }
   
+  // 清空自訂標籤
+  if (elements.customLabelInput) {
+    elements.customLabelInput.value = '';
+  }
+  
   uploadMode = 'individual';
   uploadCategory = 'auto-split';
   labelMode = 'from-filename';
@@ -209,6 +266,7 @@ function resetUploadForm() {
  * 選擇上傳類型（從添加資料彈窗）
  */
 function selectUploadType(type) {
+  console.log('選擇上傳類型:', type);
   if (type === 'local') {
     closeAddDataModal();
     showUploadDataModal();
@@ -230,6 +288,7 @@ function goBackToDataSelection() {
  * 處理上傳模式變更
  */
 function handleUploadModeChange(mode) {
+  console.log('上傳模式變更:', mode);
   uploadMode = mode;
   
   // 根據模式更新檔案輸入
@@ -248,6 +307,7 @@ function handleUploadModeChange(mode) {
  * 處理標籤模式變更
  */
 function handleLabelModeChange(mode) {
+  console.log('標籤模式變更:', mode);
   labelMode = mode;
   
   if (elements.labelInputSection) {
@@ -263,7 +323,9 @@ function handleLabelModeChange(mode) {
  * 處理檔案選擇
  */
 function handleFileSelect(event) {
+  console.log('檔案選擇事件觸發');
   const files = Array.from(event.target.files);
+  console.log('選擇的檔案數量:', files.length);
   addFilesToList(files);
 }
 
@@ -274,11 +336,13 @@ function addFilesToList(files) {
   let addedCount = 0;
   
   files.forEach(file => {
+    console.log('處理檔案:', file.name, file.type, file.size);
+    
     // 檢查檔案類型
     const allowedTypes = [
       'image/jpeg', 'image/jpg', 'image/png', 
       'text/csv', 'application/json', 
-      'audio/wav', 'video/avi', 'video/mp4',
+      'audio/wav', 'audio/mpeg', 'video/avi', 'video/mp4',
       'application/cbor', 'application/parquet'
     ];
     
@@ -400,13 +464,17 @@ function updateUploadButton() {
  * 確認上傳資料
  */
 function confirmUploadData() {
-  if (selectedFiles.length === 0) return;
+  if (selectedFiles.length === 0) {
+    showNotification('沒有檔案', '請先選擇要上傳的檔案', 'warning');
+    return;
+  }
   
   // 獲取自訂標籤（如果有）
   if (labelMode === 'enter-label' && elements.customLabelInput) {
     customLabel = elements.customLabelInput.value.trim();
     if (!customLabel) {
       showNotification('請輸入標籤', '請為您的資料輸入標籤', 'warning');
+      elements.customLabelInput.focus();
       return;
     }
   }
@@ -424,6 +492,7 @@ function confirmUploadData() {
       customLabel: customLabel
     };
     
+    console.log('上傳完成:', uploadInfo);
     showNotification('上傳成功', `成功上傳 ${uploadInfo.files} 個檔案到${getCategoryDisplayName(uploadInfo.category)}`, 'success');
     closeUploadDataModal();
     
@@ -500,13 +569,14 @@ function goToMain() {
  * 顯示設備配置彈窗
  */
 function showDeviceConfig() {
-  console.log('showDeviceConfig called');
+  console.log('顯示設備配置彈窗');
   const modal = document.getElementById('device-config-modal');
   if (modal) {
-    console.log('Adding show class to device config modal');
     modal.classList.add('show');
+    console.log('設備配置彈窗已顯示');
   } else {
-    console.error('Device config modal not found');
+    console.error('找不到設備配置彈窗元素');
+    showNotification('錯誤', '無法開啟設備配置彈窗', 'error');
   }
 }
 
@@ -517,6 +587,7 @@ function closeDeviceConfig() {
   const modal = document.getElementById('device-config-modal');
   if (modal) {
     modal.classList.remove('show');
+    console.log('設備配置彈窗已關閉');
   }
 }
 
@@ -537,41 +608,30 @@ function updateDeviceSpecs() {
     // 預設 Cortex-M4F
     'cortex-m4f-80': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
     
-    // Alif 系列
+    // 其他設備規格...
     'alif-he-m55': { family: 'cortex-m', clock: 160, ram: 4096, rom: 8, latency: 50 },
     'alif-hp-m55': { family: 'cortex-m', clock: 400, ram: 8192, rom: 16, latency: 30 },
-    
-    // Ambiq 系列
     'ambiq-apollo4': { family: 'cortex-m', clock: 192, ram: 2048, rom: 2, latency: 60 },
     'ambiq-apollo5': { family: 'cortex-m', clock: 250, ram: 4096, rom: 4, latency: 50 },
-    
-    // Arduino 系列
     'arduino-nano33-ble': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
     'arduino-nicla-vision': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
     'arduino-nicla-voice': { family: 'cortex-m', clock: 240, ram: 512, rom: 1, latency: 120 },
     'arduino-portenta-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
-    
-    // BrainChip
     'brainchip-akd1000': { family: 'other', clock: 1000, ram: 8192, rom: 32, latency: 10 },
-    
-    // BrickML
     'brickml-m33': { family: 'cortex-m', clock: 192, ram: 512, rom: 2, latency: 100 },
-    
-    // Cortex 通用系列
     'cortex-m7-216': { family: 'cortex-m', clock: 216, ram: 512, rom: 2, latency: 80 },
-    
-    // Digi ConnectCore
     'digi-connect-core': { family: 'cortex-a', clock: 1700, ram: 2048, rom: 8, latency: 20 },
-    
-    // Espressif
     'espressif-esp-eye': { family: 'xtensa', clock: 240, ram: 520, rom: 4, latency: 100 },
-    
-    // Himax 系列
     'himax-we1': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
     'himax-wiseye2': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 40 },
     'himax-wiseye2-ethos': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 30 },
-    
-    // 其他設備...（保持原有的設備規格）
+    'nordic-nrf52840': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf5340': { family: 'cortex-m', clock: 128, ram: 512, rom: 1, latency: 120 },
+    'nvidia-jetson-nano': { family: 'cortex-a', clock: 1430, ram: 4096, rom: 16, latency: 15 },
+    'nvidia-jetson-orin-nx': { family: 'cortex-a', clock: 2200, ram: 8192, rom: 32, latency: 10 },
+    'raspberry-pi-4': { family: 'cortex-a', clock: 1500, ram: 4096, rom: 32, latency: 20 },
+    'raspberry-pi-5': { family: 'cortex-a', clock: 2400, ram: 8192, rom: 64, latency: 15 },
+    'raspberry-pi-rp2040': { family: 'cortex-m', clock: 133, ram: 264, rom: 2, latency: 100 },
     'custom': { family: 'cortex-m', clock: 100, ram: 256, rom: 2, latency: 100 }
   };
   
@@ -581,6 +641,8 @@ function updateDeviceSpecs() {
   ramBudget.value = specs.ram;
   romBudget.value = specs.rom;
   latencyBudget.value = specs.latency;
+  
+  console.log('設備規格已更新:', specs);
 }
 
 /**
@@ -620,14 +682,18 @@ function saveDeviceConfig() {
       device: targetDevice.value,
       clock: clockRate.value,
       ram: ramBudget.value,
-      rom: romBudget.value
+      rom: romBudget.value,
+      timestamp: new Date().toISOString()
     };
     
-    // 這裡可以保存配置到 localStorage
+    // 保存配置到 localStorage
     localStorage.setItem('deviceConfig', JSON.stringify(config));
     
+    console.log('設備配置已儲存:', config);
     showNotification('配置已儲存', '設備配置已成功儲存', 'success');
     closeDeviceConfig();
+  } else {
+    showNotification('儲存失敗', '請填寫所有必要欄位', 'error');
   }
 }
 

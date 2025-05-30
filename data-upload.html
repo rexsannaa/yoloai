@@ -260,49 +260,13 @@
                   <option value="himax-we1">Himax WE-I (ARC DSP 400MHz)</option>
                   <option value="himax-wiseye2">Himax WiseEye2 (Cortex-M55 400 MHz)</option>
                   <option value="himax-wiseye2-ethos">Himax WiseEye2 (Cortex-M55 400 MHz) + Ethos-U55-64</option>
-                  <option value="imdt-v2h-cpu">IMDT V2H (CPU)</option>
-                  <option value="imdt-v2h-renesas">IMDT V2H (with Renesas' RZ/V2H)</option>
-                  <option value="infineon-psoc6-cy8c6244">Infineon PSoC6 CY8C6244 (Cortex-M4F 150 MHz)</option>
-                  <option value="infineon-psoc6-cy8c6347">Infineon PSoC6 CY8C6347 (Cortex-M4F 150 MHz)</option>
-                  <option value="macbook-pro-16-2020">MacBook Pro 16" 2020 (Intel Core i9 2.4GHz)</option>
-                  <option value="memoryx-mx3">MemoryX MX3</option>
-                  <option value="microchip-sama7g54">Microchip SAMA7G54 Evaluation Kit</option>
                   <option value="nordic-nrf52840">Nordic nRF52840 DK (Cortex-M4F 64MHz)</option>
                   <option value="nordic-nrf5340">Nordic nRF5340 DK (Cortex-M33 128MHz)</option>
-                  <option value="nordic-nrf9151">Nordic nRF9151 DK (Cortex-M33 64MHz)</option>
-                  <option value="nordic-nrf9160">Nordic nRF9160 DK (Cortex-M33 64MHz)</option>
-                  <option value="nordic-nrf9161">Nordic nRF9161 DK (Cortex-M33 64MHz)</option>
                   <option value="nvidia-jetson-nano">Nvidia Jetson Nano</option>
                   <option value="nvidia-jetson-orin-nx">Nvidia Jetson Orin NX</option>
-                  <option value="nvidia-jetson-orin-nano">Nvidia Jetson Orin Nano</option>
-                  <option value="openmv-cam-h7">OpenMV Cam H7 Plus</option>
-                  <option value="particle-boron">Particle Boron</option>
-                  <option value="particle-photon-2">Particle Photon 2</option>
-                  <option value="qualcomm-dragonwing-rb3">Qualcomm Dragonwing RB3 Gen 2 Development Kit</option>
                   <option value="raspberry-pi-4">Raspberry Pi 4</option>
                   <option value="raspberry-pi-5">Raspberry Pi 5</option>
                   <option value="raspberry-pi-rp2040">Raspberry Pi RP2040 (Cortex-M0+ 133MHz)</option>
-                  <option value="renesas-ra6m5">Renesas RA6M5 (Cortex-M33 200MHz)</option>
-                  <option value="renesas-ra8d1">Renesas RA8D1 (Cortex-M85 480MHz)</option>
-                  <option value="renesas-rz-g2l">Renesas RZ/G2L</option>
-                  <option value="renesas-rz-v2h-cpu">Renesas RZ/V2H (CPU)</option>
-                  <option value="renesas-rz-v2h-drp">Renesas RZ/V2H (with DRP-AI3 accelerator)</option>
-                  <option value="renesas-rz-v2l-cpu">Renesas RZ/V2L (CPU)</option>
-                  <option value="renesas-rz-v2l-drp">Renesas RZ/V2L (with DRP-AI accelerator)</option>
-                  <option value="st-discovery-kit">ST IoT Discovery Kit (Cortex-M4F 80MHz)</option>
-                  <option value="st-stm32n6">ST STM32N6 (Cortex-M55 600MHz + ST Neural-ART accelerator)</option>
-                  <option value="seeed-sensecap-a1101">Seeed SenseCap A1101 (HX6537-A ARC DSP 400MHz)</option>
-                  <option value="seeed-studio-wio-terminal">Seeed Studio Wio Terminal (Cortex-M4F 120MHz)</option>
-                  <option value="seeed-vision-ai-module">Seeed Vision AI Module (HX6537-A ARC DSP 400MHz)</option>
-                  <option value="silabs-efr32mg24">SiLabs EFR32MG24 (Cortex-M33 78MHz)</option>
-                  <option value="silabs-thunderboard-sense2">SiLabs Thunderboard Sense 2 (Cortex-M4F 40MHz)</option>
-                  <option value="sony-spresense">Sony Spresense (Cortex-M4F 156MHz)</option>
-                  <option value="synaptics-ka10000">Synaptics KA10000</option>
-                  <option value="ti-am62a-deep-learning">TI AM62A (with Deep Learning Accelerator)</option>
-                  <option value="ti-am68a-deep-learning">TI AM68A (with Deep Learning Accelerator)</option>
-                  <option value="ti-launchxl-cc1352p">TI LAUNCHXL-CC1352P (Cortex-M4F 48MHz)</option>
-                  <option value="ti-tda4vm-mma">TI TDA4VM (with matrix multiply accelerator (MMA))</option>
-                  <option value="think-silicon-neox-ga100">Think Silicon Neox GA100 (200 MHz) [BETA]</option>
                 </optgroup>
               </select>
             </div>
@@ -537,3 +501,46 @@
               <div class="radio-content">
                 <strong>保留資料未標註</strong>
                 <i class="fas fa-question-circle" title="上傳的資料將保持未標註狀態"></i>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="label-mode" value="enter-label" onchange="handleLabelModeChange('enter-label')">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>輸入標籤</strong>
+                <i class="fas fa-question-circle" title="為所有上傳的檔案輸入相同的標籤"></i>
+              </div>
+            </label>
+          </div>
+          
+          <div class="label-input-section" id="label-input-section" style="display: none;">
+            <input type="text" id="custom-label" class="form-input" placeholder="輸入標籤名稱">
+          </div>
+        </div>
+
+        <!-- 已選擇檔案區域 -->
+        <div class="selected-files-section" id="selected-files-section" style="display: none;">
+          <h4>已選擇檔案</h4>
+          <div class="file-list" id="selected-file-list">
+            <!-- 檔案列表會動態生成 -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="goBackToDataSelection()">返回</button>
+        <div class="footer-actions">
+          <button class="btn btn-secondary" onclick="closeUploadDataModal()">取消</button>
+          <button class="btn btn-primary" id="upload-data-btn" onclick="confirmUploadData()" disabled>
+            <i class="fas fa-upload"></i>
+            上傳資料
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data-upload.js"></script>
+</body>
+</html>
