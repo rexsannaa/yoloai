@@ -1,4 +1,25 @@
-// js/data-upload.js - 資料管理頁面功能
+/**
+ * 顯示即將推出訊息
+ */
+function showComingSoon() {
+  showNotification('功能開發中', '此功能正在開發中，敬請期待！', 'info');
+}
+
+// 暴露全域函數
+window.switchMainTab = switchMainTab;
+window.showAddDataModal = showAddDataModal;
+window.closeAddDataModal = closeAddDataModal;
+window.selectUploadType = selectUploadType;
+window.removeFile = removeFile;
+window.confirmUpload = confirmUpload;
+window.goToMain = goToMain;
+window.showComingSoon = showComingSoon;
+window.closeNotification = closeNotification;
+window.showDeviceConfig = showDeviceConfig;
+window.closeDeviceConfig = closeDeviceConfig;
+window.updateDeviceSpecs = updateDeviceSpecs;
+window.resetToDefaults = resetToDefaults;
+window.saveDeviceConfig = saveDeviceConfig;// js/data-upload.js - 資料管理頁面功能
 
 /**
  * 資料管理頁面功能處理
@@ -8,7 +29,6 @@
 let selectedFiles = [];
 let currentTab = 'dataset';
 let uploadType = null;
-let currentTrainingType = null; // 從主頁面傳來的訓練類型
 
 // DOM 元素
 const elements = {
@@ -22,67 +42,9 @@ const elements = {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
-  loadTrainingType(); // 載入訓練類型
   initElements();
   setupEventListeners();
-  updatePageForTrainingType(); // 根據訓練類型更新頁面
 });
-
-/**
- * 載入訓練類型
- */
-function loadTrainingType() {
-  currentTrainingType = localStorage.getItem('trainingType');
-  
-  if (currentTrainingType) {
-    // 顯示歡迎訊息
-    const typeNames = {
-      motion: 'Motion: 手勢識別',
-      images: 'Images: 物件偵測',
-      audio: 'Audio: 音頻分類'
-    };
-    
-    showNotification(
-      '歡迎來到訓練頁面', 
-      `您選擇了 ${typeNames[currentTrainingType]} 訓練類型`, 
-      'success'
-    );
-  }
-}
-
-/**
- * 根據訓練類型更新頁面
- */
-function updatePageForTrainingType() {
-  if (!currentTrainingType) return;
-  
-  // 更新頁面標題
-  const typeNames = {
-    motion: 'Motion: 手勢識別',
-    images: 'Images: 物件偵測',
-    audio: 'Audio: 音頻分類'
-  };
-  
-  const pageTitle = document.title;
-  document.title = `${typeNames[currentTrainingType]} - ${pageTitle}`;
-  
-  // 在資料集面板添加訓練類型提示
-  const datasetHeader = document.querySelector('.dataset-panel .panel-header h3');
-  if (datasetHeader) {
-    datasetHeader.innerHTML = `資料集 <small style="color: #6366f1; font-weight: 500;">(${typeNames[currentTrainingType]})</small>`;
-  }
-  
-  // 更新空狀態描述
-  const addDataSection = document.querySelector('.add-data-section p');
-  if (addDataSection) {
-    const descriptions = {
-      motion: '上傳手勢和動作相關的感測器資料或影片檔案。',
-      images: '上傳圖片檔案進行物件偵測和分類訓練。',
-      audio: '上傳音頻檔案進行聲音識別和分類訓練。'
-    };
-    addDataSection.textContent = `開始建立您的 ${typeNames[currentTrainingType]} 資料集。${descriptions[currentTrainingType]}`;
-  }
-}
 
 /**
  * 初始化 DOM 元素
@@ -190,50 +152,6 @@ function showAddDataModal() {
   uploadType = null;
   hideUploadArea();
   updateConfirmButton();
-  
-  // 根據訓練類型更新彈窗內容
-  updateModalForTrainingType();
-}
-
-/**
- * 根據訓練類型更新彈窗內容
- */
-function updateModalForTrainingType() {
-  if (!currentTrainingType) return;
-  
-  const modalTitle = document.querySelector('#add-data-modal .modal-header h3');
-  const fileInput = document.getElementById('file-input');
-  const uploadInfo = document.querySelector('.upload-info small');
-  
-  if (modalTitle) {
-    const typeNames = {
-      motion: 'Motion 手勢識別',
-      images: 'Images 物件偵測',
-      audio: 'Audio 音頻分類'
-    };
-    modalTitle.textContent = `添加 ${typeNames[currentTrainingType]} 資料`;
-  }
-  
-  // 根據訓練類型設置接受的檔案格式
-  const acceptFormats = {
-    motion: '.mp4,.avi,.mov,.csv,.json',
-    images: '.jpg,.jpeg,.png,.bmp,.gif',
-    audio: '.wav,.mp3,.m4a,.aac,.flac'
-  };
-  
-  const formatDescriptions = {
-    motion: '支援格式：MP4, AVI, MOV, CSV, JSON | 最大：100MB',
-    images: '支援格式：JPG, PNG, BMP, GIF | 最大：50MB',
-    audio: '支援格式：WAV, MP3, M4A, AAC, FLAC | 最大：100MB'
-  };
-  
-  if (fileInput && acceptFormats[currentTrainingType]) {
-    fileInput.accept = acceptFormats[currentTrainingType];
-  }
-  
-  if (uploadInfo && formatDescriptions[currentTrainingType]) {
-    uploadInfo.textContent = formatDescriptions[currentTrainingType];
-  }
 }
 
 /**
@@ -294,17 +212,16 @@ function addFilesToList(files) {
   let addedCount = 0;
   
   files.forEach(file => {
-    // 根據訓練類型檢查檔案類型
-    if (!isValidFileType(file)) {
+    // 檢查檔案類型
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'text/csv', 'application/json'];
+    if (!allowedTypes.includes(file.type)) {
       showNotification('檔案格式錯誤', `不支援的檔案格式: ${file.name}`, 'error');
       return;
     }
     
-    // 檢查檔案大小
-    const maxSize = getMaxFileSize();
-    if (file.size > maxSize) {
-      const maxSizeMB = Math.round(maxSize / (1024 * 1024));
-      showNotification('檔案過大', `檔案 ${file.name} 超過 ${maxSizeMB}MB 限制`, 'error');
+    // 檢查檔案大小 (100MB)
+    if (file.size > 100 * 1024 * 1024) {
+      showNotification('檔案過大', `檔案 ${file.name} 超過 100MB 限制`, 'error');
       return;
     }
     
@@ -326,33 +243,566 @@ function addFilesToList(files) {
 }
 
 /**
- * 檢查檔案類型是否有效
+ * 更新檔案列表
  */
-function isValidFileType(file) {
-  const allowedTypes = {
-    motion: ['video/mp4', 'video/avi', 'video/quicktime', 'text/csv', 'application/json'],
-    images: ['image/jpeg', 'image/jpg', 'image/png', 'image/bmp', 'image/gif'],
-    audio: ['audio/wav', 'audio/mp3', 'audio/mpeg', 'audio/mp4', 'audio/aac', 'audio/flac']
-  };
+function updateFileList() {
+  if (!elements.fileList || !elements.fileItems) return;
   
-  if (!currentTrainingType) {
-    // 如果沒有訓練類型，使用預設的允許類型
-    const defaultTypes = ['image/jpeg', 'image/jpg', 'image/png', 'text/csv', 'application/json'];
-    return defaultTypes.includes(file.type);
+  if (selectedFiles.length === 0) {
+    elements.fileList.style.display = 'none';
+    return;
   }
   
-  return allowedTypes[currentTrainingType]?.includes(file.type) || false;
+  elements.fileList.style.display = 'block';
+  elements.fileItems.innerHTML = '';
+  
+  selectedFiles.forEach((file, index) => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    
+    const isImage = file.type.startsWith('image/');
+    const iconClass = isImage ? 'image' : 'data';
+    const iconName = isImage ? 'fa-image' : getFileIconName(file.type);
+    
+    fileItem.innerHTML = `
+      <div class="file-icon ${iconClass}">
+        <i class="fas ${iconName}"></i>
+      </div>
+      <div class="file-info">
+        <div class="file-name" title="${file.name}">${file.name}</div>
+        <div class="file-size">${formatFileSize(file.size)}</div>
+      </div>
+      <button class="file-remove" onclick="removeFile(${index})" title="移除檔案">
+        <i class="fas fa-times"></i>
+      </button>
+    `;
+    
+    elements.fileItems.appendChild(fileItem);
+  });
 }
 
 /**
- * 獲取最大檔案大小
+ * 移除檔案
  */
-function getMaxFileSize() {
-  const maxSizes = {
-    motion: 100 * 1024 * 1024, // 100MB
-    images: 50 * 1024 * 1024,  // 50MB
-    audio: 100 * 1024 * 1024   // 100MB
+function removeFile(index) {
+  if (index >= 0 && index < selectedFiles.length) {
+    const fileName = selectedFiles[index].name;
+    selectedFiles.splice(index, 1);
+    showNotification('檔案已移除', `已移除檔案: ${fileName}`, 'info');
+    updateFileList();
+    updateConfirmButton();
+  }
+}
+
+/**
+ * 更新確認按鈕
+ */
+function updateConfirmButton() {
+  if (elements.confirmBtn) {
+    elements.confirmBtn.disabled = selectedFiles.length === 0;
+  }
+}
+
+/**
+ * 確認上傳
+ */
+function confirmUpload() {
+  if (selectedFiles.length === 0) return;
+  
+  showNotification('開始上傳', `正在上傳 ${selectedFiles.length} 個檔案...`, 'info');
+  
+  // 模擬上傳過程
+  setTimeout(() => {
+    showNotification('上傳成功', '所有檔案已成功上傳並加入資料集', 'success');
+    closeAddDataModal();
+    selectedFiles = [];
+  }, 2000);
+}
+
+/**
+ * 獲取檔案圖示名稱
+ */
+function getFileIconName(fileType) {
+  if (fileType.includes('csv')) return 'fa-file-csv';
+  if (fileType.includes('json')) return 'fa-file-code';
+  return 'fa-file';
+}
+
+/**
+ * 格式化檔案大小
+ */
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+/**
+ * 返回主頁面
+ */
+function goToMain() {
+  window.location.href = 'index.html';
+}
+
+/**
+ * 顯示設備配置彈窗
+ */
+function showDeviceConfig() {
+  const modal = document.getElementById('device-config-modal');
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+/**
+ * 關閉設備配置彈窗
+ */
+function closeDeviceConfig() {
+  const modal = document.getElementById('device-config-modal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+/**
+ * 顯示設備選擇彈窗
+ */
+function showDeviceSelect() {
+  const modal = document.getElementById('device-select-modal');
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+/**
+ * 關閉設備選擇彈窗
+ */
+function closeDeviceSelect() {
+  const modal = document.getElementById('device-select-modal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+/**
+ * 更新設備規格
+ */
+function updateDeviceSpecs() {
+  const deviceSelect = document.getElementById('target-device');
+  const processorFamily = document.getElementById('processor-family');
+  const clockRate = document.getElementById('clock-rate');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  const latencyBudget = document.getElementById('latency-budget');
+  
+  if (!deviceSelect || !processorFamily || !clockRate || !ramBudget || !romBudget || !latencyBudget) return;
+  
+  const deviceSpecs = {
+    // 預設 Cortex-M4F
+    'cortex-m4f-80': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
+    
+    // Alif 系列
+    'alif-he-m55': { family: 'cortex-m', clock: 160, ram: 4096, rom: 8, latency: 50 },
+    'alif-hp-m55': { family: 'cortex-m', clock: 400, ram: 8192, rom: 16, latency: 30 },
+    
+    // Ambiq 系列
+    'ambiq-apollo4': { family: 'cortex-m', clock: 192, ram: 2048, rom: 2, latency: 60 },
+    'ambiq-apollo5': { family: 'cortex-m', clock: 250, ram: 4096, rom: 4, latency: 50 },
+    
+    // Arduino 系列
+    'arduino-nano33-ble': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'arduino-nicla-vision': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
+    'arduino-nicla-voice': { family: 'cortex-m', clock: 240, ram: 512, rom: 1, latency: 120 },
+    'arduino-portenta-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
+    
+    // BrainChip
+    'brainchip-akd1000': { family: 'other', clock: 1000, ram: 8192, rom: 32, latency: 10 },
+    
+    // BrickML
+    'brickml-m33': { family: 'cortex-m', clock: 192, ram: 512, rom: 2, latency: 100 },
+    
+    // Cortex 通用系列
+    'cortex-m7-216': { family: 'cortex-m', clock: 216, ram: 512, rom: 2, latency: 80 },
+    
+    // Digi ConnectCore
+    'digi-connect-core': { family: 'cortex-a', clock: 1700, ram: 2048, rom: 8, latency: 20 },
+    
+    // Espressif
+    'espressif-esp-eye': { family: 'xtensa', clock: 240, ram: 520, rom: 4, latency: 100 },
+    
+    // Himax 系列
+    'himax-we1': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'himax-wiseye2': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 40 },
+    'himax-wiseye2-ethos': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 30 },
+    
+    // IMDT
+    'imdt-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'imdt-v2h-renesas': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 20 },
+    
+    // Infineon PSoC6
+    'infineon-psoc6-cy8c6244': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
+    'infineon-psoc6-cy8c6347': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
+    
+    // MacBook Pro (特殊情況)
+    'macbook-pro-16-2020': { family: 'x86', clock: 2400, ram: 16384, rom: 512, latency: 5 },
+    
+    // MemoryX
+    'memoryx-mx3': { family: 'other', clock: 800, ram: 4096, rom: 32, latency: 20 },
+    
+    // Microchip
+    'microchip-sama7g54': { family: 'cortex-a', clock: 1000, ram: 512, rom: 4, latency: 30 },
+    
+    // Nordic 系列
+    'nordic-nrf52840': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf5340': { family: 'cortex-m', clock: 128, ram: 512, rom: 1, latency: 120 },
+    'nordic-nrf9151': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9160': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'nordic-nrf9161': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    
+    // Nvidia Jetson 系列
+    'nvidia-jetson-nano': { family: 'cortex-a', clock: 1430, ram: 4096, rom: 16, latency: 15 },
+    'nvidia-jetson-orin-nx': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'nvidia-jetson-orin-nano': { family: 'cortex-a', clock: 1500, ram: 8192, rom: 32, latency: 12 },
+    
+    // OpenMV
+    'openmv-cam-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
+    
+    // Particle 系列
+    'particle-boron': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
+    'particle-photon-2': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 100 },
+    
+    // Qualcomm
+    'qualcomm-dragonwing-rb3': { family: 'cortex-a', clock: 2840, ram: 4096, rom: 32, latency: 8 },
+    
+    // Raspberry Pi 系列
+    'raspberry-pi-4': { family: 'cortex-a', clock: 1500, ram: 4096, rom: 32, latency: 15 },
+    'raspberry-pi-5': { family: 'cortex-a', clock: 2400, ram: 8192, rom: 64, latency: 10 },
+    'raspberry-pi-rp2040': { family: 'cortex-m', clock: 133, ram: 264, rom: 2, latency: 120 },
+    
+    // Renesas 系列
+    'renesas-ra6m5': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 90 },
+    'renesas-ra8d1': { family: 'cortex-m', clock: 480, ram: 1024, rom: 4, latency: 60 },
+    'renesas-rz-g2l': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 25 },
+    'renesas-rz-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
+    'renesas-rz-v2h-drp': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 15 },
+    'renesas-rz-v2l-cpu': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 30 },
+    'renesas-rz-v2l-drp': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 20 },
+    
+    // STMicroelectronics 系列
+    'st-discovery-kit': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
+    'st-stm32n6': { family: 'cortex-m', clock: 600, ram: 2048, rom: 8, latency: 40 },
+    
+    // Seeed 系列
+    'seeed-sensecap-a1101': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
+    'seeed-studio-wio-terminal': { family: 'cortex-m', clock: 120, ram: 192, rom: 4, latency: 120 },
+    'seeed-vision-ai-module': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
+    
+    // SiLabs 系列
+    'silabs-efr32mg24': { family: 'cortex-m', clock: 78, ram: 256, rom: 1, latency: 140 },
+    'silabs-thunderboard-sense2': { family: 'cortex-m', clock: 40, ram: 256, rom: 1, latency: 200 },
+    
+    // Sony
+    'sony-spresense': { family: 'cortex-m', clock: 156, ram: 1536, rom: 8, latency: 80 },
+    
+    // Synaptics
+    'synaptics-ka10000': { family: 'other', clock: 1000, ram: 4096, rom: 16, latency: 20 },
+    
+    // Texas Instruments 系列
+    'ti-am62a-deep-learning': { family: 'cortex-a', clock: 1400, ram: 2048, rom: 8, latency: 15 },
+    'ti-am68a-deep-learning': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
+    'ti-launchxl-cc1352p': { family: 'cortex-m', clock: 48, ram: 80, rom: 0.3, latency: 200 },
+    'ti-tda4vm-mma': { family: 'cortex-a', clock: 2000, ram: 4096, rom: 16, latency: 12 },
+    
+    // Think Silicon
+    'think-silicon-neox-ga100': { family: 'other', clock: 200, ram: 512, rom: 4, latency: 100 },
+    
+    // 自訂
+    'custom': { family: 'cortex-m', clock: 100, ram: 256, rom: 2, latency: 100 }
   };
   
-  return maxSizes[currentTrainingType] || 100 * 1024 * 1024; // 預設 100MB
+  const specs = deviceSpecs[deviceSelect.value] || deviceSpecs['cortex-m4f-80'];
+  processorFamily.value = specs.family;
+  clockRate.value = specs.clock;
+  ramBudget.value = specs.ram;
+  romBudget.value = specs.rom;
+  latencyBudget.value = specs.latency;
 }
+
+/**
+ * 篩選設備列表
+ */
+function filterDevices() {
+  const searchInput = document.getElementById('device-search');
+  const deviceItems = document.querySelectorAll('.device-item');
+  
+  if (!searchInput) return;
+  
+  const searchTerm = searchInput.value.toLowerCase();
+  
+  deviceItems.forEach(item => {
+    const deviceName = item.textContent.toLowerCase();
+    if (deviceName.includes(searchTerm)) {
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+}
+
+/**
+ * 選擇設備
+ */
+function selectDevice() {
+  const selectedItem = document.querySelector('.device-item.selected');
+  const targetDeviceSelect = document.getElementById('target-device');
+  
+  if (selectedItem && targetDeviceSelect) {
+    const deviceValue = selectedItem.getAttribute('data-device');
+    targetDeviceSelect.value = deviceValue;
+    updateDeviceSpecs();
+    closeDeviceSelect();
+  }
+}
+
+/**
+ * 重設為預設設定
+ */
+function resetToDefaults() {
+  const targetDevice = document.getElementById('target-device');
+  const processorFamily = document.getElementById('processor-family');
+  const clockRate = document.getElementById('clock-rate');
+  const customName = document.getElementById('custom-name');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  const latencyBudget = document.getElementById('latency-budget');
+  
+  if (targetDevice) targetDevice.value = 'cortex-m4f-80';
+  if (processorFamily) processorFamily.value = 'cortex-m';
+  if (clockRate) clockRate.value = '80';
+  if (customName) customName.value = '';
+  if (ramBudget) ramBudget.value = '128';
+  if (romBudget) romBudget.value = '1';
+  if (latencyBudget) latencyBudget.value = '100';
+  
+  showNotification('已重設', '所有設定已重設為預設值', 'info');
+}
+
+/**
+ * 儲存設備配置
+ */
+function saveDeviceConfig() {
+  const targetDevice = document.getElementById('target-device');
+  const clockRate = document.getElementById('clock-rate');
+  const ramBudget = document.getElementById('ram-budget');
+  const romBudget = document.getElementById('rom-budget');
+  
+  if (targetDevice && clockRate && ramBudget && romBudget) {
+    const config = {
+      device: targetDevice.value,
+      clock: clockRate.value,
+      ram: ramBudget.value,
+      rom: romBudget.value
+    };
+    
+    // 這裡可以保存配置到 localStorage 或發送到伺服器
+    localStorage.setItem('deviceConfig', JSON.stringify(config));
+    
+    showNotification('配置已儲存', '設備配置已成功儲存', 'success');
+    closeDeviceConfig();
+  }
+}
+
+// 設備項目點擊事件
+document.addEventListener('DOMContentLoaded', function() {
+  // 載入已保存的設備配置
+  const savedConfig = localStorage.getItem('deviceConfig');
+  if (savedConfig) {
+    try {
+      const config = JSON.parse(savedConfig);
+      const targetDevice = document.getElementById('target-device');
+      const clockRate = document.getElementById('clock-rate');
+      const ramBudget = document.getElementById('ram-budget');
+      const romBudget = document.getElementById('rom-budget');
+      
+      if (targetDevice && config.device) targetDevice.value = config.device;
+      if (clockRate && config.clock) clockRate.value = config.clock;
+      if (ramBudget && config.ram) ramBudget.value = config.ram;
+      if (romBudget && config.rom) romBudget.value = config.rom;
+    } catch (e) {
+      console.log('無法載入設備配置');
+    }
+  }
+});
+
+/**
+ * 顯示通知
+ */
+function showNotification(title, message, type = 'info') {
+  // 移除現有通知
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+  
+  // 創建通知元素
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <div class="notification-header">
+        <strong>${title}</strong>
+        <button class="notification-close" onclick="closeNotification()">&times;</button>
+      </div>
+      <div class="notification-message">${message}</div>
+    </div>
+  `;
+  
+  // 添加樣式
+  addNotificationStyles();
+  
+  // 添加到頁面
+  document.body.appendChild(notification);
+  
+  // 動畫顯示
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 10);
+  
+  // 自動關閉
+  setTimeout(() => {
+    closeNotification();
+  }, 4000);
+}
+
+/**
+ * 關閉通知
+ */
+function closeNotification() {
+  const notification = document.querySelector('.notification');
+  if (notification) {
+    notification.classList.add('hide');
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }
+}
+
+/**
+ * 添加通知樣式
+ */
+function addNotificationStyles() {
+  if (document.querySelector('#notification-styles')) return;
+  
+  const style = document.createElement('style');
+  style.id = 'notification-styles';
+  style.textContent = `
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      min-width: 320px;
+      max-width: 400px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+    }
+    
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .notification.hide {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    
+    .notification-info {
+      border-left: 4px solid #06b6d4;
+    }
+    
+    .notification-success {
+      border-left: 4px solid #10b981;
+    }
+    
+    .notification-warning {
+      border-left: 4px solid #f59e0b;
+    }
+    
+    .notification-error {
+      border-left: 4px solid #ef4444;
+    }
+    
+    .notification-content {
+      padding: 16px;
+    }
+    
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .notification-header strong {
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+    
+    .notification-close {
+      background: none;
+      border: none;
+      font-size: 16px;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+    }
+    
+    .notification-close:hover {
+      color: #64748b;
+      background: #f1f5f9;
+    }
+    
+    .notification-message {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    
+    @media (max-width: 768px) {
+      .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+        max-width: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// 暴露全域函數
+window.switchMainTab = switchMainTab;
+window.showAddDataModal = showAddDataModal;
+window.closeAddDataModal = closeAddDataModal;
+window.selectUploadType = selectUploadType;
+window.removeFile = removeFile;
+window.confirmUpload = confirmUpload;
+window.goToMain = goToMain;
+window.showComingSoon = showComingSoon;
+window.closeNotification = closeNotification;
