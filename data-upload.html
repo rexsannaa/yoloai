@@ -387,7 +387,7 @@
     </div>
   </div>
 
-  <!-- 添加資料彈窗 -->
+  <!-- 添加現有資料選擇彈窗 -->
   <div class="modal-overlay" id="add-data-modal">
     <div class="modal-container">
       <div class="modal-header">
@@ -419,35 +419,11 @@
             </div>
           </div>
         </div>
-
-        <!-- 本地上傳區域 -->
-        <div class="upload-area" id="upload-area" style="display: none;">
-          <div class="upload-zone">
-            <div class="upload-icon">
-              <i class="fas fa-cloud-upload-alt"></i>
-            </div>
-            <h4>拖放檔案到此處</h4>
-            <p>或點擊選擇檔案上傳</p>
-            <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.csv,.json" style="display: none;">
-            <button class="upload-btn" onclick="document.getElementById('file-input').click()">
-              選擇檔案
-            </button>
-            <div class="upload-info">
-              <small>支援格式：JPG, PNG, CSV, JSON | 最大：100MB</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- 檔案列表 -->
-        <div class="file-list" id="file-list" style="display: none;">
-          <h4>已選擇的檔案</h4>
-          <div class="file-items" id="file-items"></div>
-        </div>
       </div>
       
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeAddDataModal()">取消</button>
-        <button class="btn btn-primary" id="confirm-btn" onclick="confirmUpload()" disabled>
+        <button class="btn btn-primary" onclick="showComingSoon()" disabled>
           <i class="fas fa-check"></i>
           確認
         </button>
@@ -455,6 +431,109 @@
     </div>
   </div>
 
-  <script src="js/data-upload.js"></script>
-</body>
-</html>
+  <!-- 上傳資料詳細表單彈窗 -->
+  <div class="modal-overlay" id="upload-data-modal">
+    <div class="modal-container large">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h3>上傳資料</h3>
+        </div>
+        <button class="modal-close" onclick="closeUploadDataModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-content">
+        <!-- 說明文字 -->
+        <div class="upload-description">
+          <p>您可以上傳 CBOR、JSON、CSV、Parquet、WAV、JPG、PNG、AVI 或 MP4 檔案。您也可以上傳名為 "info.labels" 的標註檔案，用於指定邊界框、標籤和/或元資料。查看 <a href="#" onclick="showComingSoon()">上傳器文件</a> 了解更多。或者，您可以使用我們的 <a href="#" onclick="showComingSoon()">Python SDK</a> 以程式方式匯入各種格式的資料，例如 pandas 或 numpy；或 <a href="#" onclick="showComingSoon()">直接從另一個專案匯入資料</a>。</p>
+          
+          <p>對於 CSV 和 Parquet 檔案，<a href="#" onclick="showComingSoon()">配置 CSV 精靈</a> 以定義在上傳檔案之前應如何處理您的檔案。</p>
+        </div>
+
+        <!-- 上傳模式 -->
+        <div class="form-section">
+          <h4>上傳模式</h4>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="upload-mode" value="individual" checked onchange="handleUploadModeChange('individual')">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>選擇個別檔案</strong>
+                <i class="fas fa-question-circle" title="選擇要上傳的個別檔案"></i>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="upload-mode" value="folder" onchange="handleUploadModeChange('folder')">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>選擇資料夾</strong>
+                <i class="fas fa-question-circle" title="選擇包含檔案的資料夾"></i>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 選擇檔案 -->
+        <div class="form-section">
+          <h4>選擇檔案</h4>
+          <div class="file-upload-area">
+            <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.csv,.json,.cbor,.parquet,.wav,.avi,.mp4" style="display: none;" onchange="handleFileSelect(event)">
+            <button class="upload-trigger-btn" onclick="document.getElementById('file-input').click()">
+              選擇檔案
+            </button>
+            <span class="upload-status" id="upload-status">沒有選擇檔案</span>
+          </div>
+        </div>
+
+        <!-- 上傳到類別 -->
+        <div class="form-section">
+          <h4>上傳到類別</h4>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="upload-category" value="auto-split" checked>
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>自動在訓練和測試之間分割</strong>
+                <i class="fas fa-question-circle" title="系統會自動將資料分為訓練集和測試集"></i>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="upload-category" value="training">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>訓練</strong>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="upload-category" value="testing">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>測試</strong>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 標籤 -->
+        <div class="form-section">
+          <h4>標籤</h4>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="label-mode" value="from-filename" checked>
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>從檔案名稱推斷</strong>
+                <i class="fas fa-question-circle" title="從檔案名稱自動推斷標籤"></i>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="label-mode" value="unlabeled" onchange="handleLabelModeChange('unlabeled')">
+              <span class="radio-custom"></span>
+              <div class="radio-content">
+                <strong>保留資料未標註</strong>
+                <i class="fas fa-question-circle" title="上傳的資料將保持未標註狀態"></i>

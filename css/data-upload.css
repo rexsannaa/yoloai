@@ -321,13 +321,6 @@ body {
   font-weight: 600;
 }
 
-.panel-header h3 small {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--primary);
-  margin-left: 8px;
-}
-
 .panel-actions {
   display: flex;
   gap: 4px;
@@ -459,47 +452,6 @@ body {
 
 .connect-device a:hover {
   text-decoration: underline;
-}
-
-/* === 已上傳資料樣式 === */
-.uploaded-data {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.uploaded-data .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: var(--border-radius);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-  border: none;
-}
-
-.uploaded-data .btn-primary {
-  background: var(--primary);
-  color: white;
-}
-
-.uploaded-data .btn-primary:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-.uploaded-data .btn-secondary {
-  background: var(--bg-secondary);
-  color: var(--text-medium);
-  border: 1px solid var(--border-color);
-}
-
-.uploaded-data .btn-secondary:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-dark);
 }
 
 /* === 空狀態 === */
@@ -749,86 +701,6 @@ body {
   font-size: 0.8rem;
 }
 
-/* === 設備選擇樣式 === */
-.search-box {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.search-box i {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-light);
-  font-size: 0.9rem;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 10px 12px 10px 36px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 0.9rem;
-  background: var(--bg-secondary);
-}
-
-.search-box input:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: var(--bg-primary);
-}
-
-.device-categories {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.category-header {
-  padding: 12px 0 8px;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 8px;
-}
-
-.category-header h4 {
-  font-size: 0.9rem;
-  color: var(--text-dark);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.device-list {
-  margin-bottom: 20px;
-}
-
-.device-item {
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  margin-bottom: 4px;
-  cursor: pointer;
-  transition: var(--transition);
-  font-size: 0.85rem;
-  color: var(--text-dark);
-}
-
-.device-item:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary);
-}
-
-.device-item.selected {
-  background: var(--primary-light);
-  border-color: var(--primary);
-  color: var(--primary);
-  font-weight: 500;
-}
-
-.device-item.hidden {
-  display: none;
-}
-
 /* === 上傳選項 === */
 .upload-options {
   display: grid;
@@ -874,78 +746,175 @@ body {
   color: var(--text-light);
 }
 
-/* === 上傳區域 === */
-.upload-area {
-  margin-top: 20px;
-}
-
-.upload-zone {
-  border: 2px dashed var(--border-color);
+/* === 上傳資料詳細表單樣式 === */
+.upload-description {
+  background: var(--bg-secondary);
   border-radius: var(--border-radius);
-  padding: 32px 16px;
-  text-align: center;
-  transition: var(--transition);
-  cursor: pointer;
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-medium);
 }
 
-.upload-zone:hover,
-.upload-zone.dragover {
-  border-color: var(--primary);
-  background: var(--primary-light);
-}
-
-.upload-icon {
-  font-size: 2.5rem;
-  color: var(--text-light);
+.upload-description p {
   margin-bottom: 12px;
 }
 
-.upload-zone h4 {
+.upload-description p:last-child {
+  margin-bottom: 0;
+}
+
+.upload-description a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.upload-description a:hover {
+  text-decoration: underline;
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-section h4 {
   font-size: 1rem;
   color: var(--text-dark);
-  margin-bottom: 6px;
+  margin-bottom: 12px;
+  font-weight: 600;
 }
 
-.upload-zone p {
-  color: var(--text-medium);
-  margin-bottom: 16px;
+/* === 單選按鈕群組樣式 === */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.upload-btn {
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.radio-option:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary);
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+.radio-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-content strong {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.radio-content i.fa-question-circle {
+  color: var(--text-light);
+  font-size: 0.8rem;
+  cursor: help;
+}
+
+/* === 檔案上傳區域 === */
+.file-upload-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.upload-trigger-btn {
   background: var(--primary);
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
-  cursor: pointer;
   font-size: 0.85rem;
+  cursor: pointer;
   transition: var(--transition);
 }
 
-.upload-btn:hover {
+.upload-trigger-btn:hover {
   background: var(--primary-dark);
 }
 
-.upload-info {
+.upload-status {
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+/* === 標籤輸入區域 === */
+.label-input-section {
   margin-top: 12px;
+  padding-left: 28px;
 }
 
-.upload-info small {
-  color: var(--text-light);
-  font-size: 0.75rem;
+.label-input-section .form-input {
+  width: 100%;
+  max-width: 300px;
 }
 
-/* === 檔案列表 === */
-.file-list {
-  margin-top: 20px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
+/* === 已選擇檔案區域 === */
+.selected-files-section {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-top: 16px;
 }
 
-.file-list h4 {
+.selected-files-section h4 {
   font-size: 0.9rem;
   color: var(--text-dark);
   margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.file-list {
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .file-item {
@@ -953,9 +922,10 @@ body {
   align-items: center;
   gap: 12px;
   padding: 8px;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border-radius: 4px;
   margin-bottom: 6px;
+  border: 1px solid var(--border-color);
 }
 
 .file-icon {
@@ -1077,6 +1047,10 @@ body {
   .collect-panel {
     border-top: 1px solid var(--border-color);
   }
+  
+  .upload-options {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1105,10 +1079,6 @@ body {
     font-size: 0.8rem;
   }
   
-  .upload-options {
-    grid-template-columns: 1fr;
-  }
-  
   .modal-container {
     width: 95%;
     margin: 20px;
@@ -1125,5 +1095,19 @@ body {
   
   .empty-dataset {
     max-width: 100%;
+  }
+  
+  .radio-group {
+    gap: 6px;
+  }
+  
+  .radio-option {
+    padding: 10px;
+  }
+  
+  .file-upload-area {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

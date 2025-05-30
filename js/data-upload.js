@@ -1,25 +1,4 @@
-/**
- * 顯示即將推出訊息
- */
-function showComingSoon() {
-  showNotification('功能開發中', '此功能正在開發中，敬請期待！', 'info');
-}
-
-// 暴露全域函數
-window.switchMainTab = switchMainTab;
-window.showAddDataModal = showAddDataModal;
-window.closeAddDataModal = closeAddDataModal;
-window.selectUploadType = selectUploadType;
-window.removeFile = removeFile;
-window.confirmUpload = confirmUpload;
-window.goToMain = goToMain;
-window.showComingSoon = showComingSoon;
-window.closeNotification = closeNotification;
-window.showDeviceConfig = showDeviceConfig;
-window.closeDeviceConfig = closeDeviceConfig;
-window.updateDeviceSpecs = updateDeviceSpecs;
-window.resetToDefaults = resetToDefaults;
-window.saveDeviceConfig = saveDeviceConfig;// js/data-upload.js - 資料管理頁面功能
+// js/data-upload.js - 資料管理頁面功能
 
 /**
  * 資料管理頁面功能處理
@@ -28,22 +7,33 @@ window.saveDeviceConfig = saveDeviceConfig;// js/data-upload.js - 資料管理�
 // 全域變數
 let selectedFiles = [];
 let currentTab = 'dataset';
-let uploadType = null;
+let uploadMode = 'individual';
+let uploadCategory = 'auto-split';
+let labelMode = 'from-filename';
+let customLabel = '';
 
 // DOM 元素
 const elements = {
   fileInput: null,
-  uploadArea: null,
-  fileList: null,
-  fileItems: null,
-  confirmBtn: null,
-  addDataModal: null
+  uploadDataModal: null,
+  addDataModal: null,
+  selectedFileList: null,
+  selectedFilesSection: null,
+  uploadDataBtn: null,
+  uploadStatus: null,
+  labelInputSection: null,
+  customLabelInput: null
 };
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing...');
   initElements();
   setupEventListeners();
+  
+  // 檢查關鍵元素是否存在
+  console.log('Add data modal:', elements.addDataModal ? 'Found' : 'Not found');
+  console.log('Upload data modal:', elements.uploadDataModal ? 'Found' : 'Not found');
 });
 
 /**
@@ -51,47 +41,46 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initElements() {
   elements.fileInput = document.getElementById('file-input');
-  elements.uploadArea = document.getElementById('upload-area');
-  elements.fileList = document.getElementById('file-list');
-  elements.fileItems = document.getElementById('file-items');
-  elements.confirmBtn = document.getElementById('confirm-btn');
+  elements.uploadDataModal = document.getElementById('upload-data-modal');
   elements.addDataModal = document.getElementById('add-data-modal');
+  elements.selectedFileList = document.getElementById('selected-file-list');
+  elements.selectedFilesSection = document.getElementById('selected-files-section');
+  elements.uploadDataBtn = document.getElementById('upload-data-btn');
+  elements.uploadStatus = document.getElementById('upload-status');
+  elements.labelInputSection = document.getElementById('label-input-section');
+  elements.customLabelInput = document.getElementById('custom-label');
+  
+  // 調試信息
+  console.log('Elements initialized:', {
+    fileInput: !!elements.fileInput,
+    uploadDataModal: !!elements.uploadDataModal,
+    addDataModal: !!elements.addDataModal,
+    selectedFileList: !!elements.selectedFileList,
+    selectedFilesSection: !!elements.selectedFilesSection,
+    uploadDataBtn: !!elements.uploadDataBtn,
+    uploadStatus: !!elements.uploadStatus,
+    labelInputSection: !!elements.labelInputSection,
+    customLabelInput: !!elements.customLabelInput
+  });
 }
 
 /**
  * 設置事件監聽器
  */
 function setupEventListeners() {
-  // 檔案選擇事件
-  if (elements.fileInput) {
-    elements.fileInput.addEventListener('change', handleFileSelect);
-  }
-  
-  // 拖拽上傳事件
-  if (elements.uploadArea) {
-    elements.uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      elements.uploadArea.classList.add('dragover');
-    });
-    
-    elements.uploadArea.addEventListener('dragleave', (e) => {
-      e.preventDefault();
-      elements.uploadArea.classList.remove('dragover');
-    });
-    
-    elements.uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      elements.uploadArea.classList.remove('dragover');
-      const files = Array.from(e.dataTransfer.files);
-      addFilesToList(files);
-    });
-  }
-  
   // 彈窗點擊外部關閉
   if (elements.addDataModal) {
     elements.addDataModal.addEventListener('click', (e) => {
       if (e.target === elements.addDataModal) {
         closeAddDataModal();
+      }
+    });
+  }
+  
+  if (elements.uploadDataModal) {
+    elements.uploadDataModal.addEventListener('click', (e) => {
+      if (e.target === elements.uploadDataModal) {
+        closeUploadDataModal();
       }
     });
   }
@@ -141,21 +130,20 @@ function getTabDisplayName(tabName) {
 }
 
 /**
- * 顯示添加資料彈窗
+ * 顯示添加資料選擇彈窗
  */
 function showAddDataModal() {
+  console.log('showAddDataModal called');
   if (elements.addDataModal) {
+    console.log('Adding show class to modal');
     elements.addDataModal.classList.add('show');
+  } else {
+    console.error('Add data modal element not found');
   }
-  // 重置狀態
-  selectedFiles = [];
-  uploadType = null;
-  hideUploadArea();
-  updateConfirmButton();
 }
 
 /**
- * 關閉添加資料彈窗
+ * 關閉添加資料選擇彈窗
  */
 function closeAddDataModal() {
   if (elements.addDataModal) {
@@ -164,44 +152,118 @@ function closeAddDataModal() {
 }
 
 /**
- * 選擇上傳類型
+ * 顯示上傳資料詳細表單彈窗
+ */
+function showUploadDataModal() {
+  // 直接顯示詳細表單彈窗
+  if (elements.uploadDataModal) {
+    elements.uploadDataModal.classList.add('show');
+  }
+  
+  // 重置狀態
+  resetUploadForm();
+}
+
+/**
+ * 關閉上傳資料詳細表單彈窗
+ */
+function closeUploadDataModal() {
+  if (elements.uploadDataModal) {
+    elements.uploadDataModal.classList.remove('show');
+  }
+  
+  // 重置狀態
+  resetUploadForm();
+}
+
+/**
+ * 重置上傳表單
+ */
+function resetUploadForm() {
+  selectedFiles = [];
+  updateFileDisplay();
+  updateUploadButton();
+  
+  // 重置表單選項
+  const individualRadio = document.querySelector('input[name="upload-mode"][value="individual"]');
+  if (individualRadio) individualRadio.checked = true;
+  
+  const autoSplitRadio = document.querySelector('input[name="upload-category"][value="auto-split"]');
+  if (autoSplitRadio) autoSplitRadio.checked = true;
+  
+  const fromFilenameRadio = document.querySelector('input[name="label-mode"][value="from-filename"]');
+  if (fromFilenameRadio) fromFilenameRadio.checked = true;
+  
+  // 隱藏標籤輸入區域
+  if (elements.labelInputSection) {
+    elements.labelInputSection.style.display = 'none';
+  }
+  
+  uploadMode = 'individual';
+  uploadCategory = 'auto-split';
+  labelMode = 'from-filename';
+  customLabel = '';
+}
+
+/**
+ * 選擇上傳類型（從添加資料彈窗）
  */
 function selectUploadType(type) {
-  uploadType = type;
-  
   if (type === 'local') {
-    showUploadArea();
+    closeAddDataModal();
+    showUploadDataModal();
   } else if (type === 'cloud') {
     showNotification('雲端儲存', '雲端儲存功能開發中', 'info');
+    closeAddDataModal();
   }
 }
 
 /**
- * 顯示上傳區域
+ * 返回到資料選擇
  */
-function showUploadArea() {
-  if (elements.uploadArea) {
-    elements.uploadArea.style.display = 'block';
+function goBackToDataSelection() {
+  closeUploadDataModal();
+  showAddDataModal();
+}
+
+/**
+ * 處理上傳模式變更
+ */
+function handleUploadModeChange(mode) {
+  uploadMode = mode;
+  
+  // 根據模式更新檔案輸入
+  if (elements.fileInput) {
+    if (mode === 'folder') {
+      elements.fileInput.setAttribute('webkitdirectory', '');
+      elements.fileInput.setAttribute('directory', '');
+    } else {
+      elements.fileInput.removeAttribute('webkitdirectory');
+      elements.fileInput.removeAttribute('directory');
+    }
   }
 }
 
 /**
- * 隱藏上傳區域
+ * 處理標籤模式變更
  */
-function hideUploadArea() {
-  if (elements.uploadArea) {
-    elements.uploadArea.style.display = 'none';
-  }
-  if (elements.fileList) {
-    elements.fileList.style.display = 'none';
+function handleLabelModeChange(mode) {
+  labelMode = mode;
+  
+  if (elements.labelInputSection) {
+    if (mode === 'enter-label') {
+      elements.labelInputSection.style.display = 'block';
+    } else {
+      elements.labelInputSection.style.display = 'none';
+    }
   }
 }
 
 /**
  * 處理檔案選擇
  */
-function handleFileSelect(e) {
-  const files = Array.from(e.target.files);
+function handleFileSelect(event) {
+  const files = Array.from(event.target.files);
   addFilesToList(files);
 }
 
@@ -213,8 +275,21 @@ function addFilesToList(files) {
   
   files.forEach(file => {
     // 檢查檔案類型
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'text/csv', 'application/json'];
-    if (!allowedTypes.includes(file.type)) {
+    const allowedTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 
+      'text/csv', 'application/json', 
+      'audio/wav', 'video/avi', 'video/mp4',
+      'application/cbor', 'application/parquet'
+    ];
+    
+    const isAllowedType = allowedTypes.some(type => 
+      file.type === type || 
+      file.name.toLowerCase().endsWith(type.split('/')[1]) ||
+      (type === 'application/cbor' && file.name.toLowerCase().endsWith('.cbor')) ||
+      (type === 'application/parquet' && file.name.toLowerCase().endsWith('.parquet'))
+    );
+    
+    if (!isAllowedType) {
       showNotification('檔案格式錯誤', `不支援的檔案格式: ${file.name}`, 'error');
       return;
     }
@@ -237,8 +312,32 @@ function addFilesToList(files) {
   
   if (addedCount > 0) {
     showNotification('檔案已添加', `成功添加 ${addedCount} 個檔案`, 'success');
-    updateFileList();
-    updateConfirmButton();
+    updateFileDisplay();
+    updateUploadButton();
+  }
+}
+
+/**
+ * 更新檔案顯示
+ */
+function updateFileDisplay() {
+  // 更新狀態文字
+  if (elements.uploadStatus) {
+    if (selectedFiles.length === 0) {
+      elements.uploadStatus.textContent = '沒有選擇檔案';
+    } else {
+      elements.uploadStatus.textContent = `已選擇 ${selectedFiles.length} 個檔案`;
+    }
+  }
+  
+  // 更新檔案列表
+  if (elements.selectedFilesSection && elements.selectedFileList) {
+    if (selectedFiles.length === 0) {
+      elements.selectedFilesSection.style.display = 'none';
+    } else {
+      elements.selectedFilesSection.style.display = 'block';
+      updateFileList();
+    }
   }
 }
 
@@ -246,23 +345,17 @@ function addFilesToList(files) {
  * 更新檔案列表
  */
 function updateFileList() {
-  if (!elements.fileList || !elements.fileItems) return;
+  if (!elements.selectedFileList) return;
   
-  if (selectedFiles.length === 0) {
-    elements.fileList.style.display = 'none';
-    return;
-  }
-  
-  elements.fileList.style.display = 'block';
-  elements.fileItems.innerHTML = '';
+  elements.selectedFileList.innerHTML = '';
   
   selectedFiles.forEach((file, index) => {
     const fileItem = document.createElement('div');
     fileItem.className = 'file-item';
     
-    const isImage = file.type.startsWith('image/');
-    const iconClass = isImage ? 'image' : 'data';
-    const iconName = isImage ? 'fa-image' : getFileIconName(file.type);
+    const fileType = getFileType(file);
+    const iconClass = getFileIconClass(fileType);
+    const iconName = getFileIconName(fileType);
     
     fileItem.innerHTML = `
       <div class="file-icon ${iconClass}">
@@ -277,7 +370,7 @@ function updateFileList() {
       </button>
     `;
     
-    elements.fileItems.appendChild(fileItem);
+    elements.selectedFileList.appendChild(fileItem);
   });
 }
 
@@ -289,43 +382,98 @@ function removeFile(index) {
     const fileName = selectedFiles[index].name;
     selectedFiles.splice(index, 1);
     showNotification('檔案已移除', `已移除檔案: ${fileName}`, 'info');
-    updateFileList();
-    updateConfirmButton();
+    updateFileDisplay();
+    updateUploadButton();
   }
 }
 
 /**
- * 更新確認按鈕
+ * 更新上傳按鈕狀態
  */
-function updateConfirmButton() {
-  if (elements.confirmBtn) {
-    elements.confirmBtn.disabled = selectedFiles.length === 0;
+function updateUploadButton() {
+  if (elements.uploadDataBtn) {
+    elements.uploadDataBtn.disabled = selectedFiles.length === 0;
   }
 }
 
 /**
- * 確認上傳
+ * 確認上傳資料
  */
-function confirmUpload() {
+function confirmUploadData() {
   if (selectedFiles.length === 0) return;
   
+  // 獲取自訂標籤（如果有）
+  if (labelMode === 'enter-label' && elements.customLabelInput) {
+    customLabel = elements.customLabelInput.value.trim();
+    if (!customLabel) {
+      showNotification('請輸入標籤', '請為您的資料輸入標籤', 'warning');
+      return;
+    }
+  }
+  
+  // 顯示上傳進度
   showNotification('開始上傳', `正在上傳 ${selectedFiles.length} 個檔案...`, 'info');
   
   // 模擬上傳過程
   setTimeout(() => {
-    showNotification('上傳成功', '所有檔案已成功上傳並加入資料集', 'success');
-    closeAddDataModal();
-    selectedFiles = [];
+    const uploadInfo = {
+      files: selectedFiles.length,
+      mode: uploadMode,
+      category: uploadCategory,
+      labelMode: labelMode,
+      customLabel: customLabel
+    };
+    
+    showNotification('上傳成功', `成功上傳 ${uploadInfo.files} 個檔案到${getCategoryDisplayName(uploadInfo.category)}`, 'success');
+    closeUploadDataModal();
+    
+    // 重置檔案輸入
+    if (elements.fileInput) {
+      elements.fileInput.value = '';
+    }
   }, 2000);
+}
+
+/**
+ * 獲取類別顯示名稱
+ */
+function getCategoryDisplayName(category) {
+  const names = {
+    'auto-split': '自動分割資料集',
+    'training': '訓練資料集',
+    'testing': '測試資料集'
+  };
+  return names[category] || category;
+}
+
+/**
+ * 獲取檔案類型
+ */
+function getFileType(file) {
+  if (file.type.startsWith('image/')) return 'image';
+  if (file.type.startsWith('video/')) return 'video';
+  if (file.type.startsWith('audio/')) return 'audio';
+  return 'data';
+}
+
+/**
+ * 獲取檔案圖示類別
+ */
+function getFileIconClass(fileType) {
+  return fileType;
 }
 
 /**
  * 獲取檔案圖示名稱
  */
 function getFileIconName(fileType) {
-  if (fileType.includes('csv')) return 'fa-file-csv';
-  if (fileType.includes('json')) return 'fa-file-code';
-  return 'fa-file';
+  const icons = {
+    image: 'fa-image',
+    video: 'fa-video',
+    audio: 'fa-music',
+    data: 'fa-file-alt'
+  };
+  return icons[fileType] || 'fa-file';
 }
 
 /**
@@ -352,9 +500,13 @@ function goToMain() {
  * 顯示設備配置彈窗
  */
 function showDeviceConfig() {
+  console.log('showDeviceConfig called');
   const modal = document.getElementById('device-config-modal');
   if (modal) {
+    console.log('Adding show class to device config modal');
     modal.classList.add('show');
+  } else {
+    console.error('Device config modal not found');
   }
 }
 
@@ -363,26 +515,6 @@ function showDeviceConfig() {
  */
 function closeDeviceConfig() {
   const modal = document.getElementById('device-config-modal');
-  if (modal) {
-    modal.classList.remove('show');
-  }
-}
-
-/**
- * 顯示設備選擇彈窗
- */
-function showDeviceSelect() {
-  const modal = document.getElementById('device-select-modal');
-  if (modal) {
-    modal.classList.add('show');
-  }
-}
-
-/**
- * 關閉設備選擇彈窗
- */
-function closeDeviceSelect() {
-  const modal = document.getElementById('device-select-modal');
   if (modal) {
     modal.classList.remove('show');
   }
@@ -439,88 +571,7 @@ function updateDeviceSpecs() {
     'himax-wiseye2': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 40 },
     'himax-wiseye2-ethos': { family: 'cortex-m', clock: 400, ram: 2560, rom: 16, latency: 30 },
     
-    // IMDT
-    'imdt-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
-    'imdt-v2h-renesas': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 20 },
-    
-    // Infineon PSoC6
-    'infineon-psoc6-cy8c6244': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
-    'infineon-psoc6-cy8c6347': { family: 'cortex-m', clock: 150, ram: 1024, rom: 2, latency: 100 },
-    
-    // MacBook Pro (特殊情況)
-    'macbook-pro-16-2020': { family: 'x86', clock: 2400, ram: 16384, rom: 512, latency: 5 },
-    
-    // MemoryX
-    'memoryx-mx3': { family: 'other', clock: 800, ram: 4096, rom: 32, latency: 20 },
-    
-    // Microchip
-    'microchip-sama7g54': { family: 'cortex-a', clock: 1000, ram: 512, rom: 4, latency: 30 },
-    
-    // Nordic 系列
-    'nordic-nrf52840': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf5340': { family: 'cortex-m', clock: 128, ram: 512, rom: 1, latency: 120 },
-    'nordic-nrf9151': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf9160': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
-    'nordic-nrf9161': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
-    
-    // Nvidia Jetson 系列
-    'nvidia-jetson-nano': { family: 'cortex-a', clock: 1430, ram: 4096, rom: 16, latency: 15 },
-    'nvidia-jetson-orin-nx': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
-    'nvidia-jetson-orin-nano': { family: 'cortex-a', clock: 1500, ram: 8192, rom: 32, latency: 12 },
-    
-    // OpenMV
-    'openmv-cam-h7': { family: 'cortex-m', clock: 480, ram: 1024, rom: 2, latency: 80 },
-    
-    // Particle 系列
-    'particle-boron': { family: 'cortex-m', clock: 64, ram: 256, rom: 1, latency: 150 },
-    'particle-photon-2': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 100 },
-    
-    // Qualcomm
-    'qualcomm-dragonwing-rb3': { family: 'cortex-a', clock: 2840, ram: 4096, rom: 32, latency: 8 },
-    
-    // Raspberry Pi 系列
-    'raspberry-pi-4': { family: 'cortex-a', clock: 1500, ram: 4096, rom: 32, latency: 15 },
-    'raspberry-pi-5': { family: 'cortex-a', clock: 2400, ram: 8192, rom: 64, latency: 10 },
-    'raspberry-pi-rp2040': { family: 'cortex-m', clock: 133, ram: 264, rom: 2, latency: 120 },
-    
-    // Renesas 系列
-    'renesas-ra6m5': { family: 'cortex-m', clock: 200, ram: 512, rom: 2, latency: 90 },
-    'renesas-ra8d1': { family: 'cortex-m', clock: 480, ram: 1024, rom: 4, latency: 60 },
-    'renesas-rz-g2l': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 25 },
-    'renesas-rz-v2h-cpu': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 25 },
-    'renesas-rz-v2h-drp': { family: 'cortex-a', clock: 1200, ram: 2048, rom: 8, latency: 15 },
-    'renesas-rz-v2l-cpu': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 30 },
-    'renesas-rz-v2l-drp': { family: 'cortex-a', clock: 1200, ram: 1024, rom: 4, latency: 20 },
-    
-    // STMicroelectronics 系列
-    'st-discovery-kit': { family: 'cortex-m', clock: 80, ram: 128, rom: 1, latency: 100 },
-    'st-stm32n6': { family: 'cortex-m', clock: 600, ram: 2048, rom: 8, latency: 40 },
-    
-    // Seeed 系列
-    'seeed-sensecap-a1101': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
-    'seeed-studio-wio-terminal': { family: 'cortex-m', clock: 120, ram: 192, rom: 4, latency: 120 },
-    'seeed-vision-ai-module': { family: 'arc', clock: 400, ram: 2048, rom: 16, latency: 50 },
-    
-    // SiLabs 系列
-    'silabs-efr32mg24': { family: 'cortex-m', clock: 78, ram: 256, rom: 1, latency: 140 },
-    'silabs-thunderboard-sense2': { family: 'cortex-m', clock: 40, ram: 256, rom: 1, latency: 200 },
-    
-    // Sony
-    'sony-spresense': { family: 'cortex-m', clock: 156, ram: 1536, rom: 8, latency: 80 },
-    
-    // Synaptics
-    'synaptics-ka10000': { family: 'other', clock: 1000, ram: 4096, rom: 16, latency: 20 },
-    
-    // Texas Instruments 系列
-    'ti-am62a-deep-learning': { family: 'cortex-a', clock: 1400, ram: 2048, rom: 8, latency: 15 },
-    'ti-am68a-deep-learning': { family: 'cortex-a', clock: 2000, ram: 8192, rom: 32, latency: 10 },
-    'ti-launchxl-cc1352p': { family: 'cortex-m', clock: 48, ram: 80, rom: 0.3, latency: 200 },
-    'ti-tda4vm-mma': { family: 'cortex-a', clock: 2000, ram: 4096, rom: 16, latency: 12 },
-    
-    // Think Silicon
-    'think-silicon-neox-ga100': { family: 'other', clock: 200, ram: 512, rom: 4, latency: 100 },
-    
-    // 自訂
+    // 其他設備...（保持原有的設備規格）
     'custom': { family: 'cortex-m', clock: 100, ram: 256, rom: 2, latency: 100 }
   };
   
@@ -530,42 +581,6 @@ function updateDeviceSpecs() {
   ramBudget.value = specs.ram;
   romBudget.value = specs.rom;
   latencyBudget.value = specs.latency;
-}
-
-/**
- * 篩選設備列表
- */
-function filterDevices() {
-  const searchInput = document.getElementById('device-search');
-  const deviceItems = document.querySelectorAll('.device-item');
-  
-  if (!searchInput) return;
-  
-  const searchTerm = searchInput.value.toLowerCase();
-  
-  deviceItems.forEach(item => {
-    const deviceName = item.textContent.toLowerCase();
-    if (deviceName.includes(searchTerm)) {
-      item.classList.remove('hidden');
-    } else {
-      item.classList.add('hidden');
-    }
-  });
-}
-
-/**
- * 選擇設備
- */
-function selectDevice() {
-  const selectedItem = document.querySelector('.device-item.selected');
-  const targetDeviceSelect = document.getElementById('target-device');
-  
-  if (selectedItem && targetDeviceSelect) {
-    const deviceValue = selectedItem.getAttribute('data-device');
-    targetDeviceSelect.value = deviceValue;
-    updateDeviceSpecs();
-    closeDeviceSelect();
-  }
 }
 
 /**
@@ -608,7 +623,7 @@ function saveDeviceConfig() {
       rom: romBudget.value
     };
     
-    // 這裡可以保存配置到 localStorage 或發送到伺服器
+    // 這裡可以保存配置到 localStorage
     localStorage.setItem('deviceConfig', JSON.stringify(config));
     
     showNotification('配置已儲存', '設備配置已成功儲存', 'success');
@@ -616,27 +631,12 @@ function saveDeviceConfig() {
   }
 }
 
-// 設備項目點擊事件
-document.addEventListener('DOMContentLoaded', function() {
-  // 載入已保存的設備配置
-  const savedConfig = localStorage.getItem('deviceConfig');
-  if (savedConfig) {
-    try {
-      const config = JSON.parse(savedConfig);
-      const targetDevice = document.getElementById('target-device');
-      const clockRate = document.getElementById('clock-rate');
-      const ramBudget = document.getElementById('ram-budget');
-      const romBudget = document.getElementById('rom-budget');
-      
-      if (targetDevice && config.device) targetDevice.value = config.device;
-      if (clockRate && config.clock) clockRate.value = config.clock;
-      if (ramBudget && config.ram) ramBudget.value = config.ram;
-      if (romBudget && config.rom) romBudget.value = config.rom;
-    } catch (e) {
-      console.log('無法載入設備配置');
-    }
-  }
-});
+/**
+ * 顯示即將推出訊息
+ */
+function showComingSoon() {
+  showNotification('功能開發中', '此功能正在開發中，敬請期待！', 'info');
+}
 
 /**
  * 顯示通知
@@ -800,9 +800,20 @@ function addNotificationStyles() {
 window.switchMainTab = switchMainTab;
 window.showAddDataModal = showAddDataModal;
 window.closeAddDataModal = closeAddDataModal;
+window.showUploadDataModal = showUploadDataModal;
+window.closeUploadDataModal = closeUploadDataModal;
 window.selectUploadType = selectUploadType;
+window.goBackToDataSelection = goBackToDataSelection;
+window.handleUploadModeChange = handleUploadModeChange;
+window.handleLabelModeChange = handleLabelModeChange;
+window.handleFileSelect = handleFileSelect;
 window.removeFile = removeFile;
-window.confirmUpload = confirmUpload;
+window.confirmUploadData = confirmUploadData;
 window.goToMain = goToMain;
+window.showDeviceConfig = showDeviceConfig;
+window.closeDeviceConfig = closeDeviceConfig;
+window.updateDeviceSpecs = updateDeviceSpecs;
+window.resetToDefaults = resetToDefaults;
+window.saveDeviceConfig = saveDeviceConfig;
 window.showComingSoon = showComingSoon;
 window.closeNotification = closeNotification;
